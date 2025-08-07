@@ -8,23 +8,23 @@ export const ActiveFileTableHeaders: DataTableHeader[] = [
     },
     {
         text: `Путь`,
-        value: `eventType`
+        value: `filePath`
     },
     {
         text: `Inode`,
-        value: `source`
+        value: `inode`
     },
     {
         text: `Размер`,
-        value: `timestamp`
+        value: `fileSize`
     },
     {
         text: `Макс. глубина цепочки`,
-        value: `relatedFileId.id`
+        value: `maxChainDepth`
     },
     {
         text: `Мин. глуюина цепочки`,
-        value: `relatedFileId.fileSystemId`
+        value: `minChainDepth`
     },
     {
         text: `Статус`,
@@ -33,7 +33,6 @@ export const ActiveFileTableHeaders: DataTableHeader[] = [
     },
     {
         text: `Изменить статус`,
-        align: `start`,
         value: `changeStatus`
     },
 ]

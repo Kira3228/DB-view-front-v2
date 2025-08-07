@@ -109,7 +109,6 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
         commit(`CLEAR_SELECTION`)
     },
     updatePage({ commit }, page: number) {
-        console.log(page);
         commit(`SET_CURRENT_PAGE`, page)
     },
     async downloadSelectedLogReport({ commit, state }) {
@@ -172,8 +171,6 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     },
     async debouncedFetch({ state, getters, dispatch }) {
         try {
-            console.log(`lflflflflf`);
-
             const params = new URLSearchParams()
             params.set(`filePath`, state.filepath)
             params.set(`fileSystemId`, state.systemId)

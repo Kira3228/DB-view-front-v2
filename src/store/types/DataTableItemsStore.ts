@@ -1,3 +1,4 @@
+import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 interface DataTable {
     items: TDataTableItems[]
@@ -16,8 +17,9 @@ export interface EventLogDataTableState extends DataTable {
 
 export interface ActiveFileDataTableState extends DataTable {
     filepath: string
-    inode: number
+    inode: string
     status: string
+    isArchived: boolean
 }
 export interface RootState {
     eventLogDataTable: EventLogDataTableState

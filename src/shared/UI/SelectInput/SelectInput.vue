@@ -57,7 +57,6 @@ export default defineComponent({
       if (this.debounce) {
         this.debounce.debounce(() => {
           this.$emit(`debounce`, newValue);
-          console.log(newValue);
         });
       }
     },

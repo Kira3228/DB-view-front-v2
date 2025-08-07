@@ -33,12 +33,20 @@
         v-slot:item.changeStatus="{ item }"
       >
         <div class="tw-flex tw-flex-col tw-justify-center tw-align-middle">
-          <select-input :items="statusOptions" />
+          <select-input
+            @input="(newStatus) => onUpdate(item.id, newStatus)"
+            :value="item.status"
+            :items="statusOptions"
+          />
         </div>
       </template>
 
       <template v-if="tableType === 'active'" v-slot:item.status="{ item }">
         <v-chip :color="getColor(item.status)">{{ item.status }} </v-chip>
+      </template>
+
+      <template v-if="tableType === 'active'" v-slot:top>
+        <v-switch v-model="isArchived" label="Архив" class="pa-3"></v-switch>
       </template>
     </v-data-table>
 
@@ -57,13 +65,7 @@ import Vue, { PropType } from "vue";
 import { DataTableHeader } from "vuetify";
 import SelectInput from "../SelectInput/SelectInput.vue";
 import { TDataTableItems } from "./TDataTableItems";
-import { statusOptions } from "@/widgets/EventLogFilters/SelectOptions/StatusOptions";
-
-interface DataTableData {
-  pageCount: number;
-  localPage: number;
-  itemsPerPage: number;
-}
+import { statusOptions } from "@/widgets/ActiveFileFilters/StatusOptions/StatusOptions";
 
 export default Vue.extend({
   components: { SelectInput },
@@ -91,14 +93,6 @@ export default Vue.extend({
       required: true,
     },
   },
-  mounted() {
-    if (this.tableType === "events") {
-      console.log(true);
-
-      return true;
-    } else console.log(false);
-  },
-
   data() {
     return {
       pageCount: 0,
@@ -116,6 +110,20 @@ export default Vue.extend({
         this.$emit("update:selected", value);
       },
     },
+    selectedStatus: {
+      get(): string {
+        return this.$store.state.activeFileTable.status;
+      },
+      set() {},
+    },
+    isArchived: {
+      get(): boolean {
+        return this.$store.state.activeFileTable.isArchived;
+      },
+      set(newValue: boolean) {
+        this.$store.commit(`activeFileTable/SET_SWITCH`, newValue);
+      },
+    },
   },
   methods: {
     handleChangePage(newPage: number) {
@@ -125,21 +133,15 @@ export default Vue.extend({
     },
     expandable(): boolean {
       if (this.tableType === "events") {
-        console.log(true);
-
         return true;
       } else {
-        console.log(false);
         return false;
       }
     },
     showSelect(): boolean {
       if (this.tableType === "events") {
-        console.log(true);
-
         return true;
       } else {
-        console.log(false);
         return false;
       }
     },
@@ -148,10 +150,23 @@ export default Vue.extend({
       else if (status === `archived`) return `orange`;
       else return `red`;
     },
+    async onUpdate(itemId: string, newStatus: string) {
+      console.log(`itemIDIDIDID`, itemId);
+
+      await this.$store.dispatch(`activeFileTable/updateStatus`, {
+        id: Number(itemId),
+        status: newStatus,
+      });
+    },
   },
   watch: {
     page(newPage: number) {
       this.localPage = newPage;
+    },
+    async isArchived(newValue: boolean) {
+      console.log(newValue);
+
+      await this.$store.dispatch(`activeFileTable/switchToArchive`, newValue);
     },
   },
 });
