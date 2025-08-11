@@ -1,6 +1,5 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { ActiveFileDataTableState, RootState } from "../types/DataTableItemsStore";
-import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import { ActiveFileDto } from "@/shared/types/ActiveFiles/TActiveFileDto";
 import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
 

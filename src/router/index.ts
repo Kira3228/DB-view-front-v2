@@ -3,6 +3,9 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import MainMenu from "./../shared/UI/Menu/Menu.vue"
 import ActiveFilePage from '@/pages/ActiveFilePage/ui/ActiveFilePage.vue'
+import FileDetails from '@/pages/FileDetails/FileDetailsPage.vue'
+import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
+import ReportPage from '@/pages/ReportPage/ui/ReportPage.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
@@ -27,17 +30,10 @@ const routes: Array<RouteConfig> = [
         meta: {
         },
       },
-      {
-        path: "/archive",
-        name: "archive",
-        component: EventLogPage,
 
-        meta: {
-        },
-      },
       {
         path: "/details",
-        component: EventLogPage,
+        component: FileDetailsPage,
         name: "details",
         meta: {
         },
@@ -45,7 +41,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "/report-list",
         name: "report-list",
-        component: EventLogPage,
+        component: ReportPage,
 
         meta: {
         }

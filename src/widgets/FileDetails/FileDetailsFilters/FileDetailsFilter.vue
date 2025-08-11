@@ -21,7 +21,7 @@ import TextInput from "@/shared/UI/TextInput/TextInput.vue";
 import Vue from "vue";
 
 export default Vue.extend({
-  name: `ActiveFileFilters`,
+  name: `FileDetailsFilters`,
   components: {
     TextInput,
   },
@@ -30,24 +30,26 @@ export default Vue.extend({
   },
   methods: {
     async fetchFiltered() {
-      return await this.$store.dispatch(`activeFileTable/debouncedFetch`);
+      console.log(`ЖОПА`);
+
+      return await this.$store.dispatch(`fileDetailsModule/loadItems`);
     },
   },
   computed: {
     filepath: {
       get(): string {
-        return this.$store.state.activeFileTable.filepath;
+        return this.$store.state.fileDetailsModule.filepath;
       },
       set(newValue: string) {
-        this.$store.commit(`activeFileTable/SET_FILEPATH`, newValue);
+        this.$store.commit(`fileDetailsModule/SET_FILEPATH`, newValue);
       },
     },
     inode: {
       get(): string {
-        return this.$store.state.activeFileTable.inode;
+        return this.$store.state.fileDetailsModule.inode;
       },
       set(newValue: string) {
-        this.$store.commit(`activeFileTable/SET_INODE`, newValue);
+        this.$store.commit(`fileDetailsModule/SET_INODE`, newValue);
       },
     },
   },

@@ -12,8 +12,8 @@
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
-    <v-main>
-      <v-container fluid class="">
+    <v-main class="tw-flex-1">
+      <v-container fluid>
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -35,11 +35,6 @@ export default defineComponent({
           title: "Активные файлы",
           icon: "mdi-folder",
           route: "/active-files",
-        },
-        {
-          title: "Архив",
-          icon: "mdi-account-multiple",
-          route: "/archive",
         },
         {
           title: "Детали файла",
