@@ -1,13 +1,25 @@
 <template>
-  <v-text-field
-    dense
-    :label="label"
-    :placeholder="placeholder"
-    :value="value"
-    color="primary"
-    solo
-    @input="handleInput"
-  />
+  <div>
+    <v-textarea
+      v-if="textarea"
+      :value="value"
+      filled
+      auto-grow
+      :label="label"
+      @input="handleInput"
+    >
+    </v-textarea>
+    <v-text-field
+      v-else
+      dense
+      :label="label"
+      :placeholder="placeholder"
+      :value="value"
+      color="primary"
+      solo
+      @input="handleInput"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -28,6 +40,10 @@ export default defineComponent({
     value: {
       type: String,
       default: "",
+    },
+    textarea: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

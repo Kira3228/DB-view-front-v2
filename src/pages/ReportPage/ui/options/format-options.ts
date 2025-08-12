@@ -1,12 +1,16 @@
-import { TOption } from "@/shared/UI/SelectInput/TOptions";
+import { TOption } from "@/shared/UI/SelectInput/TOptions"
 
 export const formatOptions: TOption[] = [
   {
-    label: `Списки событий`,
-    value: `event`
+    label: `DOCX`,
+    value: `docx`
   },
   {
-    label: `Цепочки распространений`,
-    value: `chains`
+    label: `PDF`,
+    value: `pdf`
   },
+  {
+    label: `XLSX`,
+    value: `xlsx`
+  }
 ]

@@ -1,5 +1,6 @@
 import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
+import { TOption } from "@/shared/UI/SelectInput/TOptions";
 interface DataTable {
     items: TDataTableItems[]
     loading: boolean
@@ -67,10 +68,10 @@ export interface FileDetailsState {
 }
 
 export interface ReportFilters {
-    date: number[]
+    date: string[] | null
     depht: number[]
-    reportType: string
-    reportFormat: string
+    reportType: TOption | string
+    reportFormat: TOption
     selectedFields: SelectedReportFields
     reportFields: ReportFields[]
 }

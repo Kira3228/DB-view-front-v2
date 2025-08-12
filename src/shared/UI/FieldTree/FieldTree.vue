@@ -14,7 +14,6 @@
         </div>
       </template>
     </v-treeview>
-    <p>{{ selectbleFields }}</p>
   </div>
 </template>
 

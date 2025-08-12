@@ -20,18 +20,19 @@
           v-on="on"
           dense
           style="font-size: small"
-          @click:clear="localValue = []"
+          @click:clear="clearDates"
         ></v-text-field>
       </template>
       <v-date-picker
-        v-model="localValue"
+        v-model="localDates"
         no-title
         range
-        @input="onDateChange"
+        @input="handleDatePickerChange"
       ></v-date-picker>
     </v-menu>
   </div>
 </template>
+
 <script lang="ts">
 import { useDebounce } from "@/shared/utils/debounce";
 import { defineComponent, PropType } from "@vue/composition-api";
@@ -50,51 +51,60 @@ export default defineComponent({
   },
   data() {
     return {
-      dates: [] as string[],
+      localDates: [] as string[],
       menu2: false,
       debounce: null as ReturnType<typeof useDebounce> | null,
     };
   },
   created() {
     this.debounce = useDebounce();
+    this.localDates = [...this.value];
   },
   methods: {
-    onDateChange(selectedDates: string[]) {
-      this.$emit(`input`, selectedDates);
+    handleDatePickerChange(selectedDates: string[]) {
+      console.log("Date picker changed:", selectedDates);
+
+      this.localDates = selectedDates || [];
+
+      this.$emit("input", this.localDates);
+
       if (this.debounce) {
         this.debounce.debounce(() => {
-          this.$emit("debounce", selectedDates);
+          this.$emit("debounce", this.localDates);
         }, 500);
       }
-      if (selectedDates.length === 2) {
+
+      if (this.localDates.length === 2) {
         this.menu2 = false;
       }
     },
-  },
-  watch: {
-    localValue(newVal: string[]) {
-      this.onDateChange(newVal);
+
+    clearDates() {
+      this.localDates = [];
+      this.$emit("input", []);
     },
   },
   computed: {
     dateRangeText(): string {
-      return this.value
+      return this.localDates
         .map((val) => {
-          const [year, month, day] = val.split(`-`);
+          if (!val) return "";
+          const [year, month, day] = val.split("-");
           return `${day}-${month}-${year}`;
         })
-        .join(`~`);
+        .filter(Boolean)
+        .join("~");
     },
-    localValue: {
-      get(): string[] | null {
-        return this.value;
-      },
-      set(newVal: string[] | null) {
-        this.$emit(`input`, newVal);
-        if (newVal && newVal.length === 2) {
-          this.menu2 = false;
+  },
+  watch: {
+    value: {
+      handler(newVal: string[]) {
+        if (JSON.stringify(newVal) !== JSON.stringify(this.localDates)) {
+          this.localDates = [...(newVal || [])];
         }
       },
+      immediate: true,
+      deep: true,
     },
   },
 });

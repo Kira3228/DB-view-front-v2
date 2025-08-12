@@ -90,7 +90,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     async loadItems({ commit }) {
         commit(`SET_LOADING`, true)
         try {
-            const response = await fetch(`http://localhost:3000/api/logs/filtered`)
+            const response = await fetch(`http://localhost:3000/api/logs/filtered/?filePathException=${localStorage.getItem(`fileExseption`)}&processPathException=${localStorage.getItem(`processExseption`)}`)
             const data: TEventLogsDto = await response.json()
             commit(`SET_ITEMS`, data.events)
             commit(`SET_TOTAL_PAGES`, data.totalPages)
@@ -117,7 +117,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
             throw new Error
         }
         try {
-            const url = `http://localhost:3000/api/logs/export/selected/?ids=${selectedIds}`
+            const url = `http://localhost:3000/api/logs/export/selected/?ids=${selectedIds}&`
             const response = await fetch(url)
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -150,10 +150,12 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     },
     async updateTableItems({ commit, state }, params?: string) {
         try {
-            let url = `http://localhost:3000/api/logs/filtered/?page=${state.page}`
+            let url = `http://localhost:3000/api/logs/filtered/?page=${state.page}&filePathException=${localStorage.getItem(`fileExseption`)}&processPathException=${localStorage.getItem(`processExseption`)}`
+
 
             if (params) {
-                url = `http://localhost:3000/api/logs/filtered/?${params}`
+                url = `http://localhost:3000/api/logs/filtered/?${params}&filePathException=${localStorage.getItem(`fileExseption`)}&processPathException=${localStorage.getItem(`processExseption`)}`
+
             }
 
             const response = await fetch(url)
@@ -184,7 +186,8 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
             }
             params.set(`page`, String(state.page))
 
-            await dispatch(`updateTableItems`, params)
+            await dispatch(`updateTableItems`, params.toString())
+
         }
         catch (error) {
             console.error(error);

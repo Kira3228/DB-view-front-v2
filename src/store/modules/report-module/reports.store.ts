@@ -2,10 +2,11 @@ import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { ReportFields, ReportFilters, RootState, SelectedReportFields } from "../../types/DataTableItemsStore";
 import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { toSearchString } from "./toSearchString";
+import { TOption } from "@/shared/UI/SelectInput/TOptions";
 
 const state: ReportFilters = {
-  date: [],
-  depht: [],
+  date: ['', ''],
+  depht: [1, 2],
   selectedFields: {
     eventData: false,
     eventType: false,
@@ -39,8 +40,8 @@ const state: ReportFilters = {
       processStartTime: false
     }
   },
-  reportFormat: '',
-  reportType: '',
+  reportFormat: { label: '', value: '' },
+  reportType: { label: '', value: '' },
   reportFields: []
 }
 
@@ -67,7 +68,24 @@ const getters: GetterTree<ReportFilters, RootState> = {
     });
 
     return result;
-  }
+  },
+  startDate: (state: ReportFilters) => {
+    if (state.date) {
+      if (state.date[0]) {
+        return String(new Date(state.date[0]).getTime())
+      }
+    }
+    return ''
+  },
+  endDate: (state: ReportFilters) => {
+    if (state.date) {
+      if (state.date[1]) {
+        return String(new Date(state.date[1]).getTime())
+      }
+    }
+
+    return ''
+  },
 }
 
 const mutations: MutationTree<ReportFilters> = {
@@ -81,33 +99,53 @@ const mutations: MutationTree<ReportFilters> = {
 
   SET_DEPTH(state: ReportFilters, newValues: number[]) {
     state.depht = [...newValues];
+    console.log(newValues);
+
   },
-  SET_DATE(state: ReportFilters, newValues: number[]) {
-    state.date = [...newValues];
+  SET_DATE(state: ReportFilters, newValues: string[] | null) {
+    console.log(newValues);
+    state.date = newValues;
   },
-  SET_FORMAT(state: ReportFilters, newValue: string) {
+  SET_FORMAT(state: ReportFilters, newValue: TOption) {
+    console.log(newValue);
+
     state.reportFormat = newValue;
   },
-  SET_TYPE(state: ReportFilters, newValue: string) {
+  SET_TYPE(state: ReportFilters, newValue: TOption) {
     state.reportType = newValue;
+    console.log(newValue);
+
   }
 }
 
 const actions: ActionTree<ReportFilters, RootState> = {
-  async downloadReport({ state }) {
+  async downloadReport({ state, getters }) {
     try {
       const params = toSearchString(state.selectedFields)
-      const url = `http://localhost:3000/api/reports/${state.reportFormat}%${params}`
-      const response = await fetch(`/?${params}`)
+      let url = '';
+      if (state.reportType === `event`) {
+        url = `http://localhost:3000/api/reports/${state.reportType}/${state.reportFormat}/?${params}&startDate=${getters.startDate}&endDate=${getters.endDate}`
+      }
+      else {
+        url = `http://localhost:3000/api/reports/${state.reportType}/${state.reportFormat}/?minDepth=${state.depht[0]}&maxDepth=${state.depht[1]}&startDate=${getters.startDate}&endDate=${getters.endDate}`
+      }
+
+      if (state.date) {
+        console.log(
+          getters.startDate,
+          getters.endDate
+        );
+
+      }
+
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error
       }
 
-
       const blob = await response.blob()
       const filename = `report.${state.reportFormat}`
-      // downloadBlob(blob, { filename })
-      console.log(url);
+      downloadBlob(blob, { filename })
 
     }
     catch (e) {

@@ -2,15 +2,11 @@ import { TOption } from "@/shared/UI/SelectInput/TOptions"
 
 export const typeOptions: TOption[] = [
   {
-    label: `DOCX`,
-    value: `docx`
+    label: `События`,
+    value: `event`
   },
   {
-    label: `PDF`,
-    value: `pdf`
-  },
-  {
-    label: `XLSX`,
-    value: `xlsx`
-  },
+    label: `Цепочки`,
+    value: `chains`
+  }
 ]

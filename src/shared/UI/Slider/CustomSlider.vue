@@ -1,31 +1,32 @@
 <template>
   <v-range-slider
-    v-model="range"
+    v-model="localRange"
     :max="max"
     :min="min"
     hide-details
     class="align-center"
+    @input="handleUpdate"
   >
     <template v-slot:prepend>
       <v-text-field
-        :value="range[0]"
+        :value="localRange[0]"
         class="mt-0 pt-0"
         hide-details
         single-line
         type="number"
         style="width: 60px"
-        @change="$set(range, 0, $event)"
+        @change="updateRangeValue(0, $event)"
       ></v-text-field>
     </template>
     <template v-slot:append>
       <v-text-field
-        :value="range[1]"
+        :value="localRange[1]"
         class="mt-0 pt-0"
         hide-details
         single-line
         type="number"
         style="width: 60px"
-        @change="$set(range, 1, $event)"
+        @change="updateRangeValue(1, $event)"
       ></v-text-field>
     </template>
   </v-range-slider>
@@ -43,13 +44,40 @@ export default Vue.extend({
     },
     max: {
       type: Number,
-      default: 0,
+      default: 100,
     },
     min: {
       type: Number,
-      default: 100,
+      default: 0,
     },
   },
-  methods: {},
+  data() {
+    return {
+      localRange: [...this.range] as number[],
+    };
+  },
+  methods: {
+    handleUpdate(newVal: number[]) {
+      this.localRange = [...newVal];
+      this.$emit("update-slider", newVal);
+    },
+    updateRangeValue(index: number, value: string | number) {
+      const numValue = typeof value === "string" ? parseFloat(value) : value;
+      if (!isNaN(numValue)) {
+        const newRange = [...this.localRange];
+        newRange[index] = numValue;
+        this.localRange = newRange;
+        this.$emit("update-slider", newRange);
+      }
+    },
+  },
+  watch: {
+    range: {
+      handler(newVal: number[]) {
+        this.localRange = [...newVal];
+      },
+      immediate: true,
+    },
+  },
 });
 </script>
