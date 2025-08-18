@@ -57,7 +57,6 @@ const actions: ActionTree<FileDetailsState, RootState> = {
         throw new Error
       }
       const data: FileHierarchyMap = await response.json()
-      console.log(data);
 
       commit(`SET_FILE_HIERARCHY`, data)
     }

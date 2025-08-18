@@ -9,6 +9,7 @@ export default new Vuetify({
         locales: { ru }
     },
     theme: {
+        // dark: localStorage.getItem("isDarkTheme") === "true",
         options: {
             customProperties: true
         },

@@ -1,8 +1,9 @@
-import { TEventLogsDto } from "@/shared/types/EventLogs";
 import { EventLogDataTableState, RootState } from "@/store/types/DataTableItemsStore";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
+import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
+import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchLogsFiltered } from "@/shared/api/logs";
 
 const state: EventLogDataTableState = {
     selectedItems: [],
@@ -22,21 +23,10 @@ const getters: GetterTree<EventLogDataTableState, RootState> = {
     hasSelection: (state: EventLogDataTableState): boolean => state.selectedItems.length > 0,
     selectedIds: (state: EventLogDataTableState): number[] => state.selectedItems.map(item => item.id),
     startDate: (state: EventLogDataTableState): string => {
-        if (state.dateRange) {
-            if (state.dateRange[0]) {
-                return state.dateRange[0].replace('T', ' ').replace('.000Z', ' ').trimEnd()
-            }
-        }
-        return ''
+        return toSqlDateTimeOrEmpty(state.dateRange?.[0])
     },
     endDate: (state: EventLogDataTableState): string => {
-        if (state.dateRange) {
-            if (state.dateRange[1]) {
-                return state.dateRange[1].replace('T', ' ').replace('.000Z', ' ').trimEnd()
-            }
-        }
-
-        return ''
+        return toSqlDateTimeOrEmpty(state.dateRange?.[1])
     },
 }
 
@@ -44,56 +34,81 @@ const mutations: MutationTree<EventLogDataTableState> = {
     SET_SELECTED_ITEMS(state: EventLogDataTableState, items: TDataTableItems[]) {
         state.selectedItems = items
     },
+    
     SET_ITEMS(state: EventLogDataTableState, items: TDataTableItems[]) {
         state.items = items
     },
+
     SET_LOADING(state: EventLogDataTableState, loading: boolean) {
         state.loading = loading
     },
+
     SET_TOTAL_PAGES(state: EventLogDataTableState, totalPages: number) {
         state.totalPages = totalPages
     },
+
     CLEAR_SELECTION(state: EventLogDataTableState) {
         state.selectedItems = []
     },
+
     ADD_TO_SELECTION(state: EventLogDataTableState, item: TDataTableItems) {
         if (!state.selectedItems.find(selected => selected.id === item.id)) {
             state.selectedItems.push(item)
         }
     },
+
     REMOVE_FROM_SELECTION(state: EventLogDataTableState, itemId: number) {
         state.selectedItems = state.selectedItems.filter(item => item.id !== itemId)
     },
+
     SET_CURRENT_PAGE(state: EventLogDataTableState, page: number) {
         state.page = page
     },
+
     SET_FILEPATH(state: EventLogDataTableState, newValue: string) {
         state.filepath = newValue
     },
+
     SET_SYSTEM_ID(state: EventLogDataTableState, newValue: string) {
         state.systemId = newValue
     },
+
     SET_STATUS(state: EventLogDataTableState, newStatus: string) {
         state.status = newStatus
     },
+
     SET_TYPE_OF_EVENT(state: EventLogDataTableState, newType: string) {
         state.typeOfEvent = newType
     },
-    SET_DATE_RANGE(state: EventLogDataTableState, newDate: string[] | null) {
-        console.log(newDate);
 
+    SET_DATE_RANGE(state: EventLogDataTableState, newDate: string[] | null) {
         state.dateRange = newDate
     }
 }
 
 const actions: ActionTree<EventLogDataTableState, RootState> = {
-    async loadItems({ commit }) {
+    async loadItems({ commit, getters }) {
         commit(`SET_LOADING`, true)
         try {
-            const response = await fetch(`http://localhost:3000/api/logs/filtered/?filePathException=${localStorage.getItem(`fileExseption`)}&processPathException=${localStorage.getItem(`processExseption`)}`)
-            const data: TEventLogsDto = await response.json()
-            commit(`SET_ITEMS`, data.events)
-            commit(`SET_TOTAL_PAGES`, data.totalPages)
+            const data = await fetchLogsFiltered({
+                page: state.page,
+                filePath: state.filepath || undefined,
+                fileSystemId: state.systemId || undefined,
+                status: state.status || undefined,
+                eventType: state.typeOfEvent || undefined,
+                startDate: getters.startDate || undefined,
+                endDate: getters.endDate || undefined,
+                filePathException: localStorage.getItem('fileExseption') || undefined,
+                processPathException: localStorage.getItem('processExseption') || undefined,
+            })
+            if (data && data.events) {
+                commit(`SET_ITEMS`, data.events)
+                commit(`SET_TOTAL_PAGES`, data.totalPages ?? 0)
+            }
+            else {
+                commit(`SET_ITEMS`, [])
+                commit(`SET_TOTAL_PAGES`, 0)
+            }
         }
         catch (error) {
             console.error(error)
@@ -102,30 +117,29 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
             commit(`SET_LOADING`, false)
         }
     },
+
     updateSelection({ commit }, items: TDataTableItems[]) {
         commit(`SET_SELECTED_ITEMS`, items)
     },
+
     clearSelection({ commit }) {
         commit(`CLEAR_SELECTION`)
     },
-    updatePage({ commit }, page: number) {
+
+    updatePage({ commit, dispatch }, page: number) {
         commit(`SET_CURRENT_PAGE`, page)
+        return dispatch('loadItems');
     },
+
     async downloadSelectedLogReport({ commit, state }) {
         const selectedIds = state.selectedItems.map(item => item.id);
         if (selectedIds.length === 0) {
             throw new Error
         }
         try {
-            const url = `http://localhost:3000/api/logs/export/selected/?ids=${selectedIds}&`
-            const response = await fetch(url)
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const blob = await response.blob()
-            const filename = `report.csv`
-            downloadBlob(blob, { filename })
-            return { success: true, filename };
+            const blob = await downloadSelectedLogsCsv(selectedIds)
+            downloadBlob(blob, { filename: `report.csv` })
+            return { succes: true, filename: `report.csv` }
         }
         catch (error) {
             console.log(error);
@@ -134,66 +148,22 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
 
     async downloadAllLogReport({ commit, state }) {
         try {
-            const url = `http://localhost:3000/api/logs/export/all`
-            const response = await fetch(url)
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const blob = await response.blob()
-            const filename = `report.csv`
-            downloadBlob(blob, { filename })
-            return { success: true, filename };
+            const blob = await downloadAllLogsCsv()
+            downloadBlob(blob, { filename: `report.csv` })
+            return { success: true, filename: `report.csv` };
         }
         catch (error) {
             console.log(error);
         }
     },
-    async updateTableItems({ commit, state }, params?: string) {
-        try {
-            let url = `http://localhost:3000/api/logs/filtered/?page=${state.page}&filePathException=${localStorage.getItem(`fileExseption`)}&processPathException=${localStorage.getItem(`processExseption`)}`
 
-
-            if (params) {
-                url = `http://localhost:3000/api/logs/filtered/?${params}&filePathException=${localStorage.getItem(`fileExseption`)}&processPathException=${localStorage.getItem(`processExseption`)}`
-
-            }
-
-            const response = await fetch(url)
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const events: TEventLogsDto = await response.json()
-            if (events && events.events) {
-                commit(`SET_ITEMS`, events.events)
-                commit(`SET_TOTAL_PAGES`, events.totalPages)
-            }
-        } catch (error) {
-            console.error(error);
-        }
+    async updateTableItems({ dispatch }, params?: string) {
+        return dispatch(`loadItems`)
     },
-    async debouncedFetch({ state, getters, dispatch }) {
-        try {
-            const params = new URLSearchParams()
-            params.set(`filePath`, state.filepath)
-            params.set(`fileSystemId`, state.systemId)
-            params.set(`status`, state.status)
-            params.set(`eventType`, state.typeOfEvent)
-            if (getters.startDate) {
-                params.set(`startDate`, getters.startDate)
-            }
-            if (getters.endDate) {
-                params.set(`endDate`, getters.endDate)
-            }
-            params.set(`page`, String(state.page))
 
-            await dispatch(`updateTableItems`, params.toString())
-
-        }
-        catch (error) {
-            console.error(error);
-        }
+    async debouncedFetch({ dispatch }) {
+        dispatch(`loadItems`)
     }
-
 }
 
 const eventLogDataTableModule: Module<EventLogDataTableState, RootState> = {

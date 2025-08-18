@@ -3,16 +3,16 @@
     <text-input
       :textarea="true"
       v-model="fileExseption"
-      label="Исключения файлов"
+      label="Исключения файлов (через ;)"
       @input="handleFileExseptionChange"
       @debounce="saveSettings"
     ></text-input>
     <text-input
       :textarea="true"
       v-model="processExseption"
-      label="Исключения процессов"
+      label="Исключения процессов (через ;)"
       @input="handleProcessExseptionChange"
-      @debounce="saveSettings()"
+      @debounce="saveSettings"
     ></text-input>
   </div>
 </template>
@@ -32,6 +32,7 @@ export default Vue.extend({
       processExseption: "",
     };
   },
+
   methods: {
     saveSettings() {
       localStorage.setItem("fileExseption", this.fileExseption);

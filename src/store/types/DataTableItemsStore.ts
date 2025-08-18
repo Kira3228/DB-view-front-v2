@@ -18,7 +18,7 @@ export interface EventLogDataTableState extends DataTable {
 
 export interface ActiveFileDataTableState extends DataTable {
     filepath: string
-    inode: string
+    inode: number | string
     status: string
     isArchived: boolean
 }
@@ -69,8 +69,8 @@ export interface FileDetailsState {
 
 export interface ReportFilters {
     date: string[] | null
-    depht: number[]
-    reportType: TOption | string
+    depth: number[]
+    reportType: TOption 
     reportFormat: TOption
     selectedFields: SelectedReportFields
     reportFields: ReportFields[]

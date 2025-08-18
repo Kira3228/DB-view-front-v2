@@ -3,10 +3,11 @@ import { ReportFields, ReportFilters, RootState, SelectedReportFields } from "..
 import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { toSearchString } from "./toSearchString";
 import { TOption } from "@/shared/UI/SelectInput/TOptions";
+import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
 
 const state: ReportFilters = {
-  date: ['', ''],
-  depht: [1, 2],
+  date: [],
+  depth: [1, 2],
   selectedFields: {
     eventData: false,
     eventType: false,
@@ -69,23 +70,20 @@ const getters: GetterTree<ReportFilters, RootState> = {
 
     return result;
   },
+
   startDate: (state: ReportFilters) => {
-    if (state.date) {
-      if (state.date[0]) {
-        return String(new Date(state.date[0]).getTime())
-      }
-    }
-    return ''
+    return toSqlDateTimeOrEmpty(state.date?.[0])
   },
   endDate: (state: ReportFilters) => {
-    if (state.date) {
-      if (state.date[1]) {
-        return String(new Date(state.date[1]).getTime())
-      }
-    }
-
-    return ''
+    return toSqlDateTimeOrEmpty(state.date?.[1])
   },
+
+  reortTypeValue: (state: ReportFilters): string => {
+    return state.reportType?.value || ""
+  },
+  reortFormatValue: (state: ReportFilters): string => {
+    return state.reportFormat?.value || ""
+  }
 }
 
 const mutations: MutationTree<ReportFilters> = {
@@ -98,45 +96,45 @@ const mutations: MutationTree<ReportFilters> = {
   },
 
   SET_DEPTH(state: ReportFilters, newValues: number[]) {
-    state.depht = [...newValues];
-    console.log(newValues);
-
+    state.depth = [...newValues];
   },
+
   SET_DATE(state: ReportFilters, newValues: string[] | null) {
-    console.log(newValues);
     state.date = newValues;
   },
-  SET_FORMAT(state: ReportFilters, newValue: TOption) {
-    console.log(newValue);
 
+  SET_FORMAT(state: ReportFilters, newValue: TOption) {
     state.reportFormat = newValue;
   },
+
   SET_TYPE(state: ReportFilters, newValue: TOption) {
     state.reportType = newValue;
-    console.log(newValue);
-
   }
 }
 
 const actions: ActionTree<ReportFilters, RootState> = {
   async downloadReport({ state, getters }) {
     try {
+      const reportType = getters.reortTypeValue
       const params = toSearchString(state.selectedFields)
       let url = '';
       if (state.reportType === `event`) {
         url = `http://localhost:3000/api/reports/${state.reportType}/${state.reportFormat}/?${params}&startDate=${getters.startDate}&endDate=${getters.endDate}`
       }
       else {
-        url = `http://localhost:3000/api/reports/${state.reportType}/${state.reportFormat}/?minDepth=${state.depht[0]}&maxDepth=${state.depht[1]}&startDate=${getters.startDate}&endDate=${getters.endDate}`
+        url = `http://localhost:3000/api/reports/${state.reportType}/${state.reportFormat}/?minDepth=${state.depth[0]}&maxDepth=${state.depth[1]}&startDate=${getters.startDate}&endDate=${getters.endDate}`
+      }
+      if (
+        state.reportFormat !== `pdf` &&
+        state.reportFormat !== `xlsx` &&
+        state.reportFormat !== `docx`
+      ) {
+        throw new Error(`Не выбран формат`)
+      }
+      if (state.reportType !== `event` && state.reportType !== `chains`) {
+        throw new Error(`Не выбран тип документа`)
       }
 
-      if (state.date) {
-        console.log(
-          getters.startDate,
-          getters.endDate
-        );
-
-      }
 
       const response = await fetch(url)
       if (!response.ok) {
@@ -147,8 +145,12 @@ const actions: ActionTree<ReportFilters, RootState> = {
       const filename = `report.${state.reportFormat}`
       downloadBlob(blob, { filename })
 
+      console.log(url);
+
+
     }
     catch (e) {
+      alert(e)
       console.error(e);
     }
   }

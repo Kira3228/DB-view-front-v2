@@ -2,6 +2,7 @@ import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { ActiveFileDataTableState, RootState } from "../types/DataTableItemsStore";
 import { ActiveFileDto } from "@/shared/types/ActiveFiles/TActiveFileDto";
 import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
+import { fetchActiveFiles, fetchArchiveFiles, updateFileStatus } from "@/shared/api/activeFiles";
 
 const state: ActiveFileDataTableState = {
     filepath: "",
@@ -18,18 +19,16 @@ const getters: GetterTree<ActiveFileDataTableState, RootState> = {}
 
 const mutations: MutationTree<ActiveFileDataTableState> = {
     SET_FILEPATH(state: ActiveFileDataTableState, newValue: string) {
-        console.log(newValue);
         state.filepath = newValue
     },
     SET_INODE(state: ActiveFileDataTableState, newValue: string) {
-        console.log(newValue);
-        state.inode = newValue
+        const n = Number(newValue);
+        state.inode = newValue.trim() !== '' && Number.isFinite(n) ? n : '';
     },
     SET_ITEMS(state: ActiveFileDataTableState, items: TActiveFile[]) {
         state.items = items
     },
     SET_CURRENT_PAGE(state: ActiveFileDataTableState, newValue: number) {
-        console.log(newValue);
 
         state.page = newValue
     },
@@ -57,31 +56,24 @@ const mutations: MutationTree<ActiveFileDataTableState> = {
 
 const actions: ActionTree<ActiveFileDataTableState, RootState> = {
     async loadItems({ commit, state }, params: string) {
+        commit(`SET_LOADING`, true)
         try {
-            if (state.isArchived) {
-                commit(`SET_LOADING`, true)
-                let url = `http://localhost:3000/api/active/get/archive/?page=${state.page}`
-                if (params) {
-                    url = `http://localhost:3000/api/active/get/archive/?${params}`
-                }
-                const response = await fetch(url)
-                const data: ActiveFileDto = await response.json()
-                commit(`SET_ITEMS`, data.files)
-                commit(`SET_TOTAL_PAGES`, data.totalPages)
+            const query: { page: number; filePath?: string; inode?: number } = {
+                page: state.page || 1
             }
-            else {
-                commit(`SET_LOADING`, true)
-                let url = `http://localhost:3000/api/active/get/active/?page=${state.page}&filePath=${state.filepath}&inode=${state.inode}`
-                if (params) {
-                    url = `http://localhost:3000/api/active/get/active/?${params}`
-                }
-                const response = await fetch(url)
-                const data: ActiveFileDto = await response.json()
-                console.log(data.totalPages);
+            if (state.filepath && state.filepath.trim() !== '') {
+                query.filePath = state.filepath.trim()
+            }
+            if (typeof state.inode === `number` && Number.isFinite(state.inode)) {
+                query.inode = state.inode
+            }
 
-                commit(`SET_ITEMS`, data.files)
-                commit(`SET_TOTAL_PAGES`, data.totalPages)
-            }
+            const data: ActiveFileDto = state.isArchived
+                ? await fetchArchiveFiles(query)
+                : await fetchActiveFiles(query)
+
+            commit(`SET_ITEMS`, data.files)
+            commit(`SET_TOTAL_PAGES`, data.totalPages)
         }
         catch (error) {
             console.error(error);
@@ -108,50 +100,17 @@ const actions: ActionTree<ActiveFileDataTableState, RootState> = {
     },
     async updateStatus({ commit }, payload: { id: string, status: string }) {
         try {
-            const response = await fetch(`http://localhost:3000/api/active/get/active/update/${payload.id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ status: payload.status }),
-            })
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            commit(`SET_FILE_STATUS`, payload)
-            console.log(data);
-
-            return data;
+            const data = await updateFileStatus(payload.id, payload.status)
+            commit(`SET_FILE_STATUS`, { id: Number(payload.id), status: payload.status })
+            return data
         }
         catch (error) {
             console.error(error);
         }
     },
     async switchToArchive({ commit, state, dispatch }, newValue: boolean) {
-        try {
-            if (newValue) {
-                const response = await fetch(`http://localhost:3000/api/active/get/archive/?filePath=${state.filepath}&inode=${state.inode}`)
-                if (!response.ok) {
-                    throw new Error
-                }
-                const data: ActiveFileDto = await response.json()
-                console.log(data.files);
-                commit(`SET_SWITCH`, newValue)
-                commit(`SET_ITEMS`, data.files)
-                console.log(data.totalPages);
-
-                commit(`SET_TOTAL_PAGES`, data.totalPages)
-            }
-            else {
-                dispatch(`loadItems`)
-            }
-
-        }
-        catch (error) {
-            console.error();
-
-        }
+        commit(`SET_SWITCH`, newValue)
+        return dispatch(`loadItems`)
     }
 }
 const activeFileTableModule: Module<ActiveFileDataTableState, RootState> = {
