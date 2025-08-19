@@ -14,7 +14,10 @@ export const fetchLogsFiltered = (params: {
   filePathException?: string;
   processPathException?: string;
 }) => {
-  return httpGet<TEventLogsDto>(`${BASE}/api/logs/filtered`, params);
+  console.log(params
+  );
+
+  return httpGet<TEventLogsDto>(`${BASE}/api/logs/search`, params);
 }
 
 export const downloadSelectedLogsCsv = (ids: number[]) => {

@@ -62,8 +62,6 @@ export default defineComponent({
   },
   methods: {
     handleDatePickerChange(selectedDates: string[]) {
-      console.log("Date picker changed:", selectedDates);
-
       this.localDates = selectedDates || [];
 
       this.$emit("input", this.localDates);

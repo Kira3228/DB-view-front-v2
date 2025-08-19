@@ -85,9 +85,6 @@ export default defineComponent({
     async fetchFiltered() {
       return await this.$store.dispatch(`dataTable/debouncedFetch`);
     },
-    test() {
-      console.log(`хуй`);
-    },
   },
   computed: {
     isDisbled(): boolean {
@@ -131,6 +128,17 @@ export default defineComponent({
       },
       set(newDateRange: string[]) {
         this.$store.commit(`dataTable/SET_DATE_RANGE`, newDateRange);
+      },
+    },
+  },
+  watch: {
+    dateRange: {
+      deep: true,
+      handler() {
+        if (this.dateRange.length === 0) {
+          console.log(`nsnsnsnsnsnsnssns`);
+          
+        }
       },
     },
   },

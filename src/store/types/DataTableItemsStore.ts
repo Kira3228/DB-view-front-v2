@@ -13,7 +13,7 @@ export interface EventLogDataTableState extends DataTable {
     systemId: string
     typeOfEvent: string
     status: string
-    dateRange: string[] | null
+    dateRange: string[] 
 }
 
 export interface ActiveFileDataTableState extends DataTable {
@@ -70,7 +70,7 @@ export interface FileDetailsState {
 export interface ReportFilters {
     date: string[] | null
     depth: number[]
-    reportType: TOption 
+    reportType: TOption
     reportFormat: TOption
     selectedFields: SelectedReportFields
     reportFields: ReportFields[]

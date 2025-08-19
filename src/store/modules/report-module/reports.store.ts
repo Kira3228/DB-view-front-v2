@@ -4,6 +4,7 @@ import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { toSearchString } from "./toSearchString";
 import { TOption } from "@/shared/UI/SelectInput/TOptions";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
+import { buildURL } from "@/shared/api/http";
 
 const state: ReportFilters = {
   date: [],
@@ -78,7 +79,7 @@ const getters: GetterTree<ReportFilters, RootState> = {
     return toSqlDateTimeOrEmpty(state.date?.[1])
   },
 
-  reortTypeValue: (state: ReportFilters): string => {
+  reprtTypeValue: (state: ReportFilters): string => {
     return state.reportType?.value || ""
   },
   reortFormatValue: (state: ReportFilters): string => {
@@ -115,39 +116,38 @@ const mutations: MutationTree<ReportFilters> = {
 const actions: ActionTree<ReportFilters, RootState> = {
   async downloadReport({ state, getters }) {
     try {
-      const reportType = getters.reortTypeValue
-      const params = toSearchString(state.selectedFields)
-      let url = '';
-      if (state.reportType === `event`) {
-        url = `http://localhost:3000/api/reports/${state.reportType}/${state.reportFormat}/?${params}&startDate=${getters.startDate}&endDate=${getters.endDate}`
+      const reportType = getters.reprtTypeValue
+      const reportFormat = getters.reortFormatValue
+
+      if (![`pdf`, `docx`, `xlsx`].includes(reportFormat)) {
+        throw new Error("Не выбран формат");
+      }
+      if (![`events`, `chains`].includes(reportType)) {
+        throw new Error("Не выбран тип документа");
+      }
+      const params: Record<string, any> = {
+        startDate: getters.startDate || undefined,
+        endDate: getters.endDate || undefined
+      }
+
+      if (reportType === `events`) {
+        Object.assign(params, toSearchString(state.selectedFields))
       }
       else {
-        url = `http://localhost:3000/api/reports/${state.reportType}/${state.reportFormat}/?minDepth=${state.depth[0]}&maxDepth=${state.depth[1]}&startDate=${getters.startDate}&endDate=${getters.endDate}`
-      }
-      if (
-        state.reportFormat !== `pdf` &&
-        state.reportFormat !== `xlsx` &&
-        state.reportFormat !== `docx`
-      ) {
-        throw new Error(`Не выбран формат`)
-      }
-      if (state.reportType !== `event` && state.reportType !== `chains`) {
-        throw new Error(`Не выбран тип документа`)
+        params.minDepth = state.depth[0]
+        params.maxDepth = state.depth[1]
       }
 
+      const url = `http://localhost:3000/api/reports/${reportType}.${reportFormat}`;
+      const fullUrl = buildURL(url, params)
+      const response = await fetch(fullUrl)
 
-      const response = await fetch(url)
       if (!response.ok) {
-        throw new Error
+        throw new Error(`Ошибка загрузки отчета`)
       }
-
       const blob = await response.blob()
-      const filename = `report.${state.reportFormat}`
-      downloadBlob(blob, { filename })
 
-      console.log(url);
-
-
+      downloadBlob(blob, { filename: `report.${reportFormat}` })
     }
     catch (e) {
       alert(e)

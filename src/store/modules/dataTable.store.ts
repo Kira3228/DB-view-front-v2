@@ -26,7 +26,7 @@ const getters: GetterTree<EventLogDataTableState, RootState> = {
         return toSqlDateTimeOrEmpty(state.dateRange?.[0])
     },
     endDate: (state: EventLogDataTableState): string => {
-        return toSqlDateTimeOrEmpty(state.dateRange?.[1])
+        return toSqlDateTimeOrEmpty(state.dateRange[1])
     },
 }
 
@@ -34,7 +34,7 @@ const mutations: MutationTree<EventLogDataTableState> = {
     SET_SELECTED_ITEMS(state: EventLogDataTableState, items: TDataTableItems[]) {
         state.selectedItems = items
     },
-    
+
     SET_ITEMS(state: EventLogDataTableState, items: TDataTableItems[]) {
         state.items = items
     },
@@ -82,7 +82,7 @@ const mutations: MutationTree<EventLogDataTableState> = {
     },
 
     SET_DATE_RANGE(state: EventLogDataTableState, newDate: string[] | null) {
-        state.dateRange = newDate
+        state.dateRange = newDate ? [...newDate] : []
     }
 }
 
@@ -90,17 +90,21 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     async loadItems({ commit, getters }) {
         commit(`SET_LOADING`, true)
         try {
+            console.log(`getters.startDate: `, getters.startDate);
+
             const data = await fetchLogsFiltered({
                 page: state.page,
                 filePath: state.filepath || undefined,
                 fileSystemId: state.systemId || undefined,
                 status: state.status || undefined,
                 eventType: state.typeOfEvent || undefined,
-                startDate: getters.startDate || undefined,
-                endDate: getters.endDate || undefined,
+                startDate: getters.startDate,
+                endDate: getters.endDate,
                 filePathException: localStorage.getItem('fileExseption') || undefined,
                 processPathException: localStorage.getItem('processExseption') || undefined,
             })
+
+
             if (data && data.events) {
                 commit(`SET_ITEMS`, data.events)
                 commit(`SET_TOTAL_PAGES`, data.totalPages ?? 0)
