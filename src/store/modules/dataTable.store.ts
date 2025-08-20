@@ -15,7 +15,7 @@ const state: EventLogDataTableState = {
     systemId: "",
     status: "",
     typeOfEvent: "",
-    dateRange: []
+    dateRange: [] as string[]
 }
 
 const getters: GetterTree<EventLogDataTableState, RootState> = {
@@ -26,7 +26,7 @@ const getters: GetterTree<EventLogDataTableState, RootState> = {
         return toSqlDateTimeOrEmpty(state.dateRange?.[0])
     },
     endDate: (state: EventLogDataTableState): string => {
-        return toSqlDateTimeOrEmpty(state.dateRange[1])
+        return toSqlDateTimeOrEmpty(state.dateRange?.[1])
     },
 }
 
@@ -90,8 +90,6 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     async loadItems({ commit, getters }) {
         commit(`SET_LOADING`, true)
         try {
-            console.log(`getters.startDate: `, getters.startDate);
-
             const data = await fetchLogsFiltered({
                 page: state.page,
                 filePath: state.filepath || undefined,

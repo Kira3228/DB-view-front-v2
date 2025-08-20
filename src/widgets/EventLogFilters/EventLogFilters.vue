@@ -131,16 +131,5 @@ export default defineComponent({
       },
     },
   },
-  watch: {
-    dateRange: {
-      deep: true,
-      handler() {
-        if (this.dateRange.length === 0) {
-          console.log(`nsnsnsnsnsnsnssns`);
-          
-        }
-      },
-    },
-  },
 });
 </script>

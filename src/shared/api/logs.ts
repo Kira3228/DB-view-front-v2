@@ -14,9 +14,6 @@ export const fetchLogsFiltered = (params: {
   filePathException?: string;
   processPathException?: string;
 }) => {
-  console.log(params
-  );
-
   return httpGet<TEventLogsDto>(`${BASE}/api/logs/search`, params);
 }
 

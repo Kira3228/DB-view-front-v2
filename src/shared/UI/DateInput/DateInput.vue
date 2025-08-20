@@ -80,6 +80,13 @@ export default defineComponent({
     clearDates() {
       this.localDates = [];
       this.$emit("input", []);
+
+      if (this.debounce) {
+        this.debounce.debounce(() => {
+          this.$emit(`debounce`, this.localDates);
+        }, 500);
+      }
+      this.menu2 = false;
     },
   },
   computed: {
