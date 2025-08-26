@@ -6,11 +6,10 @@ export const EventLogTableHeaders: DataTableHeader[] = [
         value: `id`,
         align: `start`,
         sortable: false,
-
     },
     {
         text: `Тип`,
-        value: `eventType`
+        value: `eventType`,
     },
     {
         text: `Источник`,

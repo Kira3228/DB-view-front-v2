@@ -20,8 +20,8 @@ import DataTable from "@/shared/UI/DataTable/DataTable.vue";
 import Vue from "vue";
 import { ActiveFileTableHeaders } from "./tableHeaders";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
-
 import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
+
 export default Vue.extend({
   name: `ActiveFilePage`,
   components: { DataTable, FiltersBar },
@@ -62,7 +62,7 @@ export default Vue.extend({
     items(): TDataTableItems[] {
       return this.$store.state.activeFileTable.items;
     },
-    totalPages() {
+    totalPages(): number {
       return this.$store.state.activeFileTable.totalPages;
     },
   },

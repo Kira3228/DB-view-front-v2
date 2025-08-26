@@ -1,7 +1,7 @@
+import { BASE } from "@/constants";
 import { ActiveFileDto } from "../types/ActiveFiles/TActiveFileDto";
 import { httpGet, httpPatch } from "./http"
 
-const BASE = `http://localhost:3000`
 
 export const fetchActiveFiles = (params: { page?: number; filePath?: string; inode?: number }) => {
   return httpGet<ActiveFileDto>(`${BASE}/api/files/active`, params)

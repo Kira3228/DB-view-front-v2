@@ -17,7 +17,9 @@ export default new Vuetify({
     },
     typography: {
         fontFamily: '"Roboto", "Inter", "Segoe UI", Arial, sans-serif',
-    }
+    },
+    icons: { iconfont: 'mdi' },
+
 
 
 });

@@ -1,51 +1,48 @@
 <template>
   <div class="tw-flex tw-flex-col">
-    <div>
-      <div class="tw-flex tw-mb-3 tw-gap-2">
-        <custom-button
-          @click="downloadAllLogReport"
-          title="Экспортировать всё"
-        ></custom-button>
-        <custom-button
-          @click="downloadSelectedLogReport"
-          title="Экспортировать выделенное"
-          :isDisabled="!isDisbled"
-        ></custom-button>
+    <div class="tw-flex tw-mb-3 tw-gap-2">
+      <custom-button
+        @click="downloadAllLogReport"
+        title="Экспортировать всё"
+      ></custom-button>
+      <custom-button
+        @click="downloadSelectedLogReport"
+        title="Экспортировать выделенное"
+        :isDisabled="!isDisbled"
+      ></custom-button>
+    </div>
+    <div class="tw-flex tw-justify-between">
+      <div class="tw-flex tw-w-2/3 tw-gap-x-2">
+        <text-input
+          v-model="filepath"
+          label="Путь"
+          placeholder="Путь"
+          @debounce="fetchFiltered"
+        ></text-input>
+        <p>{{ filepath }}</p>
+        <text-input
+          v-model="systemId"
+          label="Id системы"
+          placeholder="Id системы"
+          @debounce="fetchFiltered"
+        ></text-input>
+        <select-input
+          v-model="selectedEvent"
+          :items="events"
+          placeholder="Тип события"
+          @debounce="fetchFiltered"
+        ></select-input>
+        <select-input
+          v-model="selectedStatus"
+          :items="status"
+          placeholder="Статус"
+          @debounce="fetchFiltered"
+        ></select-input>
+        <date-input @debounce="fetchFiltered" v-model="dateRange"></date-input>
       </div>
-      <div class="tw-flex">
-        <div class="tw-flex tw-w-2/3 tw-gap-x-2">
-          <text-input
-            v-model="filepath"
-            label="Путь"
-            placeholder="Путь"
-            @debounce="fetchFiltered"
-          ></text-input>
-          <p>{{ filepath }}</p>
-          <text-input
-            v-model="systemId"
-            label="Id системы"
-            placeholder="Id системы"
-            @debounce="fetchFiltered"
-          ></text-input>
-          <select-input
-            v-model="selectedEvent"
-            :items="events"
-            placeholder="Тип события"
-            @debounce="fetchFiltered"
-          ></select-input>
-          <select-input
-            v-model="selectedStatus"
-            :items="status"
-            placeholder="Статус"
-            @debounce="fetchFiltered"
-          ></select-input>
-        </div>
-        <div class="tw-w-1/6">
-          <date-input
-            @debounce="fetchFiltered"
-            v-model="dateRange"
-          ></date-input>
-        </div>
+      <div class="tw-w-">
+        <!-- <custom-button title="Настройки"></custom-button> -->
+        <modal></modal>
       </div>
     </div>
   </div>
@@ -58,7 +55,7 @@ import TextInput from "@/shared/UI/TextInput/TextInput.vue";
 import { eventOptions } from "./SelectOptions/EventOptions";
 import { statusOptions } from "./SelectOptions/StatusOptions";
 import { defineComponent } from "@vue/composition-api";
-
+import Modal from "@/shared/UI/Modal/Modal.vue";
 export default defineComponent({
   name: `EventLogFilters`,
   components: {
@@ -66,6 +63,7 @@ export default defineComponent({
     SelectInput,
     DateInput,
     CustomButton,
+    Modal,
   },
   data() {
     return {
