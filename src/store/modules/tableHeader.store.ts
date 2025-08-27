@@ -1,16 +1,27 @@
 import { DataTableHeader } from "vuetify";
-import { RootState, THeaderColumn } from "../types/DataTableItemsStore";
+import { ExtendedHeaderColumn, RootState, THeaderColumn } from "../types/DataTableItemsStore";
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 
-const state: THeaderColumn = { headers: [] }
-
-const getters: GetterTree<THeaderColumn, RootState> = {
-  SET_HEADERS(state: THeaderColumn, newHeaders: DataTableHeader[]) {
-    state.headers = [...newHeaders]
-  }
+const state: THeaderColumn = {
+  headers: [],
+  sortByFields: []
 }
 
-const mutations: MutationTree<THeaderColumn> = {}
+const getters: GetterTree<THeaderColumn, RootState> = {
+
+}
+
+const mutations: MutationTree<THeaderColumn> = {
+  UPDATE_HEADERS(state: THeaderColumn, newHeaders: ExtendedHeaderColumn[]) {
+    state.headers = [...newHeaders]
+  },
+  SET_HEADERS(state: THeaderColumn, newHeaders: ExtendedHeaderColumn[]) {
+    state.headers = [...newHeaders]
+  },
+  SET_SORT_BY_FIELDS(state: THeaderColumn, newArr: string[]) {
+    state.sortByFields = [...newArr]
+  }
+}
 
 const actions: ActionTree<THeaderColumn, RootState> = {}
 
@@ -21,3 +32,6 @@ const tableHeaderModule: Module<THeaderColumn, RootState> = {
   mutations,
   actions
 }
+
+
+export default tableHeaderModule

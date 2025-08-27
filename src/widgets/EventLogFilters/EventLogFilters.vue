@@ -8,7 +8,7 @@
       <custom-button
         @click="downloadSelectedLogReport"
         title="Экспортировать выделенное"
-        :isDisabled="!isDisbled"
+        :isDisabled="!isDisabled"
       ></custom-button>
     </div>
     <div class="tw-flex tw-justify-between">
@@ -41,8 +41,7 @@
         <date-input @debounce="fetchFiltered" v-model="dateRange"></date-input>
       </div>
       <div class="tw-w-">
-        <!-- <custom-button title="Настройки"></custom-button> -->
-        <modal></modal>
+        <modal :headers.sync="headersFromStore"></modal>
       </div>
     </div>
   </div>
@@ -56,6 +55,9 @@ import { eventOptions } from "./SelectOptions/EventOptions";
 import { statusOptions } from "./SelectOptions/StatusOptions";
 import { defineComponent } from "@vue/composition-api";
 import Modal from "@/shared/UI/Modal/Modal.vue";
+import { DataTableHeader } from "vuetify";
+import { EventLogTableHeaders } from "@/pages/EventLogPage/ui/tableHeaders";
+import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 export default defineComponent({
   name: `EventLogFilters`,
   components: {
@@ -85,7 +87,15 @@ export default defineComponent({
     },
   },
   computed: {
-    isDisbled(): boolean {
+    headersFromStore: {
+      get(): ExtendedHeaderColumn[] {
+        return this.$store.state.tableHeaderModule.headers;
+      },
+      set(value: ExtendedHeaderColumn[]) {
+        this.$store.commit("tableHeaderModule/UPDATE_HEADERS", value);
+      },
+    },
+    isDisabled(): boolean {
       return this.$store.getters[`dataTable/hasSelection`];
     },
     filepath: {
@@ -128,6 +138,9 @@ export default defineComponent({
         this.$store.commit(`dataTable/SET_DATE_RANGE`, newDateRange);
       },
     },
+  },
+  created() {
+    this.$store.commit(`tableHeaderModule/SET_HEADERS`, EventLogTableHeaders);
   },
 });
 </script>

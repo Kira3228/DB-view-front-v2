@@ -5,18 +5,28 @@
       :selected.sync="selectedItems"
       :paginationLength="totalPages"
       :items="items"
-      :headers="headers"
+      :headers="visibleHeaders"
       @page-changed="updatePage"
       table-type="events"
-    ></data-table>
+    >
+      <template v-slot:header="{ props }">
+        <tr>
+          <th v-for="h in props.headers" :key="h.value">
+            {{ h.text }}
+          </th>
+        </tr>
+      </template></data-table
+    >
   </div>
 </template>
+
 <script lang="ts">
 import DataTable from "@/shared/UI/DataTable/DataTable.vue";
 import EventLogFilters from "@/widgets/EventLogFilters/EventLogFilters.vue";
 import { EventLogTableHeaders } from "./tableHeaders";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import Vue from "vue";
+import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 
 export default Vue.extend({
   name: `EventLogPage`,
@@ -70,6 +80,22 @@ export default Vue.extend({
         this.$store.dispatch(`dataTable/updateSelection`, value);
       },
     },
+    headersFromStore: {
+      get() {
+        return this.$store.state.tableHeaderModule.headers;
+      },
+      set(v) {
+        this.$store.commit(`tableHeaderModule/UPDATE_HEADERS`, v);
+      },
+    },
+    visibleHeaders(): ExtendedHeaderColumn[] {
+      return this.headersFromStore.filter(
+        (h: ExtendedHeaderColumn) => h.isVisible
+      );
+    },
+  },
+  created() {
+    this.$store.commit(`tableHeaderModule/SET_HEADERS`, EventLogTableHeaders);
   },
 });
 </script>

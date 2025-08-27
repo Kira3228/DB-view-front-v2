@@ -5,6 +5,7 @@ import dataTable from './modules/dataTable.store'
 import activeFileTable from './modules/activeFile.store'
 import fileDetailsModule from './modules/fileDetails.store'
 import reportModule from './modules/report-module/reports.store'
+import tableHeaderModule from './modules/tableHeader.store'
 
 Vue.use(Vuex)
 
@@ -13,7 +14,8 @@ const store: StoreOptions<RootState> = {
     dataTable,
     activeFileTable,
     fileDetailsModule,
-    reportModule
+    reportModule,
+    tableHeaderModule
   },
   strict: process.env.NODE_ENV !== `prodaction`
 }

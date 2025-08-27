@@ -121,9 +121,14 @@ export type ReportFields =
     { label: string, key: string, id: number, children?: ReportFields[] }
 
 export type THeaderColumn = {
-    headers: DataTableHeader[]
+    headers: ExtendedHeaderColumn[]
+    sortByFields: string[]
+}
+type WithIsVisble = {
+    isVisible: boolean
 }
 
+export type ExtendedHeaderColumn = DataTableHeader & WithIsVisble
 
 export interface RootState {
     eventLogDataTable: EventLogDataTableState

@@ -1,41 +1,69 @@
 <template>
   <div>
-    <draggable class="tw-flex tw-gap-1" v-model="headers" tag="v-card">
+    <draggable
+      class="tw-flex tw-gap-1"
+      v-model="local"
+      tag="v-card"
+      :animation="150"
+      ghost-class="drag-ghost"
+      :component-data="{ props: { flat: true }, attrs: { class: 'tw-p-2' } }"
+    >
       <v-card
-        class="tw-cursor-move tw-w-32 tw-h-16"
-        v-for="(header, index) in headers"
-        :key="header.name"
+        class="tw-cursor-move"
+        v-for="header in local"
+        :key="header.value"
       >
-        <v-icon small class="mr-2">mdi-drag</v-icon>
-        {{ header.name }}
-        {{ index }}
-        <text-input placeholder="Ширина px"></text-input>
+        <div>
+          <v-icon small class="mr-2">mdi-drag</v-icon>
+          <text-input v-model="header.text" placeholder="Название"></text-input>
+          <v-checkbox v-model="header.isVisible" label="Видимость"></v-checkbox>
+          <v-checkbox
+            v-model="sortByModel"
+            :value="header.value"
+            label="Приоритет соритровки"
+          ></v-checkbox>
+        </div>
+        <text-input v-model="header.width" placeholder="Ширина px"></text-input>
       </v-card>
     </draggable>
   </div>
 </template>
-<script>
+<script lang="ts">
 import TextInput from "@/shared/UI/TextInput/TextInput.vue";
+import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 import Vue from "vue";
 import draggable from "vuedraggable";
+import { DataTableHeader } from "vuetify";
 
 export default Vue.extend({
+  name: `OrderChange`,
   components: { draggable, TextInput },
-  props: {},
-  data: () => ({
-    headers: [{ name: `id` }, { name: `name` }, { name: `жопа` }],
-
-    dragging: false,
-    items: [
-      { id: 1, title: "Задача 1", subtitle: "Описание" },
-      { id: 2, title: "Задача 2", subtitle: "Описание" },
-      { id: 3, title: "Задача 3", subtitle: "Описание" },
-    ],
-  }),
+  props: {
+    value: { type: Array as () => DataTableHeader[], default: () => [] },
+    sortByList: { type: Array as () => string[], default: () => [] },
+  },
+  computed: {
+    sortByModel: {
+      get(): string[] {
+        return this.sortByList;
+      },
+      set(v: string[]) {
+        this.$emit(`update/sortByList`, v);
+      },
+    },
+    local: {
+      get(): ExtendedHeaderColumn[] {
+        return this.value as ExtendedHeaderColumn[];
+      },
+      set(v: ExtendedHeaderColumn[]) {
+        this.$emit("input", v);
+      },
+    },
+  },
 });
 </script>
 
-<style>
+<style scoped>
 .drag-ghost {
   opacity: 0.5;
 }
