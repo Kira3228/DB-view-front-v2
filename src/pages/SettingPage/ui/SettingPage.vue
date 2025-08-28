@@ -1,23 +1,19 @@
 <template>
   <div>
-    <v-virtual-scroll :item-height="50" height="300">
-      <template v-slot:default="{}">
-        <text-input
-          :textarea="true"
-          v-model="fileExseption"
-          label="Исключения файлов (через ;)"
-          @input="handleFileExseptionChange"
-          @debounce="saveSettings"
-        ></text-input>
-        <text-input
-          :textarea="true"
-          v-model="processExseption"
-          label="Исключения процессов (через ;)"
-          @input="handleProcessExseptionChange"
-          @debounce="saveSettings"
-        ></text-input>
-      </template>
-    </v-virtual-scroll>
+    <text-input
+      :textarea="true"
+      v-model="fileExseption"
+      label="Исключения файлов (через ;)"
+      @input="handleFileExseptionChange"
+      @debounce="saveSettings"
+    ></text-input>
+    <text-input
+      :textarea="true"
+      v-model="processExseption"
+      label="Исключения процессов (через ;)"
+      @input="handleProcessExseptionChange"
+      @debounce="saveSettings"
+    ></text-input>
   </div>
 </template>
 
