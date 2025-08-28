@@ -1,31 +1,13 @@
 <template>
-  <div>
-    <text-input
-      :textarea="true"
-      v-model="fileExseption"
-      label="Исключения файлов (через ;)"
-      @input="handleFileExseptionChange"
-      @debounce="saveSettings"
-    ></text-input>
-    <text-input
-      :textarea="true"
-      v-model="processExseption"
-      label="Исключения процессов (через ;)"
-      @input="handleProcessExseptionChange"
-      @debounce="saveSettings"
-    ></text-input>
-  </div>
+  <div></div>
 </template>
 
 <script lang="ts">
-import TextInput from "@/shared/UI/TextInput/TextInput.vue";
 import Vue from "vue";
 
 export default Vue.extend({
   name: "SettingPage",
-  components: {
-    TextInput,
-  },
+  components: {},
   data() {
     return {
       fileExseption: "",
