@@ -4,7 +4,7 @@
       :open="initiallyOpen"
       :items="items"
       activatable
-      item-key="name"
+      item-key="id"
       open-on-click
       dense
       class="tw-h-full tw-overflow-y-auto tw-overflow-x-hidden"
@@ -58,6 +58,10 @@ export default Vue.extend({
   computed: {
     items() {
       return this.$store.getters[`fileDetailsModule/getFileHierarchyObj`];
+
+      // const treeItems = this.$store.state.fileDetailsModule.fileHierarchy;
+
+      // return Array.isArray(treeItems);
     },
   },
 });

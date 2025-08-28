@@ -1,6 +1,9 @@
 import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import { TOption } from "@/shared/UI/SelectInput/TOptions";
+import { TGraph } from "@/shared/utils/map-file-to-tree";
+import { TFlattenGraph } from "@/widgets/FileDetails/file-details.type";
+import { DataTableHeader } from "vuetify";
 interface DataTable {
     items: TDataTableItems[]
     loading: boolean
@@ -13,7 +16,7 @@ export interface EventLogDataTableState extends DataTable {
     systemId: string
     typeOfEvent: string
     status: string
-    dateRange: string[] 
+    dateRange: string[]
 }
 
 export interface ActiveFileDataTableState extends DataTable {
@@ -24,6 +27,7 @@ export interface ActiveFileDataTableState extends DataTable {
 }
 
 export type FileStatus = 'active' | 'archived' | 'deleted';
+
 export interface File {
     id: number;
     fileSystemId: string;
@@ -60,7 +64,7 @@ export interface TreeItem {
     isLeaf?: boolean;
 }
 export interface FileDetailsState {
-    fileHierarchy: FileHierarchyMap | null;
+    fileHierarchy: TGraph;
     loading: boolean;
     error: string | null;
     filePath: string,
@@ -117,10 +121,22 @@ type MonitoredFile = {
 export type ReportFields =
     { label: string, key: string, id: number, children?: ReportFields[] }
 
+export type THeaderColumn = {
+    headers: ExtendedHeaderColumn[]
+    sortByFields: string[]
+    sortDescFields: boolean[],
+}
+type WithIsVisble = {
+    isVisible: boolean
+}
+
+export type ExtendedHeaderColumn = DataTableHeader & WithIsVisble
 
 export interface RootState {
     eventLogDataTable: EventLogDataTableState
     activeFileDataTable: ActiveFileDataTableState
     fileDetailsGraph: any
     reportModule: any
+    tableLogHeaderModule: any
+    tableActiveHeaderModule: any
 }

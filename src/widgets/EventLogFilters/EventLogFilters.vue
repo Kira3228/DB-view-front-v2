@@ -1,55 +1,53 @@
 <template>
   <div class="tw-flex tw-flex-col">
-    <div>
-      <div class="tw-flex tw-mb-3 tw-gap-2">
-        <custom-button
-          @click="downloadAllLogReport"
-          title="Экспортировать всё"
-        ></custom-button>
-        <custom-button
-          @click="downloadSelectedLogReport"
-          title="Экспортировать выделенное"
-          :isDisabled="!isDisbled"
-        ></custom-button>
-      </div>
-      <div class="tw-flex">
-        <div class="tw-flex tw-w-2/3 tw-gap-x-2">
-          <text-input
-            v-model="filepath"
-            label="Путь"
-            placeholder="Путь"
-            @debounce="fetchFiltered"
-          ></text-input>
-          <p>{{ filepath }}</p>
-          <text-input
-            v-model="systemId"
-            label="Id системы"
-            placeholder="Id системы"
-            @debounce="fetchFiltered"
-          ></text-input>
-          <select-input
-            v-model="selectedEvent"
-            :items="events"
-            placeholder="Тип события"
-            @debounce="fetchFiltered"
-          ></select-input>
-          <select-input
-            v-model="selectedStatus"
-            :items="status"
-            placeholder="Статус"
-            @debounce="fetchFiltered"
-          ></select-input>
-        </div>
-        <div class="tw-w-1/6">
-          <date-input
-            @debounce="fetchFiltered"
-            v-model="dateRange"
-          ></date-input>
-        </div>
+    <div class="tw-flex tw-mb-3 tw-gap-2">
+      <custom-button
+        @click="downloadAllLogReport"
+        title="Экспортировать всё"
+      ></custom-button>
+      <custom-button
+        @click="downloadSelectedLogReport"
+        title="Экспортировать выделенное"
+        :isDisabled="!isDisabled"
+      ></custom-button>
+      <custom-button
+        @click="saveProfile"
+        title="Сохранить пресет"
+      ></custom-button>
+      <select-input></select-input>
+    </div>
+    <div class="tw-flex tw-justify-between">
+      <div class="tw-flex tw-w-2/3 tw-gap-x-2">
+        <text-input
+          v-model="filepath"
+          label="Путь"
+          placeholder="Путь"
+          @debounce="fetchFiltered"
+        ></text-input>
+        <p>{{ filepath }}</p>
+        <text-input
+          v-model="systemId"
+          label="Id системы"
+          placeholder="Id системы"
+          @debounce="fetchFiltered"
+        ></text-input>
+        <select-input
+          v-model="selectedEvent"
+          :items="events"
+          placeholder="Тип события"
+          @debounce="fetchFiltered"
+        ></select-input>
+        <select-input
+          v-model="selectedStatus"
+          :items="status"
+          placeholder="Статус"
+          @debounce="fetchFiltered"
+        ></select-input>
+        <date-input @debounce="fetchFiltered" v-model="dateRange"></date-input>
       </div>
     </div>
   </div>
-</template>
+</template>Видимость
 <script lang="ts">
 import CustomButton from "@/shared/UI/CustomButton/CustomButton.vue";
 import DateInput from "@/shared/UI/DateInput/DateInput.vue";
@@ -58,7 +56,9 @@ import TextInput from "@/shared/UI/TextInput/TextInput.vue";
 import { eventOptions } from "./SelectOptions/EventOptions";
 import { statusOptions } from "./SelectOptions/StatusOptions";
 import { defineComponent } from "@vue/composition-api";
-
+import Modal from "@/shared/UI/Modal/Modal.vue";
+import { EventLogTableHeaders } from "@/pages/EventLogPage/ui/tableHeaders";
+import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 export default defineComponent({
   name: `EventLogFilters`,
   components: {
@@ -66,6 +66,7 @@ export default defineComponent({
     SelectInput,
     DateInput,
     CustomButton,
+    Modal,
   },
   data() {
     return {
@@ -76,6 +77,7 @@ export default defineComponent({
     };
   },
   methods: {
+    async saveProfile() {},
     async downloadSelectedLogReport() {
       return await this.$store.dispatch(`dataTable/downloadSelectedLogReport`);
     },
@@ -87,7 +89,23 @@ export default defineComponent({
     },
   },
   computed: {
-    isDisbled(): boolean {
+    sortByFields: {
+      get(): string[] {
+        return this.$store.state.tableHeaderModule.sortByFields;
+      },
+      set(v: string[]) {
+        this.$store.commit("tableHeaderModule/SET_SORT_BY_FIELDS", v);
+      },
+    },
+    headersFromStore: {
+      get(): ExtendedHeaderColumn[] {
+        return this.$store.state.tableHeaderModule.headers;
+      },
+      set(value: ExtendedHeaderColumn[]) {
+        this.$store.commit("tableHeaderModule/UPDATE_HEADERS", value);
+      },
+    },
+    isDisabled(): boolean {
       return this.$store.getters[`dataTable/hasSelection`];
     },
     filepath: {
@@ -130,6 +148,9 @@ export default defineComponent({
         this.$store.commit(`dataTable/SET_DATE_RANGE`, newDateRange);
       },
     },
+  },
+  created() {
+    this.$store.commit(`tableHeaderModule/SET_HEADERS`, EventLogTableHeaders);
   },
 });
 </script>

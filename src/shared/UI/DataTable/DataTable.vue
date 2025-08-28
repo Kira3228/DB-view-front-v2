@@ -16,6 +16,10 @@
       hide-default-footer
       dense
       :show-expand="expandable()"
+      :sort-by.sync="sortByList"
+      :sort-desc.sync="sortDescList"
+      @update:sort-by="$emit('update:sortByList', $event)"
+      @update:sort-desc="$emit('update:sortDescList', $event)"
     >
       <template
         v-if="tableType === `events`"
@@ -45,8 +49,24 @@
         <v-chip :color="getColor(item.status)">{{ item.status }} </v-chip>
       </template>
 
-      <template v-if="tableType === 'active'" v-slot:top>
-        <v-switch v-model="isArchived" label="Архив" class="pa-3"></v-switch>
+      <template v-slot:top>
+        <div class="tw-flex tw-items-center">
+          <div class="tw-flex tw-items-center tw-gap-2">
+            <v-switch
+              v-if="tableType === 'active'"
+              v-model="isArchived"
+              label="Архив"
+              class="pa-3"
+            ></v-switch>
+          </div>
+          <div class="tw-ml-auto">
+            <modal
+              :headers.sync="localSettingHeader"
+              :sort-by-list.sync="sortByList"
+              :sort-desc-list.sync="sortDescList"
+            ></modal>
+          </div>
+        </div>
       </template>
     </v-data-table>
 
@@ -66,9 +86,10 @@ import { DataTableHeader } from "vuetify";
 import SelectInput from "../SelectInput/SelectInput.vue";
 import { TDataTableItems } from "./TDataTableItems";
 import { statusOptions } from "@/widgets/ActiveFileFilters/StatusOptions/StatusOptions";
+import Modal from "../Modal/Modal.vue";
 
 export default Vue.extend({
-  components: { SelectInput },
+  components: { SelectInput, Modal },
   name: "DataTable",
   props: {
     selected: {
@@ -92,6 +113,18 @@ export default Vue.extend({
       type: String as PropType<"events" | "active" | "archive">,
       required: true,
     },
+    sortByList: {
+      type: Array,
+      default: () => [],
+    },
+    sortDescList: {
+      type: Array,
+      default: () => [],
+    },
+    settingHeaders: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -102,6 +135,22 @@ export default Vue.extend({
     };
   },
   computed: {
+    sortDescFields: {
+      get() {
+        return this.sortDescList;
+      },
+      set(value) {
+        this.$emit("update:sortDescList", value);
+      },
+    },
+    localSettingHeader: {
+      get() {
+        return this.settingHeaders;
+      },
+      set(value) {
+        this.$emit("update:settingHeaders", value);
+      },
+    },
     localSelected: {
       get(): TDataTableItems[] {
         return this.selected;
