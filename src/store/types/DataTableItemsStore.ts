@@ -27,6 +27,7 @@ export interface ActiveFileDataTableState extends DataTable {
 }
 
 export type FileStatus = 'active' | 'archived' | 'deleted';
+
 export interface File {
     id: number;
     fileSystemId: string;
@@ -123,6 +124,7 @@ export type ReportFields =
 export type THeaderColumn = {
     headers: ExtendedHeaderColumn[]
     sortByFields: string[]
+    sortDescFields: boolean[],
 }
 type WithIsVisble = {
     isVisible: boolean
@@ -135,4 +137,6 @@ export interface RootState {
     activeFileDataTable: ActiveFileDataTableState
     fileDetailsGraph: any
     reportModule: any
+    tableLogHeaderModule: any
+    tableActiveHeaderModule: any
 }

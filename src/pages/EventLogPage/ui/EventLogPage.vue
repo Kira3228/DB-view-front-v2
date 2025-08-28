@@ -8,6 +8,9 @@
       :headers="visibleHeaders"
       @page-changed="updatePage"
       table-type="events"
+      multi-sort
+      :sort-by-list.sync="sortByFields"
+      :setting-headers.sync="headersFromStore"
     >
       <template v-slot:header="{ props }">
         <tr>
@@ -15,8 +18,8 @@
             {{ h.text }}
           </th>
         </tr>
-      </template></data-table
-    >
+      </template>
+    </data-table>
   </div>
 </template>
 
@@ -63,6 +66,17 @@ export default Vue.extend({
     },
   },
   computed: {
+    sortByFields(): string[] {
+      return this.$store.state.tableLogHeaderModule.sortByFields;
+    },
+    sortDescFields: {
+      get(): boolean[] {
+        return this.$store.state.tableLogHeaderModule.sortDescFields || [];
+      },
+      set(value: boolean[]) {
+        this.$store.commit("tableLogHeaderModule/SET_SORT_DESC_FIELDS", value);
+      },
+    },
     items(): TDataTableItems[] {
       return this.$store.state.dataTable.items;
     },
@@ -81,13 +95,14 @@ export default Vue.extend({
       },
     },
     headersFromStore: {
-      get() {
-        return this.$store.state.tableHeaderModule.headers;
+      get(): ExtendedHeaderColumn[] {
+        return this.$store.state.tableLogHeaderModule.headers;
       },
-      set(v) {
-        this.$store.commit(`tableHeaderModule/UPDATE_HEADERS`, v);
+      set(value: ExtendedHeaderColumn[]) {
+        this.$store.commit("tableLogHeaderModule/UPDATE_HEADERS", value);
       },
     },
+
     visibleHeaders(): ExtendedHeaderColumn[] {
       return this.headersFromStore.filter(
         (h: ExtendedHeaderColumn) => h.isVisible
@@ -95,7 +110,10 @@ export default Vue.extend({
     },
   },
   created() {
-    this.$store.commit(`tableHeaderModule/SET_HEADERS`, EventLogTableHeaders);
+    this.$store.commit(
+      `tableLogHeaderModule/SET_HEADERS`,
+      EventLogTableHeaders
+    );
   },
 });
 </script>

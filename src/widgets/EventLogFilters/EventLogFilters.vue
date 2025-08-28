@@ -10,6 +10,11 @@
         title="Экспортировать выделенное"
         :isDisabled="!isDisabled"
       ></custom-button>
+      <custom-button
+        @click="saveProfile"
+        title="Сохранить пресет"
+      ></custom-button>
+      <select-input></select-input>
     </div>
     <div class="tw-flex tw-justify-between">
       <div class="tw-flex tw-w-2/3 tw-gap-x-2">
@@ -40,12 +45,9 @@
         ></select-input>
         <date-input @debounce="fetchFiltered" v-model="dateRange"></date-input>
       </div>
-      <div class="tw-w-">
-        <modal :headers.sync="headersFromStore"></modal>
-      </div>
     </div>
   </div>
-</template>
+</template>Видимость
 <script lang="ts">
 import CustomButton from "@/shared/UI/CustomButton/CustomButton.vue";
 import DateInput from "@/shared/UI/DateInput/DateInput.vue";
@@ -55,7 +57,6 @@ import { eventOptions } from "./SelectOptions/EventOptions";
 import { statusOptions } from "./SelectOptions/StatusOptions";
 import { defineComponent } from "@vue/composition-api";
 import Modal from "@/shared/UI/Modal/Modal.vue";
-import { DataTableHeader } from "vuetify";
 import { EventLogTableHeaders } from "@/pages/EventLogPage/ui/tableHeaders";
 import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 export default defineComponent({
@@ -76,6 +77,7 @@ export default defineComponent({
     };
   },
   methods: {
+    async saveProfile() {},
     async downloadSelectedLogReport() {
       return await this.$store.dispatch(`dataTable/downloadSelectedLogReport`);
     },
@@ -87,6 +89,14 @@ export default defineComponent({
     },
   },
   computed: {
+    sortByFields: {
+      get(): string[] {
+        return this.$store.state.tableHeaderModule.sortByFields;
+      },
+      set(v: string[]) {
+        this.$store.commit("tableHeaderModule/SET_SORT_BY_FIELDS", v);
+      },
+    },
     headersFromStore: {
       get(): ExtendedHeaderColumn[] {
         return this.$store.state.tableHeaderModule.headers;

@@ -3,6 +3,7 @@
     <draggable
       class="tw-flex tw-gap-1"
       v-model="local"
+      item-key="value"
       tag="v-card"
       :animation="150"
       ghost-class="drag-ghost"
@@ -18,9 +19,10 @@
           <text-input v-model="header.text" placeholder="Название"></text-input>
           <v-checkbox v-model="header.isVisible" label="Видимость"></v-checkbox>
           <v-checkbox
-            v-model="sortByModel"
-            :value="header.value"
-            label="Приоритет соритровки"
+            :disabled="!header.sortable"
+            :input-value="sortByModel.includes(header.value)"
+            @change="toggleSortBy(header.value)"
+            label="Приоритет сортировки"
           ></v-checkbox>
         </div>
         <text-input v-model="header.width" placeholder="Ширина px"></text-input>
@@ -41,15 +43,11 @@ export default Vue.extend({
   props: {
     value: { type: Array as () => DataTableHeader[], default: () => [] },
     sortByList: { type: Array as () => string[], default: () => [] },
+    sortDescList: { type: Array as () => boolean[], default: () => [] },
   },
   computed: {
-    sortByModel: {
-      get(): string[] {
-        return this.sortByList;
-      },
-      set(v: string[]) {
-        this.$emit(`update/sortByList`, v);
-      },
+    sortByModel() {
+      return this.sortByList;
     },
     local: {
       get(): ExtendedHeaderColumn[] {
@@ -58,6 +56,20 @@ export default Vue.extend({
       set(v: ExtendedHeaderColumn[]) {
         this.$emit("input", v);
       },
+    },
+  },
+  methods: {
+    toggleSortBy(value: string) {
+      const newSortByList = [...this.sortByModel];
+      const index = newSortByList.indexOf(value);
+
+      if (index === -1) {
+        newSortByList.push(value);
+      } else {
+        newSortByList.splice(index, 1);
+      }
+
+      this.$emit("update:sortByList", newSortByList);
     },
   },
 });

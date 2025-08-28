@@ -6,7 +6,11 @@
     </template>
     <template v-slot:default="dialog">
       <v-card class="tw-p-2">
-        <order-change v-model="model"></order-change>
+        <order-change
+          :sort-by-list.sync="sortByListModel"
+          :sort-desc-list.sync="sortDescListModel"
+          v-model="model"
+        ></order-change>
         <v-card-actions class="justify-end">
           <v-btn text @click="dialog.value = false">Close</v-btn>
         </v-card-actions>
@@ -18,7 +22,6 @@
 import Vue from "vue";
 import CustomButton from "../CustomButton/CustomButton.vue";
 import OrderChange from "@/widgets/OrderChange/OrderChange.vue";
-import { DataTableHeader } from "vuetify";
 import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 
 export default Vue.extend({
@@ -30,6 +33,8 @@ export default Vue.extend({
   methods: {},
   props: {
     headers: { type: Array as () => ExtendedHeaderColumn[], default: () => [] },
+    sortByList: { type: Array as () => string[], default: () => [] },
+    sortDescList: { type: Array as () => boolean[], default: () => [] },
   },
   computed: {
     model: {
@@ -40,6 +45,25 @@ export default Vue.extend({
         this.$emit("update:headers", v);
       },
     },
+    sortByListModel: {
+      get(): string[] {
+        return this.sortByList;
+      },
+      set(v: string[]) {
+        this.$emit("update:sortByList", v);
+      },
+    },
+    sortDescListModel: {
+      get(): boolean[] {
+        return this.sortDescList;
+      },
+      set(v: boolean[]) {
+        this.$emit("update:sortDescList", v);
+      },
+    },
+  },
+  mounted() {
+    console.log(this.model);
   },
 });
 </script>

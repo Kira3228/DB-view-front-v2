@@ -1,14 +1,10 @@
-import { DataTableHeader } from "vuetify";
-import { ExtendedHeaderColumn, RootState, THeaderColumn } from "../types/DataTableItemsStore";
-import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
+import { Module, MutationTree } from "vuex"
+import { ExtendedHeaderColumn, RootState, THeaderColumn } from "../types/DataTableItemsStore"
 
 const state: THeaderColumn = {
   headers: [],
-  sortByFields: []
-}
-
-const getters: GetterTree<THeaderColumn, RootState> = {
-
+  sortByFields: [],
+  sortDescFields: [],
 }
 
 const mutations: MutationTree<THeaderColumn> = {
@@ -20,18 +16,17 @@ const mutations: MutationTree<THeaderColumn> = {
   },
   SET_SORT_BY_FIELDS(state: THeaderColumn, newArr: string[]) {
     state.sortByFields = [...newArr]
+  },
+  SET_SORT_DESC_FIELDS(state: THeaderColumn, newArr: boolean[]) {
+    state.sortDescFields = [...newArr]
   }
 }
 
-const actions: ActionTree<THeaderColumn, RootState> = {}
-
-const tableHeaderModule: Module<THeaderColumn, RootState> = {
+const tableActiveHeaderModule: Module<THeaderColumn, RootState> = {
   namespaced: true,
   state,
-  getters,
   mutations,
-  actions
 }
 
 
-export default tableHeaderModule
+export default tableActiveHeaderModule

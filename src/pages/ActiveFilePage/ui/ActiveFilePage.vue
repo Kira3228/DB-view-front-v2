@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <active-file-filters></active-file-filters> -->
     <filters-bar
       v-model="filters"
       :debouncedEvent="fetchFiltered"
@@ -9,8 +8,11 @@
       :paginationLength="totalPages"
       table-type="active"
       :items="items"
-      :headers="headers"
+      :headers="visibleHeaders"
       @page-changed="updatePage"
+      multi-sort
+      :sort-by-list.sync="sortByFields"
+      :setting-headers.sync="headersFromStore"
     >
     </data-table>
   </div>
@@ -21,6 +23,7 @@ import Vue from "vue";
 import { ActiveFileTableHeaders } from "./tableHeaders";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
+import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 
 export default Vue.extend({
   name: `ActiveFilePage`,
@@ -65,6 +68,39 @@ export default Vue.extend({
     totalPages(): number {
       return this.$store.state.activeFileTable.totalPages;
     },
+    sortByFields(): string[] {
+      return this.$store.state.tableActiveHeaderModule.sortByFields;
+    },
+    sortDescFields: {
+      get(): boolean[] {
+        return this.$store.state.tableActiveHeaderModule.sortDescFields || [];
+      },
+      set(value: boolean[]) {
+        this.$store.commit(
+          "tableActiveHeaderModule/SET_SORT_DESC_FIELDS",
+          value
+        );
+      },
+    },
+    headersFromStore: {
+      get(): ExtendedHeaderColumn[] {
+        return this.$store.state.tableActiveHeaderModule.headers;
+      },
+      set(value: ExtendedHeaderColumn[]) {
+        this.$store.commit("tableActiveHeaderModule/UPDATE_HEADERS", value);
+      },
+    },
+    visibleHeaders(): ExtendedHeaderColumn[] {
+      return this.headersFromStore.filter(
+        (h: ExtendedHeaderColumn) => h.isVisible
+      );
+    },
+  },
+  created() {
+    this.$store.commit(
+      `tableActiveHeaderModule/SET_HEADERS`,
+      ActiveFileTableHeaders
+    );
   },
 });
 </script>
