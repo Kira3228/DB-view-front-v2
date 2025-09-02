@@ -17,6 +17,9 @@ export interface EventLogDataTableState extends DataTable {
     typeOfEvent: string
     status: string
     dateRange: string[]
+    headers: ExtendedHeaderColumn[]
+    preset: string
+    presetList:string[]
 }
 
 export interface ActiveFileDataTableState extends DataTable {

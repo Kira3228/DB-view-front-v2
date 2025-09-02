@@ -64,6 +64,9 @@ export default Vue.extend({
         console.error(error);
       }
     },
+    async loadHeader() {
+      await this.$store.dispatch("dataTable/getHeaders");
+    },
   },
   computed: {
     sortByFields(): string[] {

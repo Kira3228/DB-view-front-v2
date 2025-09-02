@@ -1,7 +1,8 @@
+import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 import { TEventLogsDto } from "../types/EventLogs";
 import { httpGet, httpGetBlob } from "./http";
+import { BASE } from "@/constants";
 
-const BASE = `http://localhost:3000`;
 
 export const fetchLogsFiltered = (params: {
   page?: number;
@@ -25,3 +26,15 @@ export const downloadSelectedLogsCsv = (ids: number[]) => {
 export const downloadAllLogsCsv = () => {
   return httpGetBlob(`${BASE}/api/logs/export/all`)
 }
+
+export const fetchLogsHeaders = (presetName: string) => {
+  if (presetName) {
+    const params = { presetName: presetName }
+    return httpGet<ExtendedHeaderColumn>(`${BASE}/api/logs/headers`, params)
+  }
+}
+
+export const fetchLogPreset = () => {
+  return httpGet(`${BASE}/api/logs/presets`)
+}
+

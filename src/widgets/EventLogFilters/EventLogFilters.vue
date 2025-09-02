@@ -87,6 +87,11 @@ export default defineComponent({
     async fetchFiltered() {
       return await this.$store.dispatch(`dataTable/debouncedFetch`);
     },
+    async fetchPreset() {
+      return await this.$store.dispatch(`dataTable/getPresets`);
+    },
+
+    async fetchHeaders() {},
   },
   computed: {
     sortByFields: {

@@ -1,9 +1,9 @@
-import { EventLogDataTableState, RootState } from "@/store/types/DataTableItemsStore";
+import { EventLogDataTableState, ExtendedHeaderColumn, RootState } from "@/store/types/DataTableItemsStore";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
-import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchLogsFiltered } from "@/shared/api/logs";
+import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchLogPreset, fetchLogsFiltered, fetchLogsHeaders } from "@/shared/api/logs";
 
 const state: EventLogDataTableState = {
     selectedItems: [],
@@ -15,7 +15,10 @@ const state: EventLogDataTableState = {
     systemId: "",
     status: "",
     typeOfEvent: "",
-    dateRange: [] as string[]
+    dateRange: [] as string[],
+    headers: [],
+    preset: "",
+    presetList: []
 }
 
 const getters: GetterTree<EventLogDataTableState, RootState> = {
@@ -42,47 +45,46 @@ const mutations: MutationTree<EventLogDataTableState> = {
     SET_LOADING(state: EventLogDataTableState, loading: boolean) {
         state.loading = loading
     },
-
     SET_TOTAL_PAGES(state: EventLogDataTableState, totalPages: number) {
         state.totalPages = totalPages
     },
-
     CLEAR_SELECTION(state: EventLogDataTableState) {
         state.selectedItems = []
     },
-
     ADD_TO_SELECTION(state: EventLogDataTableState, item: TDataTableItems) {
         if (!state.selectedItems.find(selected => selected.id === item.id)) {
             state.selectedItems.push(item)
         }
     },
-
     REMOVE_FROM_SELECTION(state: EventLogDataTableState, itemId: number) {
         state.selectedItems = state.selectedItems.filter(item => item.id !== itemId)
     },
-
     SET_CURRENT_PAGE(state: EventLogDataTableState, page: number) {
         state.page = page
     },
-
     SET_FILEPATH(state: EventLogDataTableState, newValue: string) {
         state.filepath = newValue
     },
-
     SET_SYSTEM_ID(state: EventLogDataTableState, newValue: string) {
         state.systemId = newValue
     },
-
     SET_STATUS(state: EventLogDataTableState, newStatus: string) {
         state.status = newStatus
     },
-
     SET_TYPE_OF_EVENT(state: EventLogDataTableState, newType: string) {
         state.typeOfEvent = newType
     },
-
     SET_DATE_RANGE(state: EventLogDataTableState, newDate: string[] | null) {
         state.dateRange = newDate ? [...newDate] : []
+    },
+    SET_PRESET(state: EventLogDataTableState, newValue: string) {
+        state.preset = newValue
+    },
+    SET_HEADERS(state: EventLogDataTableState, newValue: ExtendedHeaderColumn[]) {
+        state.headers = newValue
+    },
+    SET_ALL_PRESES(state: EventLogDataTableState, newValue: string) {
+        state.preset = newValue
     }
 }
 
@@ -165,6 +167,33 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
 
     async debouncedFetch({ dispatch }) {
         dispatch(`loadItems`)
+    },
+
+    async getHeaders({ commit }) {
+        try {
+            const headers = await fetchLogsHeaders(state.preset)
+
+            if (headers) {
+                commit(`SET_HEADERS`, headers)
+            }
+            else {
+                commit(`SET_HEADERS`, [])
+            }
+        }
+        catch (error) {
+            console.error(error)
+        }
+    },
+    async getPresets({ commit }) {
+        try {
+            const presets = await fetchLogPreset()
+            if (presets) {
+                commit(``)
+            }
+        }
+        catch (error) {
+
+        }
     }
 }
 

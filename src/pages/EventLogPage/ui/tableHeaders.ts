@@ -61,6 +61,7 @@ export const EventLogTableHeaders: ExtendedHeaderColumn[] = [
         text: `Путь к процессу`,
         value: `relatedProcessId.executablePath`,
         sortable: true,
+        
         isVisible: true
     }
 ]
