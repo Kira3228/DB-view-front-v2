@@ -45,6 +45,8 @@ export default Vue.extend({
   },
   async mounted() {
     await this.loadItems();
+    await this.loadHeader();
+    await this.get();
   },
   methods: {
     async loadItems() {
@@ -67,11 +69,20 @@ export default Vue.extend({
     async loadHeader() {
       await this.$store.dispatch("dataTable/getHeaders");
     },
+    async get() {
+      try {
+        const res = await fetch(`http://localhost:3000/api/logs/headers`);
+        if (!res.ok) {
+          throw new Error();
+        }
+        const data = await res.json();
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   computed: {
-    sortByFields(): string[] {
-      return this.$store.state.tableLogHeaderModule.sortByFields;
-    },
     sortDescFields: {
       get(): boolean[] {
         return this.$store.state.tableLogHeaderModule.sortDescFields || [];
@@ -79,15 +90,6 @@ export default Vue.extend({
       set(value: boolean[]) {
         this.$store.commit("tableLogHeaderModule/SET_SORT_DESC_FIELDS", value);
       },
-    },
-    items(): TDataTableItems[] {
-      return this.$store.state.dataTable.items;
-    },
-    totalPages(): number {
-      return this.$store.state.dataTable.totalPages;
-    },
-    selectedCount(): number {
-      return this.$store.getters["dataTable/selectedCount"];
     },
     selectedItems: {
       get() {
@@ -105,11 +107,28 @@ export default Vue.extend({
         this.$store.commit("tableLogHeaderModule/UPDATE_HEADERS", value);
       },
     },
-
+    items(): TDataTableItems[] {
+      return this.$store.state.dataTable.items;
+    },
+    totalPages(): number {
+      return this.$store.state.dataTable.totalPages;
+    },
+    selectedCount(): number {
+      return this.$store.getters["dataTable/selectedCount"];
+    },
+    sortByFields(): string[] {
+      return this.$store.state.tableLogHeaderModule.sortByFields;
+    },
     visibleHeaders(): ExtendedHeaderColumn[] {
       return this.headersFromStore.filter(
         (h: ExtendedHeaderColumn) => h.isVisible
       );
+    },
+    headersFromBackend() {
+      return this.$store.state.dataTable.headers;
+    },
+    presetsFromBackend() {
+      return this.$store.state.dataTable.presetList;
     },
   },
   created() {

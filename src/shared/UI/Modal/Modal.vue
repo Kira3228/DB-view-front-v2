@@ -63,7 +63,6 @@ export default Vue.extend({
     },
   },
   mounted() {
-    console.log(this.model);
   },
 });
 </script>

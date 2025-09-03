@@ -34,8 +34,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      types: typeOptions, 
-      formats: formatOptions, 
+      types: typeOptions,
+      formats: formatOptions,
     };
   },
   methods: {
@@ -49,7 +49,6 @@ export default Vue.extend({
         return this.$store.state.reportModule.reportType;
       },
       set(newVal: TOption) {
-        console.log("Setting type:", newVal);
         this.$store.commit("reportModule/SET_TYPE", newVal);
       },
     },
@@ -58,7 +57,6 @@ export default Vue.extend({
         return this.$store.state.reportModule.reportFormat;
       },
       set(newVal: TOption) {
-        console.log("Setting format:", newVal);
         this.$store.commit("reportModule/SET_FORMAT", newVal);
       },
     },

@@ -83,8 +83,8 @@ const mutations: MutationTree<EventLogDataTableState> = {
     SET_HEADERS(state: EventLogDataTableState, newValue: ExtendedHeaderColumn[]) {
         state.headers = newValue
     },
-    SET_ALL_PRESES(state: EventLogDataTableState, newValue: string) {
-        state.preset = newValue
+    SET_ALL_PRESETS(state: EventLogDataTableState, newValue: string[]) {
+        state.presetList = newValue
     }
 }
 
@@ -169,10 +169,10 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
         dispatch(`loadItems`)
     },
 
-    async getHeaders({ commit }) {
+    async getHeaders({ commit, state }) {
         try {
             const headers = await fetchLogsHeaders(state.preset)
-
+            console.log(`загрузка заголовков`, headers);
             if (headers) {
                 commit(`SET_HEADERS`, headers)
             }
@@ -184,15 +184,19 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
             console.error(error)
         }
     },
-    async getPresets({ commit }) {
+    async getPresets({ commit, state }) {
         try {
             const presets = await fetchLogPreset()
+
             if (presets) {
-                commit(``)
+                commit(`SET_ALL_PRESETS`, presets)
+            }
+            else {
+                commit(`SET_ALL_PRESETS`, [])
             }
         }
         catch (error) {
-
+            console.log(error);
         }
     }
 }

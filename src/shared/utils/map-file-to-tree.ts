@@ -102,8 +102,6 @@ const buildTree = (rootId: number, nodeById: Map<number, TNode>, out: Map<number
 
 export const graphToTreeItems = (g: TGraph): TreeItem[] => {
   const { nodeById, out } = indexGraph(g)
-  console.log(`в конферторе`, g);
-
   for (const r of g.roots) {
     if (hasCycleFrom(r, out)) {
       break

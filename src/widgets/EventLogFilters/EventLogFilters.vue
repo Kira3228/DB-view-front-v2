@@ -99,7 +99,7 @@ export default defineComponent({
         return this.$store.state.tableHeaderModule.sortByFields;
       },
       set(v: string[]) {
-        this.$store.commit("tableHeaderModule/SET_SORT_BY_FIELDS", v);
+        this.$store.commit("tableLogHeaderModule/SET_SORT_BY_FIELDS", v);
       },
     },
     headersFromStore: {
@@ -107,7 +107,7 @@ export default defineComponent({
         return this.$store.state.tableHeaderModule.headers;
       },
       set(value: ExtendedHeaderColumn[]) {
-        this.$store.commit("tableHeaderModule/UPDATE_HEADERS", value);
+        this.$store.commit("tableLogHeaderModule/UPDATE_HEADERS", value);
       },
     },
     isDisabled(): boolean {
@@ -155,7 +155,7 @@ export default defineComponent({
     },
   },
   created() {
-    this.$store.commit(`tableHeaderModule/SET_HEADERS`, EventLogTableHeaders);
+    this.$store.commit(`tableLogHeaderModule/SET_HEADERS`, EventLogTableHeaders);
   },
 });
 </script>

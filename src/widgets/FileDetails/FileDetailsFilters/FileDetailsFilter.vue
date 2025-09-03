@@ -30,8 +30,6 @@ export default Vue.extend({
   },
   methods: {
     async fetchFiltered() {
-      console.log(`ЖОПА`);
-
       return await this.$store.dispatch(`fileDetailsModule/loadItems`);
     },
   },

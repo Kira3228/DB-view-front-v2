@@ -13,8 +13,6 @@ const state: FileDetailsState = {
 
 const getters: GetterTree<FileDetailsState, RootState> = {
   getFileHierarchyObj: (state) => {
-    console.log(`стейт в геттере`, state.fileHierarchy);
-
     const tree = graphToTreeItems(state.fileHierarchy)
     return tree
   }
@@ -23,11 +21,7 @@ const getters: GetterTree<FileDetailsState, RootState> = {
 
 const mutations: MutationTree<FileDetailsState> = {
   SET_FILE_HIERARCHY(state: FileDetailsState, graph: TGraph) {
-    console.log(`в мутации`, graph);
     state.fileHierarchy = { ...graph }
-    console.log(`cам стейт`, state.fileHierarchy);
-
-
   },
   SET_FILEPATH(state: FileDetailsState, newValue) {
     state.filePath = newValue
@@ -56,8 +50,6 @@ const actions: ActionTree<FileDetailsState, RootState> = {
         throw new Error
       }
       const data: TFlattenGraph = await response.json()
-      console.log(`после fetch`, data);
-
       commit(`SET_FILE_HIERARCHY`, data)
 
     }

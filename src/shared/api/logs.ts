@@ -27,10 +27,11 @@ export const downloadAllLogsCsv = () => {
   return httpGetBlob(`${BASE}/api/logs/export/all`)
 }
 
-export const fetchLogsHeaders = (presetName: string) => {
+export const fetchLogsHeaders = async (presetName: string) => {
   if (presetName) {
     const params = { presetName: presetName }
-    return httpGet<ExtendedHeaderColumn>(`${BASE}/api/logs/headers`, params)
+    const headers = httpGet<ExtendedHeaderColumn>(`${BASE}/api/logs/headers`, params)
+    return headers
   }
 }
 

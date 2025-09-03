@@ -200,8 +200,6 @@ export default Vue.extend({
       else return `red`;
     },
     async onUpdate(itemId: string, newStatus: string) {
-      console.log(`itemIDIDIDID`, itemId);
-
       await this.$store.dispatch(`activeFileTable/updateStatus`, {
         id: Number(itemId),
         status: newStatus,
@@ -213,8 +211,6 @@ export default Vue.extend({
       this.localPage = newPage;
     },
     async isArchived(newValue: boolean) {
-      console.log(newValue);
-
       await this.$store.dispatch(`activeFileTable/switchToArchive`, newValue);
     },
   },

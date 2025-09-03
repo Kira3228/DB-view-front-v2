@@ -32,7 +32,6 @@ export default Vue.extend({
       this.$store.commit("reportModule/SET_DEPTH", newVal);
     },
     handleDateChange(newVal: string[]) {
-      console.log("Date changed:", newVal);
       this.$store.commit("reportModule/SET_DATE", newVal);
     },
   },
