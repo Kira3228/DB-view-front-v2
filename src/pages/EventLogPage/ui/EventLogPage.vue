@@ -44,13 +44,16 @@ export default Vue.extend({
     };
   },
   async mounted() {
+    await this.loadPresets();
     await this.loadHeader();
     await this.loadItems();
-
   },
   methods: {
     async loadItems() {
       await this.$store.dispatch("dataTable/loadItems");
+    },
+    async loadPresets() {
+      await this.$store.dispatch("dataTable/getPresets");
     },
     updateSelection(items: TDataTableItems[]) {
       this.$store.dispatch(`dataTable/updateSelection`, items);
@@ -96,8 +99,6 @@ export default Vue.extend({
       },
     },
     items(): TDataTableItems[] {
-      console.log(this.$store.state.dataTable.items);
-      
       return this.$store.state.dataTable.items;
     },
     totalPages(): number {

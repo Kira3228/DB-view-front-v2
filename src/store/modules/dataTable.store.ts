@@ -172,7 +172,6 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     async getHeaders({ commit, state }) {
         try {
             const headers = await fetchLogsHeaders(state.preset)
-            console.log(`загрузка заголовков`, headers);
             if (headers) {
                 commit(`SET_HEADERS`, headers)
             }
@@ -187,7 +186,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     async getPresets({ commit, state }) {
         try {
             const presets = await fetchLogPreset()
-
+            
             if (presets) {
                 commit(`SET_ALL_PRESETS`, presets)
             }

@@ -10,7 +10,7 @@
       :items-per-page="itemsPerPage"
       :show-select="showSelect()"
       item-key="id"
-      class="elevation-1"
+      class="elevation-1 tw-text-xs"
       color="primary"
       :single-select="false"
       hide-default-footer
@@ -31,12 +31,19 @@
           </pre>
         </td>
       </template>
-      <template v-slot:eventData="{ item }">
-        <pre>
-      {{ JSON.stringify(item.eventData, null, 2) }}
-      dsasada
-      </pre
-        >
+      <template v-slot:item.eventData="{ item }">
+        <v-tooltip top color="primary">
+          <template v-slot:activator="{ on, attrs }">
+            <p v-bind="attrs" v-on="on" class="tw-text-xs tw-truncate tw-w-40">
+              {{ JSON.stringify(item.eventData, null, 2) }}
+            </p>
+          </template>
+          <span>
+            <p class="tw-text-black">
+              {{ JSON.stringify(item.eventData, null, 2) }}
+            </p>
+          </span>
+        </v-tooltip>
       </template>
       <template
         v-if="tableType === 'active'"
@@ -51,7 +58,9 @@
         </div>
       </template>
       <template v-slot:item.timestamp="{ item }">
-        {{ formatDate(item.timestamp) }}
+        <p class="tw-text-xs">
+          {{ formatDate(item.timestamp) }}
+        </p>
       </template>
 
       <template v-if="tableType === 'active'" v-slot:item.status="{ item }">
@@ -67,13 +76,6 @@
               label="Архив"
               class="pa-3"
             ></v-switch>
-          </div>
-          <div class="tw-ml-auto">
-            <modal
-              :headers.sync="localSettingHeader"
-              :sort-by-list.sync="sortByList"
-              :sort-desc-list.sync="sortDescList"
-            ></modal>
           </div>
         </div>
       </template>

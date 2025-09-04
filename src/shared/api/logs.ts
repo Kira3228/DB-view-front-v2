@@ -42,12 +42,10 @@ export const fetchLogsHeaders = async (presetName?: string) => {
   }
   catch (error) {
     console.error(error);
-
   }
-
 }
-
-export const fetchLogPreset = () => {
-  return httpGet(`${BASE}/api/logs/presets`)
+export const fetchLogPreset = async () => {
+  const presets = await httpGet(`${BASE}/api/logs/presets`)
+  return presets
 }
 

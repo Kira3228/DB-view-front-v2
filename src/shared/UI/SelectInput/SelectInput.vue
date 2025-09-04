@@ -30,14 +30,14 @@ export default defineComponent({
     },
     items: {
       type: Array,
-      default: (): TOption[] => [],
+      default: (): TOption[] | string[] => [],
     },
     placeholder: {
       type: String,
       default: "Выберите опцию",
     },
     value: {
-      type: [String, Number, Object],
+      type: [String, Number, Object, Array],
       default: null,
     },
   },

@@ -10,11 +10,10 @@
         title="Экспортировать выделенное"
         :isDisabled="!isDisabled"
       ></custom-button>
-      <custom-button
-        @click="saveProfile"
-        title="Сохранить пресет"
-      ></custom-button>
-      <select-input></select-input>
+      <select-input
+        v-model="selectedPreset"
+        placeholder="Пресет"
+      ></select-input>
     </div>
     <div class="tw-flex tw-justify-between">
       <div class="tw-flex tw-w-2/3 tw-gap-x-2">
@@ -59,6 +58,7 @@ import { defineComponent } from "@vue/composition-api";
 import Modal from "@/shared/UI/Modal/Modal.vue";
 import { EventLogTableHeaders } from "@/pages/EventLogPage/ui/tableHeaders";
 import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
+import { set } from "vue/types/umd";
 export default defineComponent({
   name: `EventLogFilters`,
   components: {
@@ -77,7 +77,9 @@ export default defineComponent({
     };
   },
   methods: {
-    async saveProfile() {},
+    async loadPreset() {
+      return await this.$store.dispatch(`dataTable/getPresets`);
+    },
     async downloadSelectedLogReport() {
       return await this.$store.dispatch(`dataTable/downloadSelectedLogReport`);
     },
@@ -153,9 +155,24 @@ export default defineComponent({
         this.$store.commit(`dataTable/SET_DATE_RANGE`, newDateRange);
       },
     },
+    selectedPreset: {
+      get(): string[] {
+        return this.$store.state.dataTable.presetList;
+      },
+      set(newPreset: string) {
+        this.$store.commit(`dataTable/SET_PRESET`, newPreset);
+      },
+    },
+  },
+  async mounted() {
+    await this.loadPreset();
+    console.log(this.selectedPreset);
   },
   created() {
-    this.$store.commit(`tableLogHeaderModule/SET_HEADERS`, EventLogTableHeaders);
+    this.$store.commit(
+      `tableLogHeaderModule/SET_HEADERS`,
+      EventLogTableHeaders
+    );
   },
 });
 </script>
