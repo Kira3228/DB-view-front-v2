@@ -31,7 +31,13 @@
           </pre>
         </td>
       </template>
-
+      <template v-slot:eventData="{ item }">
+        <pre>
+      {{ JSON.stringify(item.eventData, null, 2) }}
+      dsasada
+      </pre
+        >
+      </template>
       <template
         v-if="tableType === 'active'"
         v-slot:item.changeStatus="{ item }"
@@ -43,6 +49,9 @@
             :items="statusOptions"
           />
         </div>
+      </template>
+      <template v-slot:item.timestamp="{ item }">
+        {{ formatDate(item.timestamp) }}
       </template>
 
       <template v-if="tableType === 'active'" v-slot:item.status="{ item }">
@@ -204,6 +213,10 @@ export default Vue.extend({
         id: Number(itemId),
         status: newStatus,
       });
+    },
+    formatDate(date: string): string {
+      if (!date) return "";
+      return date.split(`T`)[0];
     },
   },
   watch: {

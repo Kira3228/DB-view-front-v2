@@ -5,12 +5,12 @@
       :selected.sync="selectedItems"
       :paginationLength="totalPages"
       :items="items"
-      :headers="visibleHeaders"
+      :headers="headersFromBackend"
       @page-changed="updatePage"
       table-type="events"
       multi-sort
       :sort-by-list.sync="sortByFields"
-      :setting-headers.sync="headersFromStore"
+      :setting-headers.sync="headersFromBackend"
     >
       <template v-slot:header="{ props }">
         <tr>
@@ -44,9 +44,9 @@ export default Vue.extend({
     };
   },
   async mounted() {
-    await this.loadItems();
     await this.loadHeader();
-    await this.get();
+    await this.loadItems();
+
   },
   methods: {
     async loadItems() {
@@ -68,18 +68,6 @@ export default Vue.extend({
     },
     async loadHeader() {
       await this.$store.dispatch("dataTable/getHeaders");
-    },
-    async get() {
-      try {
-        const res = await fetch(`http://localhost:3000/api/logs/headers`);
-        if (!res.ok) {
-          throw new Error();
-        }
-        const data = await res.json();
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
     },
   },
   computed: {
@@ -108,6 +96,8 @@ export default Vue.extend({
       },
     },
     items(): TDataTableItems[] {
+      console.log(this.$store.state.dataTable.items);
+      
       return this.$store.state.dataTable.items;
     },
     totalPages(): number {

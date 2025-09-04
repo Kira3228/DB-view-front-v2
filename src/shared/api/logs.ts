@@ -27,12 +27,24 @@ export const downloadAllLogsCsv = () => {
   return httpGetBlob(`${BASE}/api/logs/export/all`)
 }
 
-export const fetchLogsHeaders = async (presetName: string) => {
-  if (presetName) {
-    const params = { presetName: presetName }
-    const headers = httpGet<ExtendedHeaderColumn>(`${BASE}/api/logs/headers`, params)
+export const fetchLogsHeaders = async (presetName?: string) => {
+  try {
+    let params: { presetName: string }
+    if (presetName) {
+      params = { presetName: presetName }
+    }
+    else {
+      params = { presetName: "" }
+    }
+    const headers = await httpGet(`${BASE}/api/logs/headers`, params)
     return headers
+
   }
+  catch (error) {
+    console.error(error);
+
+  }
+
 }
 
 export const fetchLogPreset = () => {
