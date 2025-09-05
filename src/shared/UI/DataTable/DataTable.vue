@@ -97,10 +97,9 @@ import { DataTableHeader } from "vuetify";
 import SelectInput from "../SelectInput/SelectInput.vue";
 import { TDataTableItems } from "./TDataTableItems";
 import { statusOptions } from "@/widgets/ActiveFileFilters/StatusOptions/StatusOptions";
-import Modal from "../Modal/Modal.vue";
 
 export default Vue.extend({
-  components: { SelectInput, Modal },
+  components: { SelectInput },
   name: "DataTable",
   props: {
     selected: {

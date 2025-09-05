@@ -1,8 +1,6 @@
-import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import { TOption } from "@/shared/UI/SelectInput/TOptions";
 import { TGraph } from "@/shared/utils/map-file-to-tree";
-import { TFlattenGraph } from "@/widgets/FileDetails/file-details.type";
 import { DataTableHeader } from "vuetify";
 interface DataTable {
     items: TDataTableItems[]

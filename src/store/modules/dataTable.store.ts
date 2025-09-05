@@ -104,7 +104,6 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
                 processPathException: localStorage.getItem('processExseption') || undefined,
             })
 
-
             if (data && data.events) {
                 commit(`SET_ITEMS`, data.events)
                 commit(`SET_TOTAL_PAGES`, data.totalPages ?? 0)

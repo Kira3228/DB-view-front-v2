@@ -1,8 +1,6 @@
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
 import { TEventLogsDto } from "../types/EventLogs";
 import { httpGet, httpGetBlob } from "./http";
 import { BASE } from "@/constants";
-
 
 export const fetchLogsFiltered = (params: {
   page?: number;

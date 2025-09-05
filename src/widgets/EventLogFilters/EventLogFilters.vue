@@ -11,6 +11,7 @@
         :isDisabled="!isDisabled"
       ></custom-button>
       <select-input
+        :items="presetOptions"
         v-model="selectedPreset"
         placeholder="Пресет"
       ></select-input>
@@ -58,7 +59,6 @@ import { defineComponent } from "@vue/composition-api";
 import Modal from "@/shared/UI/Modal/Modal.vue";
 import { EventLogTableHeaders } from "@/pages/EventLogPage/ui/tableHeaders";
 import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
-import { set } from "vue/types/umd";
 export default defineComponent({
   name: `EventLogFilters`,
   components: {
@@ -96,6 +96,12 @@ export default defineComponent({
     async fetchHeaders() {},
   },
   computed: {
+    presetOptions: {
+      get(): string[] {
+        return this.$store.state.dataTable.presetList;
+      },
+      set() {},
+    },
     sortByFields: {
       get(): string[] {
         return this.$store.state.tableHeaderModule.sortByFields;
@@ -156,8 +162,8 @@ export default defineComponent({
       },
     },
     selectedPreset: {
-      get(): string[] {
-        return this.$store.state.dataTable.presetList;
+      get(): string {
+        return this.$store.state.dataTable.preset;
       },
       set(newPreset: string) {
         this.$store.commit(`dataTable/SET_PRESET`, newPreset);
@@ -166,7 +172,6 @@ export default defineComponent({
   },
   async mounted() {
     await this.loadPreset();
-    console.log(this.selectedPreset);
   },
   created() {
     this.$store.commit(

@@ -2,7 +2,6 @@ export const httpGet = async <T>(url: string, params?: Record<string, any>): Pro
   const finalURL = buildURL(url, params)
   const res = await fetch(finalURL, { method: `GET` })
 
-
   if (!res.ok) {
     throw new Error(`GET ${finalURL} failed ${res.status}`)
   }
