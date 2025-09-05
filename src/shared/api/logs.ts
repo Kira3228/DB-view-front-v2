@@ -1,6 +1,6 @@
 import { TEventLogsDto } from "../types/EventLogs";
 import { httpGet, httpGetBlob } from "./http";
-import { BASE } from "@/constants";
+import { BASE_URL } from "@/constants";
 
 export const fetchLogsFiltered = (params: {
   page?: number;
@@ -13,16 +13,16 @@ export const fetchLogsFiltered = (params: {
   filePathException?: string;
   processPathException?: string;
 }) => {
-  return httpGet<TEventLogsDto>(`${BASE}/api/logs/search`, params);
+  return httpGet<TEventLogsDto>(`${BASE_URL}/api/logs/search`, params);
 }
 
 export const downloadSelectedLogsCsv = (ids: number[]) => {
   const params = { ids: ids.join(`,`) };
-  return httpGetBlob(`${BASE}/api/logs/export/selected`, params)
+  return httpGetBlob(`${BASE_URL}/api/logs/export/selected`, params)
 }
 
 export const downloadAllLogsCsv = () => {
-  return httpGetBlob(`${BASE}/api/logs/export/all`)
+  return httpGetBlob(`${BASE_URL}/api/logs/export/all`)
 }
 
 export const fetchLogsHeaders = async (presetName?: string) => {
@@ -34,7 +34,7 @@ export const fetchLogsHeaders = async (presetName?: string) => {
     else {
       params = { presetName: "" }
     }
-    const headers = await httpGet(`${BASE}/api/logs/headers`, params)
+    const headers = await httpGet(`${BASE_URL}/api/logs/headers`, params)
     return headers
 
   }
@@ -43,7 +43,7 @@ export const fetchLogsHeaders = async (presetName?: string) => {
   }
 }
 export const fetchLogPreset = async () => {
-  const presets = await httpGet(`${BASE}/api/logs/presets`)
+  const presets = await httpGet(`${BASE_URL}/api/logs/presets`)
   return presets
 }
 
@@ -52,10 +52,10 @@ export const updateAndChange = async (presetName?: string) => {
 
   if (presetName) {
     params = { presetName };
-    const response = await httpGet(`${BASE}/api/logs/`, params);
+    const response = await httpGet(`${BASE_URL}/api/logs/`, params);
     return response;
   }
 
-  const response = await httpGet(`${BASE}/api/logs/`);
+  const response = await httpGet(`${BASE_URL}/api/logs/`);
   return response;
 };

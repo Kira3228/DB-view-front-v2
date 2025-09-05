@@ -14,6 +14,7 @@
         placeholder="Inode"
         @debounce="onDebounce"
       ></text-input>
+      <select-input placeholder="Пресет"></select-input>
     </div>
   </div>
 </template>
@@ -21,11 +22,13 @@
 <script>
 import Vue from "vue";
 import TextInput from "@/shared/UI/TextInput/TextInput.vue";
+import SelectInput from "@/shared/UI/SelectInput/SelectInput.vue";
 
 export default Vue.extend({
   name: `FiltersBar`,
   components: {
     TextInput,
+    SelectInput,
   },
   props: {
     value: {
