@@ -1,8 +1,9 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
-import { ActiveFileDataTableState, RootState } from "../types/DataTableItemsStore";
 import { ActiveFileDto } from "@/shared/types/ActiveFiles/TActiveFileDto";
 import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
 import { fetchActiveFiles, fetchArchiveFiles, updateFileStatus } from "@/shared/api/activeFiles";
+import { ActiveFileDataTableState } from "../types/IActiveFileDataTableState";
+import { RootState } from "../types/IRootState";
 
 const state: ActiveFileDataTableState = {
     filepath: "",

@@ -1,7 +1,8 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
-import { FileDetailsState, FileHierarchyMap, RootState } from "../types/DataTableItemsStore";
 import { TFlattenGraph } from "@/widgets/FileDetails/file-details.type";
 import { graphToTreeItems, TGraph } from "@/shared/utils/map-file-to-tree";
+import { RootState } from "../types/IRootState";
+import { FileDetailsState } from "../types/IFile";
 
 const state: FileDetailsState = {
   error: null,

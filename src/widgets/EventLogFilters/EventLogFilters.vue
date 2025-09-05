@@ -14,6 +14,7 @@
         :items="presetOptions"
         v-model="selectedPreset"
         placeholder="Пресет"
+        @debounce="fetchPreset"
       ></select-input>
     </div>
     <div class="tw-flex tw-justify-between">
@@ -58,7 +59,7 @@ import { statusOptions } from "./SelectOptions/StatusOptions";
 import { defineComponent } from "@vue/composition-api";
 import Modal from "@/shared/UI/Modal/Modal.vue";
 import { EventLogTableHeaders } from "@/pages/EventLogPage/ui/tableHeaders";
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
+import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 export default defineComponent({
   name: `EventLogFilters`,
   components: {
@@ -90,7 +91,7 @@ export default defineComponent({
       return await this.$store.dispatch(`dataTable/debouncedFetch`);
     },
     async fetchPreset() {
-      return await this.$store.dispatch(`dataTable/getPresets`);
+      return await this.$store.dispatch(`dataTable/getHeaders`);
     },
 
     async fetchHeaders() {},

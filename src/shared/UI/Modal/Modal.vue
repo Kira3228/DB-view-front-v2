@@ -22,7 +22,7 @@
 import Vue from "vue";
 import CustomButton from "../CustomButton/CustomButton.vue";
 import OrderChange from "@/widgets/OrderChange/OrderChange.vue";
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
+import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 
 export default Vue.extend({
   name: `Modal`,
@@ -62,7 +62,6 @@ export default Vue.extend({
       },
     },
   },
-  mounted() {
-  },
+  mounted() {},
 });
 </script>

@@ -32,7 +32,7 @@
 </template>
 <script lang="ts">
 import TextInput from "@/shared/UI/TextInput/TextInput.vue";
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
+import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 import Vue from "vue";
 import draggable from "vuedraggable";
 import { DataTableHeader } from "vuetify";

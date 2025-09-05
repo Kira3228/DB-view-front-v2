@@ -23,7 +23,7 @@ import Vue from "vue";
 import { ActiveFileTableHeaders } from "./tableHeaders";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
+import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 
 export default Vue.extend({
   name: `ActiveFilePage`,

@@ -1,4 +1,4 @@
-import { FileHierarchy } from "@/store/types/DataTableItemsStore"
+import { FileHierarchy } from "@/store/types/IFile"
 import { httpGet } from "./http"
 import { BASE } from "@/constants"
 

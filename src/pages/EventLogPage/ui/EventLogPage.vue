@@ -29,7 +29,7 @@ import EventLogFilters from "@/widgets/EventLogFilters/EventLogFilters.vue";
 import { EventLogTableHeaders } from "./tableHeaders";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import Vue from "vue";
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
+import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 
 export default Vue.extend({
   name: `EventLogPage`,

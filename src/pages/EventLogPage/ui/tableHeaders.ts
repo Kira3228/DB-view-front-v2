@@ -1,5 +1,4 @@
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
-import { DataTableHeader } from "vuetify";
+import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 
 export const EventLogTableHeaders: ExtendedHeaderColumn[] = [
     {
@@ -61,7 +60,7 @@ export const EventLogTableHeaders: ExtendedHeaderColumn[] = [
         text: `Путь к процессу`,
         value: `relatedProcessId.executablePath`,
         sortable: true,
-        
+
         isVisible: true
     }
 ]

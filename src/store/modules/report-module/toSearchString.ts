@@ -1,4 +1,4 @@
-import { SelectedReportFields } from "@/store/types/DataTableItemsStore"
+import { SelectedReportFields } from "@/store/types/IReportFilters"
 
 export const toSearchString = (fields: SelectedReportFields) => {
   const params = new URLSearchParams()

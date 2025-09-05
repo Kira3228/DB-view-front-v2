@@ -1,4 +1,4 @@
-import { ExtendedHeaderColumn } from "@/store/types/DataTableItemsStore";
+import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 import { DataTableHeader } from "vuetify";
 
 export const ActiveFileTableHeaders: ExtendedHeaderColumn[] = [

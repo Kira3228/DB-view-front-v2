@@ -1,9 +1,11 @@
-import { EventLogDataTableState, ExtendedHeaderColumn, RootState } from "@/store/types/DataTableItemsStore";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
 import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchLogPreset, fetchLogsFiltered, fetchLogsHeaders } from "@/shared/api/logs";
+import { EventLogDataTableState } from "../types/IEventLogDataTableState";
+import { RootState } from "../types/IRootState";
+import { ExtendedHeaderColumn } from "../types/THeaders";
 
 const state: EventLogDataTableState = {
     selectedItems: [],
@@ -18,7 +20,9 @@ const state: EventLogDataTableState = {
     dateRange: [] as string[],
     headers: [],
     preset: "",
-    presetList: []
+    presetList: [],
+    exceptions: [],
+    default_filters: {}
 }
 
 const getters: GetterTree<EventLogDataTableState, RootState> = {
@@ -85,6 +89,9 @@ const mutations: MutationTree<EventLogDataTableState> = {
     },
     SET_ALL_PRESETS(state: EventLogDataTableState, newValue: string[]) {
         state.presetList = newValue
+    },
+    SET_EXCEPTIONS(state: EventLogDataTableState, newValue: typeof state.exceptions) {
+        state.exceptions = newValue
     }
 }
 
@@ -171,6 +178,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     async getHeaders({ commit, state }) {
         try {
             const headers = await fetchLogsHeaders(state.preset)
+
             if (headers) {
                 commit(`SET_HEADERS`, headers)
             }
@@ -185,7 +193,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
     async getPresets({ commit, state }) {
         try {
             const presets = await fetchLogPreset()
-            
+
             if (presets) {
                 commit(`SET_ALL_PRESETS`, presets)
             }
@@ -196,7 +204,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
         catch (error) {
             console.log(error);
         }
-    }
+    },
 }
 
 const eventLogDataTableModule: Module<EventLogDataTableState, RootState> = {

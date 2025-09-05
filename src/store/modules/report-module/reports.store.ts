@@ -1,10 +1,11 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
-import { ReportFields, ReportFilters, RootState, SelectedReportFields } from "../../types/DataTableItemsStore";
 import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { toSearchString } from "./toSearchString";
 import { TOption } from "@/shared/UI/SelectInput/TOptions";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
 import { buildURL } from "@/shared/api/http";
+import { RootState } from "@/store/types/IRootState";
+import { ReportFields, ReportFilters, SelectedReportFields } from "@/store/types/IReportFilters";
 
 const state: ReportFilters = {
   date: [],

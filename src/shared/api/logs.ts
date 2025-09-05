@@ -47,3 +47,15 @@ export const fetchLogPreset = async () => {
   return presets
 }
 
+export const updateAndChange = async (presetName?: string) => {
+  let params: { presetName?: string } = {};
+
+  if (presetName) {
+    params = { presetName };
+    const response = await httpGet(`${BASE}/api/logs/`, params);
+    return response;
+  }
+
+  const response = await httpGet(`${BASE}/api/logs/`);
+  return response;
+};

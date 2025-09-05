@@ -21,7 +21,7 @@
 import {
   ReportFields,
   SelectedReportFields,
-} from "@/store/types/DataTableItemsStore";
+} from "@/store/types/IReportFilters";
 import { FieldTreeOptions } from "@/widgets/ReportFilters/FieldTreeOption";
 import Vue from "vue";
 

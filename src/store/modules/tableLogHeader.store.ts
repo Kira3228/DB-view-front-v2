@@ -1,5 +1,6 @@
-import { ExtendedHeaderColumn, RootState, THeaderColumn } from "../types/DataTableItemsStore";
-import {  Module, MutationTree } from "vuex";
+import { Module, MutationTree } from "vuex";
+import { ExtendedHeaderColumn, THeaderColumn } from "../types/THeaders";
+import { RootState } from "../types/IRootState";
 
 const state: THeaderColumn = {
   headers: [],
