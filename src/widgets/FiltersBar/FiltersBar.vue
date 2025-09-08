@@ -2,27 +2,40 @@
   <div class="tw-flex">
     <div class="tw-flex tw-w-2/3 tw-gap-x-2">
       <text-input
-        v-model="localFilepath"
+        :value="value.filepath"
         label="Путь"
         placeholder="Путь"
+        @input="updateFilePath"
         @debounce="onDebounce"
       >
       </text-input>
       <text-input
-        v-model="localInode"
+        :value="value.inode"
         label="Inode"
         placeholder="Inode"
+        @input="updateInode"
         @debounce="onDebounce"
       ></text-input>
-      <select-input placeholder="Пресет"></select-input>
+      <select-input
+        :value="selectedPreset"
+        :items="presetOptions"
+        placeholder="Пресет"
+        @input="updatePreset"
+        @debounce="onDebounce"
+      ></select-input>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import TextInput from "@/shared/UI/TextInput/TextInput.vue";
 import SelectInput from "@/shared/UI/SelectInput/SelectInput.vue";
+
+interface IFilterValue {
+  filepath: string;
+  inode: string;
+}
 
 export default Vue.extend({
   name: `FiltersBar`,
@@ -32,14 +45,22 @@ export default Vue.extend({
   },
   props: {
     value: {
-      type: Object,
+      type: Object as () => IFilterValue,
       required: true,
-      default: () => ({ filepath: "", inode: "" }),
+      default: (): IFilterValue => ({ filepath: "", inode: "" }),
+    },
+    selectedPreset: {
+      type: String,
+      default: ``,
     },
     debouncedEvent: {
       type: Function,
-      require: false,
+      required: false,
       default: null,
+    },
+    presetOptions: {
+      type: Array as () => string[],
+      default: (): string[] => [],
     },
   },
   data() {
@@ -48,35 +69,31 @@ export default Vue.extend({
       localInode: this.value.inode || "",
     };
   },
-  watch: {
-    value: {
-      deep: true,
-      handler(newVal) {
-        this.localFilepath = newVal.filepath || "";
-        this.localInode = newVal.inode || "";
-      },
-    },
-    localFilepath() {
-      this.emitChange();
-    },
-    localInode() {
-      this.emitChange();
-    },
-  },
   methods: {
-    emitChange() {
-      this.$emit("input", {
-        filepath: this.localFilepath,
-        inode: this.localInode,
+    updateFilePath(newValue: string) {
+      this.$emit(`input`, {
+        ...this.value,
+        filepath: newValue,
       });
     },
-    onDebounce() {
-      if (typeof this.debounceEvent === "function") {
-        this.debounceEvent();
+    updateInode(newValue: string) {
+      this.$emit(`input`, {
+        ...this.value,
+        inode: newValue,
+      });
+    },
+
+    updatePreset(newValue: string) {
+      this.$emit("preset-change", newValue);
+    },
+    onDebounce(): void {
+      if (typeof this.debouncedEvent === "function") {
+        this.debouncedEvent();
       } else {
         this.$emit("debounce");
       }
     },
   },
+  computed: {},
 });
 </script>
