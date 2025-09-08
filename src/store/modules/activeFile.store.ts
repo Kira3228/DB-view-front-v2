@@ -76,7 +76,7 @@ const mutations: MutationTree<ActiveFileDataTableState> = {
 }
 
 const actions: ActionTree<ActiveFileDataTableState, RootState> = {
-    async loadItems({ commit, state }, params: string) {
+    async loadItems({ commit, state }) {
         commit(`SET_LOADING`, true)
         try {
             const query: { page: number; filePath?: string; inode?: number } = {
@@ -144,7 +144,7 @@ const actions: ActionTree<ActiveFileDataTableState, RootState> = {
 
         }
     },
-    
+
     async getHeaders({ commit, state }) {
         try {
             const headers = await fetchFileHeaders(state.preset)

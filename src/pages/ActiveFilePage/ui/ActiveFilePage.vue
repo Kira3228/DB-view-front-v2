@@ -6,7 +6,6 @@
       :debouncedEvent="fetchFiltered"
       :presetOptions="presetOptions"
       @preset-change="handlePresetChange"
-      @debounce="debouncedFetchPresets"
       :debouncedEventOnSelect="debouncedFetchPresets"
     ></filters-bar>
     <data-table
