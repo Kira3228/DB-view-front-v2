@@ -1,9 +1,10 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { ActiveFileDto } from "@/shared/types/ActiveFiles/TActiveFileDto";
 import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
-import { fetchActiveFiles, fetchArchiveFiles, updateFileStatus } from "@/shared/api/activeFiles";
+import { fetchActiveFiles, fetchArchiveFiles, fetchFileHeaders, fetchFilePreset, updateFileStatus } from "@/shared/api/active-file";
 import { ActiveFileDataTableState } from "../types/IActiveFileDataTableState";
 import { RootState } from "../types/IRootState";
+import { ExtendedHeaderColumn } from "../types/THeaders";
 
 const state: ActiveFileDataTableState = {
     filepath: "",
@@ -13,7 +14,13 @@ const state: ActiveFileDataTableState = {
     page: 1,
     status: "",
     totalPages: 0,
-    isArchived: false
+    isArchived: false,
+    preset: "standart",
+    presetList: [],
+    exceptions: [],
+    default_filters: {},
+    headers: [],
+
 }
 
 const getters: GetterTree<ActiveFileDataTableState, RootState> = {}
@@ -52,6 +59,19 @@ const mutations: MutationTree<ActiveFileDataTableState> = {
     },
     SET_SWITCH(state: ActiveFileDataTableState, newValue: boolean) {
         state.isArchived = newValue
+    },
+
+    SET_PRESET(state: ActiveFileDataTableState, newValue: string) {
+        state.preset = newValue
+    },
+    SET_HEADERS(state: ActiveFileDataTableState, newValue: ExtendedHeaderColumn[]) {
+        state.headers = newValue
+    },
+    SET_ALL_PRESETS(state: ActiveFileDataTableState, newValue: string[]) {
+        state.presetList = newValue
+    },
+    SET_EXCEPTIONS(state: ActiveFileDataTableState, newValue: typeof state.exceptions) {
+        state.exceptions = newValue
     }
 }
 
@@ -112,6 +132,27 @@ const actions: ActionTree<ActiveFileDataTableState, RootState> = {
     async switchToArchive({ commit, state, dispatch }, newValue: boolean) {
         commit(`SET_SWITCH`, newValue)
         return dispatch(`loadItems`)
+    },
+
+    async getPresets({ commit }) {
+        try {
+            const preset = await fetchFilePreset()
+            commit(`SET_ALL_PRESETS`, preset)
+        }
+        catch (error) {
+            console.log(error);
+
+        }
+    },
+    
+    async getHeaders({ commit, state }) {
+        try {
+            const headers = await fetchFileHeaders(state.preset)
+            commit(`SET_HEADERS`, headers)
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 }
 const activeFileTableModule: Module<ActiveFileDataTableState, RootState> = {

@@ -5,4 +5,5 @@ export interface ActiveFileDataTableState extends DataTable {
   inode: number | string
   status: string
   isArchived: boolean
+
 }

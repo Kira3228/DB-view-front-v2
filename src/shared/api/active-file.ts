@@ -14,3 +14,25 @@ export const fetchArchiveFiles = (params: { page?: number, filePath?: string, in
 export const updateFileStatus = (id: number | string, staus: string) => {
   return httpPatch(`${BASE_URL}/api/files/${id}/status`, { status })
 }
+
+export const fetchFilePreset = async () => {
+  return await httpGet(`${BASE_URL}/api/files/presets`)
+}
+
+
+export const fetchFileHeaders = (presetName?: string) => {
+  try {
+    let params: { presetName: string }
+    if (presetName) {
+      params = { presetName: presetName }
+    } else {
+      params = { presetName: "" }
+    }
+    return httpGet(`${BASE_URL}/api/files/headers`, params)
+  }
+  catch (error) {
+    console.error(error);
+
+  }
+
+}

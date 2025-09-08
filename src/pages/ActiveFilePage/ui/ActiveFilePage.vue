@@ -2,13 +2,18 @@
   <div>
     <filters-bar
       v-model="filters"
+      :selectedPreset="currentPreset"
       :debouncedEvent="fetchFiltered"
+      :presetOptions="presetOptions"
+      @preset-change="handlePresetChange"
+      @debounce="debouncedFetchPresets"
+      :debouncedEventOnSelect="debouncedFetchPresets"
     ></filters-bar>
     <data-table
       :paginationLength="totalPages"
       table-type="active"
       :items="items"
-      :headers="visibleHeaders"
+      :headers="headersFromBackend"
       @page-changed="updatePage"
       multi-sort
       :sort-by-list.sync="sortByFields"
@@ -57,10 +62,25 @@ export default Vue.extend({
     async fetchFiltered() {
       await this.$store.dispatch(`activeFileTable/debouncedFetch`);
     },
+    async fetchPresets() {
+      return this.$store.dispatch(`activeFileTable/getPresets`);
+    },
+    async debouncedFetchPresets() {
+      return await this.$store.dispatch(`activeFileTable/getHeaders`);
+    },
+    handlePresetChange(newPreset: string) {
+      this.$store.commit(`activeFileTable/SET_PRESET`, newPreset);
+    },
+    async loadHeader() {
+      await this.$store.dispatch("activeFileTable/getHeaders");
+    },
   },
-  mounted() {
-    this.loadItems();
+  async mounted() {
+    await this.loadItems();
+    await this.loadHeader();
+    await this.fetchPresets();
   },
+
   computed: {
     items(): TDataTableItems[] {
       return this.$store.state.activeFileTable.items;
@@ -95,7 +115,17 @@ export default Vue.extend({
         (h: ExtendedHeaderColumn) => h.isVisible
       );
     },
+    currentPreset(): string {
+      return this.$store.state.dataTable.preset || "";
+    },
+    presetOptions() {
+      return this.$store.state.activeFileTable.presetList || [];
+    },
+    headersFromBackend() {
+      return this.$store.state.activeFileTable.headers || [];
+    },
   },
+
   created() {
     this.$store.commit(
       `tableActiveHeaderModule/SET_HEADERS`,

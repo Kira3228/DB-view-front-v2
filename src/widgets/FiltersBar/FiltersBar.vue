@@ -21,7 +21,7 @@
         :items="presetOptions"
         placeholder="Пресет"
         @input="updatePreset"
-        @debounce="onDebounce"
+        @debounce="onSelectDebounce"
       ></select-input>
     </div>
   </div>
@@ -54,6 +54,11 @@ export default Vue.extend({
       default: ``,
     },
     debouncedEvent: {
+      type: Function,
+      required: false,
+      default: null,
+    },
+    debouncedEventOnSelect: {
       type: Function,
       required: false,
       default: null,
@@ -91,6 +96,13 @@ export default Vue.extend({
         this.debouncedEvent();
       } else {
         this.$emit("debounce");
+      }
+    },
+    onSelectDebounce(): void {
+      if (typeof this.debouncedEventOnSelect === `function`) {
+        this.debouncedEventOnSelect();
+      } else {
+        this.$emit(`select-debounce`);
       }
     },
   },
