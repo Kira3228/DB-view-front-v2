@@ -18,7 +18,7 @@ export const fetchLogsFiltered = (params: {
 
 export const downloadSelectedLogsCsv = (ids: number[]) => {
   const params = { ids: ids.join(`,`) };
-  return httpGetBlob(`${BASE_URL}/api/logs/export/selected`, params)
+  return httpGetBlob(`${BASE_URL}/api/logs/export.csv`, params)
 }
 
 export const downloadAllLogsCsv = () => {
@@ -36,12 +36,12 @@ export const fetchLogsHeaders = async (presetName?: string) => {
     }
     const headers = await httpGet(`${BASE_URL}/api/logs/headers`, params)
     return headers
-
   }
   catch (error) {
     console.error(error);
   }
 }
+
 export const fetchLogPreset = async () => {
   const presets = await httpGet(`${BASE_URL}/api/logs/presets`)
   return presets
