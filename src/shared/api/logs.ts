@@ -59,3 +59,13 @@ export const updateAndChange = async (presetName?: string) => {
   const response = await httpGet(`${BASE_URL}/api/logs/`);
   return response;
 };
+
+export const fetchFilters = async (presetName?: string) => {
+  let params: { presetName?: string } = {}
+
+  if (presetName) {
+    params = { presetName }
+  }
+  const response = await httpGet(`${BASE_URL}/api/logs/filters`, params)
+  return response
+}

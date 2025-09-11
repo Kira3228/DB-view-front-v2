@@ -2,7 +2,7 @@ import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
-import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchLogPreset, fetchLogsFiltered, fetchLogsHeaders } from "@/shared/api/logs";
+import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchFilters, fetchLogPreset, fetchLogsFiltered, fetchLogsHeaders } from "@/shared/api/logs";
 import { EventLogDataTableState } from "../types/IEventLogDataTableState";
 import { RootState } from "../types/IRootState";
 import { ExtendedHeaderColumn } from "../types/THeaders";
@@ -92,6 +92,9 @@ const mutations: MutationTree<EventLogDataTableState> = {
     },
     SET_EXCEPTIONS(state: EventLogDataTableState, newValue: typeof state.exceptions) {
         state.exceptions = newValue
+    },
+    SET_FILTERS(state: EventLogDataTableState, newValue: typeof state.default_filters) {
+        state.default_filters = newValue
     }
 }
 
@@ -205,6 +208,21 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
             console.log(error);
         }
     },
+
+    async getFilters({ commit, state }) {
+        try {
+            const filters = await fetchFilters(state.preset)
+            if (filters) {
+                commit(`SET_FILTERS`, filters)
+            }
+            else {
+                commit(``)
+            }
+        } catch (error) {
+            console.error(error);
+
+        }
+    }
 }
 
 const eventLogDataTableModule: Module<EventLogDataTableState, RootState> = {
