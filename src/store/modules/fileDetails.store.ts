@@ -35,22 +35,8 @@ const mutations: MutationTree<FileDetailsState> = {
 const actions: ActionTree<FileDetailsState, RootState> = {
   async loadItems({ commit, state, getters }) {
     try {
-      const query: { filePath?: string; inode?: number } = {}
-      if (state.filePath && state.filePath.trim() === ``) {
-        query.filePath = state.filePath.trim()
-      }
-      if (typeof state.inode === `number` && Number.isFinite(state.inode)) {
-        query.inode = state.inode
-      }
+      const details = await fetchDetails({state.filePath, state.inode})
 
-      const params = new URLSearchParams()
-      params.set(`filePath`, state.filePath)
-      params.set(`inode`, state.inode)
-      const response = await fetch(`http://localhost:3000/api/files/graph/?${params}`)
-      if (!response.ok) {
-        throw new Error
-      }
-      const data: TFlattenGraph = await response.json()
       commit(`SET_FILE_HIERARCHY`, data)
 
     }

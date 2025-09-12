@@ -1,8 +1,9 @@
 <template>
   <div>
-    <file-details-filter v-model="filters" :debouncedEvent="fetchFiltered">
-    </file-details-filter>
-    <!-- <filters-bar></filters-bar> -->
+    <filters-bar
+      v-model="filters"
+      :debouncedEvent="fetchFiltered"
+    ></filters-bar>
     <file-details-tree></file-details-tree>
   </div>
 </template>
@@ -25,10 +26,8 @@ export default Vue.extend({
   data() {
     return {
       filters: {
-        // filepath: this.$store.state.fileDeatails.filePath,
-        // inode: this.$store.state.fileDeatails.inode,
-        filepath: "",
-        inode: "",
+        filepath: this.$store.state.fileDeatails.filePath,
+        inode: this.$store.state.fileDeatails.inode,
       },
     };
   },

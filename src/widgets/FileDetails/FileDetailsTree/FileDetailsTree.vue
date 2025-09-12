@@ -58,10 +58,6 @@ export default Vue.extend({
   computed: {
     items() {
       return this.$store.getters[`fileDetailsModule/getFileHierarchyObj`];
-
-      // const treeItems = this.$store.state.fileDetailsModule.fileHierarchy;
-
-      // return Array.isArray(treeItems);
     },
   },
 });
