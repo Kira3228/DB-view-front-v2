@@ -1,3 +1,4 @@
+import { IDefaultFilters } from "@/store/types/IEventLogDataTableState";
 import { TEventLogsDto } from "../types/EventLogs";
 import { httpGet, httpGetBlob } from "./http";
 import { BASE_URL } from "@/constants";
@@ -60,12 +61,12 @@ export const updateAndChange = async (presetName?: string) => {
   return response;
 };
 
-export const fetchFilters = async (presetName?: string) => {
+export const fetchFilters = async (presetName?: string): Promise<IDefaultFilters> => {
   let params: { presetName?: string } = {}
 
   if (presetName) {
     params = { presetName }
   }
-  const response = await httpGet(`${BASE_URL}/api/logs/filters`, params)
+  const response: IDefaultFilters = await httpGet(`${BASE_URL}/api/logs/filters`, params)
   return response
 }

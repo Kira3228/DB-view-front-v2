@@ -1,6 +1,7 @@
 <template>
   <div class="tw-w-full">
     <v-data-table
+      :multi-sort="true"
       item-class="tw-w-full"
       :headers="headers"
       :items="items"
@@ -16,10 +17,8 @@
       hide-default-footer
       dense
       :show-expand="expandable()"
-      :sort-by.sync="sortByList"
-      :sort-desc.sync="sortDescList"
-      @update:sort-by="$emit('update:sortByList', $event)"
-      @update:sort-desc="$emit('update:sortDescList', $event)"
+      :sort-by.sync="localSortByList"
+      :sort-desc.sync="sortDescFields"
     >
       <template
         v-if="tableType === `events`"
@@ -125,7 +124,7 @@ export default Vue.extend({
     },
     sortByList: {
       type: Array,
-      default: () => [],
+      default: (): string[] => [],
     },
     sortDescList: {
       type: Array,
@@ -183,6 +182,14 @@ export default Vue.extend({
         this.$store.commit(`activeFileTable/SET_SWITCH`, newValue);
       },
     },
+    localSortByList: {
+      get() {
+        return this.sortByList;
+      },
+      set(value) {
+        this.$emit("update:sortByList", value);
+      },
+    },
   },
   methods: {
     handleChangePage(newPage: number) {
@@ -227,6 +234,16 @@ export default Vue.extend({
     async isArchived(newValue: boolean) {
       await this.$store.dispatch(`activeFileTable/switchToArchive`, newValue);
     },
+    localSortByList: {
+      handler(newVal, oldVal) {
+        console.log("DataTable localSortByList изменился:", { newVal, oldVal });
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    console.log(`При монтировке DataTable`, this.sortByList);
+    console.log(`При монтировке DataTable`, this.sortDescFields);
   },
 });
 </script>

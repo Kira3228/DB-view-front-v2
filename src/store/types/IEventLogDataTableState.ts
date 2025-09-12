@@ -8,9 +8,10 @@ export interface EventLogDataTableState extends DataTable {
   typeOfEvent: string
   status: string
   dateRange: string[]
-  default_filters: {
-    sortBy?: string[]
-    sortDesc?: boolean[]
-  }
+  default_filters: IDefaultFilters
+}
+export interface IDefaultFilters {
+  sortBy?: string[]
+  sortDesc?: boolean[]
 }
 

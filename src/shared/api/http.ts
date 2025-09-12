@@ -1,7 +1,5 @@
 export const httpGet = async <T>(url: string, params?: Record<string, any>): Promise<T> => {
   const finalURL = buildURL(url, params)
-  console.log(finalURL);
-
   const res = await fetch(finalURL, { method: `GET` })
 
   if (!res.ok) {

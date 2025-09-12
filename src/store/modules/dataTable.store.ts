@@ -3,7 +3,7 @@ import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
 import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchFilters, fetchLogPreset, fetchLogsFiltered, fetchLogsHeaders } from "@/shared/api/logs";
-import { EventLogDataTableState } from "../types/IEventLogDataTableState";
+import { EventLogDataTableState, IDefaultFilters } from "../types/IEventLogDataTableState";
 import { RootState } from "../types/IRootState";
 import { ExtendedHeaderColumn } from "../types/THeaders";
 
@@ -22,7 +22,10 @@ const state: EventLogDataTableState = {
     preset: "",
     presetList: [],
     exceptions: [],
-    default_filters: {}
+    default_filters: {
+        sortBy: [],
+        sortDesc: []
+    }
 }
 
 const getters: GetterTree<EventLogDataTableState, RootState> = {
@@ -35,6 +38,14 @@ const getters: GetterTree<EventLogDataTableState, RootState> = {
     endDate: (state: EventLogDataTableState): string => {
         return toSqlDateTimeOrEmpty(state.dateRange?.[1])
     },
+    getSortBy: (state: EventLogDataTableState): string[] => {
+        const sortBy = state.default_filters.sortBy || []
+        return sortBy
+    },
+    getSortDesc: (state: EventLogDataTableState): boolean[] => {
+        const sortDesc = state.default_filters.sortDesc || []
+        return sortDesc
+    }
 }
 
 const mutations: MutationTree<EventLogDataTableState> = {
@@ -92,6 +103,13 @@ const mutations: MutationTree<EventLogDataTableState> = {
     },
     SET_EXCEPTIONS(state: EventLogDataTableState, newValue: typeof state.exceptions) {
         state.exceptions = newValue
+    },
+
+    SET_SORT_DESC(state: EventLogDataTableState, newValue: typeof state.default_filters.sortDesc) {
+        state.default_filters.sortDesc = newValue
+    },
+    SET_SORT_BY(state: EventLogDataTableState, newValue: typeof state.default_filters.sortBy) {
+        state.default_filters.sortBy = newValue
     },
     SET_FILTERS(state: EventLogDataTableState, newValue: typeof state.default_filters) {
         state.default_filters = newValue
@@ -209,18 +227,16 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
         }
     },
 
-    async getFilters({ commit, state }) {
+    async getSort({ commit, state }): Promise<void> {
         try {
             const filters = await fetchFilters(state.preset)
             if (filters) {
                 commit(`SET_FILTERS`, filters)
-            }
-            else {
-                commit(``)
+            } else {
+                commit(`SET_FILTERS`, { sortBy: [], sortDesc: [] }) 
             }
         } catch (error) {
             console.error(error);
-
         }
     }
 }

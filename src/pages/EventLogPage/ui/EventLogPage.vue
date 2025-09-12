@@ -2,6 +2,7 @@
   <div class="">
     <event-log-filters></event-log-filters>
     <data-table
+      v-if="sortDataLoaded"
       :selected.sync="selectedItems"
       :paginationLength="totalPages"
       :items="items"
@@ -9,8 +10,9 @@
       @page-changed="updatePage"
       table-type="events"
       multi-sort
-      :sort-by-list.sync="sortByFields"
       :setting-headers.sync="headersFromBackend"
+      :sort-by-list.sync="sortByFields"
+      :sortDescList.sync="sortDescFields"
     >
       <template v-slot:header="{ props }">
         <tr>
@@ -20,6 +22,7 @@
         </tr>
       </template>
     </data-table>
+    <div v-else class="text-center pa-4">Загрузка таблицы...</div>
   </div>
 </template>
 
@@ -41,11 +44,14 @@ export default Vue.extend({
     return {
       headers: EventLogTableHeaders,
       pages: 0,
+      sortDataLoaded: false,
     };
   },
   async mounted() {
     await this.$store.dispatch("dataTable/getPresets");
     await this.$store.dispatch("dataTable/getHeaders");
+    await this.$store.dispatch("dataTable/getSort");
+    this.sortDataLoaded = true;
     await this.$store.dispatch("dataTable/loadItems");
   },
   methods: {
@@ -65,12 +71,25 @@ export default Vue.extend({
     },
   },
   computed: {
+    sortByFields: {
+      get(): string[] {
+        console.log(
+          `Из EventLogPage`,
+          this.$store.getters["dataTable/getSortBy"]
+        );
+
+        return this.$store.getters["dataTable/getSortBy"];
+      },
+      set(newSortList: string[]) {
+        this.$store.commit(`dataTable/SET_SORT_BY`, newSortList);
+      },
+    },
     sortDescFields: {
       get(): boolean[] {
-        return this.$store.state.tableLogHeaderModule.sortDescFields || [];
+        return this.$store.getters["dataTable/getSortDesc"];
       },
       set(value: boolean[]) {
-        this.$store.commit("tableLogHeaderModule/SET_SORT_DESC_FIELDS", value);
+        this.$store.commit("dataTable/SET_SORT_DESC", value);
       },
     },
     selectedItems: {
@@ -98,9 +117,6 @@ export default Vue.extend({
     selectedCount(): number {
       return this.$store.getters["dataTable/selectedCount"];
     },
-    sortByFields(): string[] {
-      return this.$store.state.tableLogHeaderModule.sortByFields;
-    },
     visibleHeaders(): ExtendedHeaderColumn[] {
       return this.headersFromStore.filter(
         (h: ExtendedHeaderColumn) => h.isVisible
@@ -113,6 +129,7 @@ export default Vue.extend({
       return this.$store.state.dataTable.presetList;
     },
   },
+
   created() {
     this.$store.commit(
       `tableLogHeaderModule/SET_HEADERS`,
