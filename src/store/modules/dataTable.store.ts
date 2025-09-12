@@ -3,7 +3,7 @@ import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
 import { downloadAllLogsCsv, downloadSelectedLogsCsv, fetchFilters, fetchLogPreset, fetchLogsFiltered, fetchLogsHeaders } from "@/shared/api/logs";
-import { EventLogDataTableState, IDefaultFilters } from "../types/IEventLogDataTableState";
+import { EventLogDataTableState } from "../types/IEventLogDataTableState";
 import { RootState } from "../types/IRootState";
 import { ExtendedHeaderColumn } from "../types/THeaders";
 
@@ -196,7 +196,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
         dispatch(`loadItems`)
     },
 
-    async getHeaders({ commit, state }) {
+    async getHeaders({ commit, state, dispatch }) {
         try {
             const headers = await fetchLogsHeaders(state.preset)
 
@@ -206,12 +206,13 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
             else {
                 commit(`SET_HEADERS`, [])
             }
+            dispatch(`getSort`)
         }
         catch (error) {
             console.error(error)
         }
     },
-    async getPresets({ commit, state }) {
+    async getPresets({ commit }) {
         try {
             const presets = await fetchLogPreset()
 
@@ -233,7 +234,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
             if (filters) {
                 commit(`SET_FILTERS`, filters)
             } else {
-                commit(`SET_FILTERS`, { sortBy: [], sortDesc: [] }) 
+                commit(`SET_FILTERS`, { sortBy: [], sortDesc: [] })
             }
         } catch (error) {
             console.error(error);

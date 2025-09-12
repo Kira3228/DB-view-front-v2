@@ -16,6 +16,7 @@
       @page-changed="updatePage"
       multi-sort
       :sort-by-list.sync="sortByFields"
+      :sortDescList.sync="sortDescFields"
       :setting-headers.sync="headersFromStore"
     >
     </data-table>
@@ -41,15 +42,7 @@ export default Vue.extend({
       },
     };
   },
-  watch: {
-    filters: {
-      deep: true,
-      handler(newVal) {
-        this.$store.commit(`activeFileTable/SET_FILEPATH`, newVal.filepath);
-        this.$store.commit(`activeFileTable/SET_INODE`, newVal.inode);
-      },
-    },
-  },
+
   methods: {
     loadItems() {
       this.$store.dispatch("activeFileTable/loadItems");
@@ -78,6 +71,7 @@ export default Vue.extend({
     await this.loadItems();
     await this.loadHeader();
     await this.fetchPresets();
+    await this.$store.dispatch(`activeFileTable/getFilter`);
   },
 
   computed: {
@@ -86,20 +80,6 @@ export default Vue.extend({
     },
     totalPages(): number {
       return this.$store.state.activeFileTable.totalPages;
-    },
-    sortByFields(): string[] {
-      return this.$store.state.tableActiveHeaderModule.sortByFields;
-    },
-    sortDescFields: {
-      get(): boolean[] {
-        return this.$store.state.tableActiveHeaderModule.sortDescFields || [];
-      },
-      set(value: boolean[]) {
-        this.$store.commit(
-          "tableActiveHeaderModule/SET_SORT_DESC_FIELDS",
-          value
-        );
-      },
     },
     headersFromStore: {
       get(): ExtendedHeaderColumn[] {
@@ -123,6 +103,27 @@ export default Vue.extend({
     headersFromBackend() {
       return this.$store.state.activeFileTable.headers || [];
     },
+    sortByFields: {
+      get(): string[] {
+        console.log(
+          `Из EventLogPage`,
+          this.$store.getters["activeFileTable/getSortBy"]
+        );
+
+        return this.$store.getters["activeFileTable/getSortBy"];
+      },
+      set(newSortList: string[]) {
+        this.$store.commit(`activeFileTable/SET_SORT_BY`, newSortList);
+      },
+    },
+    sortDescFields: {
+      get(): boolean[] {
+        return this.$store.getters["activeFileTable/getSortDesc"];
+      },
+      set(value: boolean[]) {
+        this.$store.commit("activeFileTable/SET_SORT_DESC", value);
+      },
+    },
   },
 
   created() {
@@ -130,6 +131,15 @@ export default Vue.extend({
       `tableActiveHeaderModule/SET_HEADERS`,
       ActiveFileTableHeaders
     );
+  },
+  watch: {
+    filters: {
+      deep: true,
+      handler(newVal) {
+        this.$store.commit(`activeFileTable/SET_FILEPATH`, newVal.filepath);
+        this.$store.commit(`activeFileTable/SET_INODE`, newVal.inode);
+      },
+    },
   },
 });
 </script>

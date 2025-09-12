@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants";
 import { ActiveFileDto } from "../types/ActiveFiles/TActiveFileDto";
 import { httpGet, httpPatch } from "./http"
+import { IDefaultFilters } from "@/store/types/IDefaultFilters";
 
 export const fetchActiveFiles = (params: { page?: number; filePath?: string; inode?: number }) => {
   return httpGet<ActiveFileDto>(`${BASE_URL}/api/files/active`, params)
@@ -31,4 +32,13 @@ export const fetchFileHeaders = (presetName?: string) => {
   catch (error) {
     console.error(error);
   }
+}
+
+export const fetchFilters = async (presetName?: string): Promise<IDefaultFilters> => {
+  let params: { presetName?: string } = {}
+  if (presetName) {
+    params = { presetName }
+  }
+  const response: IDefaultFilters = await httpGet(`${BASE_URL}/api/files/filters`, params)
+  return response
 }

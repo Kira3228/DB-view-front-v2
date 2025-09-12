@@ -1,5 +1,6 @@
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems"
 import { DataTable } from "./DataTableItemsStore"
+import { IDefaultFilters } from "./IDefaultFilters"
 
 export interface EventLogDataTableState extends DataTable {
   selectedItems: TDataTableItems[]
@@ -10,8 +11,5 @@ export interface EventLogDataTableState extends DataTable {
   dateRange: string[]
   default_filters: IDefaultFilters
 }
-export interface IDefaultFilters {
-  sortBy?: string[]
-  sortDesc?: boolean[]
-}
+
 

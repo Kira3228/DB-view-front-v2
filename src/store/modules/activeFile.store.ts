@@ -1,7 +1,7 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { ActiveFileDto } from "@/shared/types/ActiveFiles/TActiveFileDto";
 import TActiveFile from "@/shared/types/ActiveFiles/TActiveFile";
-import { fetchActiveFiles, fetchArchiveFiles, fetchFileHeaders, fetchFilePreset, updateFileStatus } from "@/shared/api/active-file";
+import { fetchActiveFiles, fetchArchiveFiles, fetchFileHeaders, fetchFilePreset, fetchFilters, updateFileStatus } from "@/shared/api/active-file";
 import { ActiveFileDataTableState } from "../types/IActiveFileDataTableState";
 import { RootState } from "../types/IRootState";
 import { ExtendedHeaderColumn } from "../types/THeaders";
@@ -18,12 +18,25 @@ const state: ActiveFileDataTableState = {
     preset: "standart",
     presetList: [],
     exceptions: [],
-    default_filters: {},
     headers: [],
+    default_filters: {
+        sortBy: [],
+        sortDesc: []
+    },
+
 
 }
 
-const getters: GetterTree<ActiveFileDataTableState, RootState> = {}
+const getters: GetterTree<ActiveFileDataTableState, RootState> = {
+    getSortBy: (state: ActiveFileDataTableState): string[] => {
+        const sortBy = state.default_filters.sortBy || []
+        return sortBy
+    },
+    getSortDesc: (state: ActiveFileDataTableState): boolean[] => {
+        const sortDesc = state.default_filters.sortDesc || []
+        return sortDesc
+    }
+}
 
 const mutations: MutationTree<ActiveFileDataTableState> = {
     SET_FILEPATH(state: ActiveFileDataTableState, newValue: string) {
@@ -72,6 +85,15 @@ const mutations: MutationTree<ActiveFileDataTableState> = {
     },
     SET_EXCEPTIONS(state: ActiveFileDataTableState, newValue: typeof state.exceptions) {
         state.exceptions = newValue
+    },
+    SET_SORT_DESC(state: ActiveFileDataTableState, newValue: typeof state.default_filters.sortDesc) {
+        state.default_filters.sortDesc = newValue
+    },
+    SET_SORT_BY(state: ActiveFileDataTableState, newValue: typeof state.default_filters.sortBy) {
+        state.default_filters.sortBy = newValue
+    },
+    SET_FILTERS(state: ActiveFileDataTableState, newValue: typeof state.default_filters) {
+        state.default_filters = newValue
     }
 }
 
@@ -152,6 +174,20 @@ const actions: ActionTree<ActiveFileDataTableState, RootState> = {
         }
         catch (error) {
             console.log(error);
+        }
+    },
+
+    async getFilter({ commit, state }) {
+        try {
+            const filters = await fetchFilters(state.preset)
+            if (filters) {
+                commit(`SET_FILTERS`, filters)
+            } else {
+                commit(`SET_FILTERS`, { sortBy: [], sortDesc: [] })
+            }
+        } catch (error) {
+            console.error(error);
+
         }
     }
 }
