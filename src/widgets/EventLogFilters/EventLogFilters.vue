@@ -25,7 +25,6 @@
           placeholder="Путь"
           @debounce="fetchFiltered"
         ></text-input>
-        <p>{{ filepath }}</p>
         <text-input
           v-model="systemId"
           label="Id системы"
