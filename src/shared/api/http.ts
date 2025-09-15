@@ -1,12 +1,10 @@
 export const httpGet = async <T>(url: string, params?: Record<string, any>): Promise<T> => {
   const finalURL = buildURL(url, params)
-  console.log(finalURL);
   const res = await fetch(finalURL, { method: `GET` })
 
   if (!res.ok) {
     throw new Error(`GET ${finalURL} failed ${res.status}`)
   }
-
   return res.json() as Promise<T>
 }
 
@@ -35,9 +33,8 @@ export const buildURL = (base: string, params?: Record<string, any>): string => 
     if (v === undefined || v === null || v === "") continue
     sp.set(k, String(v))
   }
-
+  
   const qs = sp.toString()
-
   return qs ? `${base}?${qs}` : base
 }
 

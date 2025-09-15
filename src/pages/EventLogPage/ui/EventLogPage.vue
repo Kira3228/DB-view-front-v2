@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <event-log-filters></event-log-filters>
     <data-table
       v-if="sortDataLoaded"
@@ -29,7 +29,6 @@
 <script lang="ts">
 import DataTable from "@/shared/UI/DataTable/DataTable.vue";
 import EventLogFilters from "@/widgets/EventLogFilters/EventLogFilters.vue";
-import { EventLogTableHeaders } from "./tableHeaders";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import Vue from "vue";
 import { ExtendedHeaderColumn } from "@/store/types/THeaders";
@@ -42,7 +41,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      headers: EventLogTableHeaders,
       pages: 0,
       sortDataLoaded: false,
     };
@@ -55,29 +53,14 @@ export default Vue.extend({
     await this.$store.dispatch("dataTable/loadItems");
   },
   methods: {
-    updateSelection(items: TDataTableItems[]) {
-      this.$store.dispatch(`dataTable/updateSelection`, items);
-    },
     updatePage(newPage: number) {
       this.$store.dispatch(`dataTable/updatePage`, newPage);
       this.$store.dispatch(`dataTable/updateTableItems`);
-    },
-    async refreshData() {
-      try {
-        await this.$store.dispatch("dataTable/loadItems");
-      } catch (error) {
-        console.error(error);
-      }
     },
   },
   computed: {
     sortByFields: {
       get(): string[] {
-        console.log(
-          `Из EventLogPage`,
-          this.$store.getters["dataTable/getSortBy"]
-        );
-
         return this.$store.getters["dataTable/getSortBy"];
       },
       set(newSortList: string[]) {
@@ -114,27 +97,9 @@ export default Vue.extend({
     totalPages(): number {
       return this.$store.state.dataTable.totalPages;
     },
-    selectedCount(): number {
-      return this.$store.getters["dataTable/selectedCount"];
-    },
-    visibleHeaders(): ExtendedHeaderColumn[] {
-      return this.headersFromStore.filter(
-        (h: ExtendedHeaderColumn) => h.isVisible
-      );
-    },
     headersFromBackend() {
       return this.$store.state.dataTable.headers;
     },
-    presetsFromBackend() {
-      return this.$store.state.dataTable.presetList;
-    },
-  },
-
-  created() {
-    this.$store.commit(
-      `tableLogHeaderModule/SET_HEADERS`,
-      EventLogTableHeaders
-    );
   },
 });
 </script>

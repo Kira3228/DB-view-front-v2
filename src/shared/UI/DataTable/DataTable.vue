@@ -99,7 +99,9 @@ import { statusOptions } from "@/widgets/ActiveFileFilters/StatusOptions/StatusO
 
 export default Vue.extend({
   components: { SelectInput },
+
   name: "DataTable",
+
   props: {
     selected: {
       type: Array as PropType<TDataTableItems[]>,
@@ -130,19 +132,16 @@ export default Vue.extend({
       type: Array,
       default: () => [],
     },
-    settingHeaders: {
-      type: Array,
-      default: () => [],
-    },
   },
+
   data() {
     return {
-      pageCount: 0,
       localPage: this.page,
       itemsPerPage: 14,
       statusOptions: statusOptions,
     };
   },
+
   computed: {
     sortDescFields: {
       get() {
@@ -152,14 +151,6 @@ export default Vue.extend({
         this.$emit("update:sortDescList", value);
       },
     },
-    localSettingHeader: {
-      get() {
-        return this.settingHeaders;
-      },
-      set(value) {
-        this.$emit("update:settingHeaders", value);
-      },
-    },
     localSelected: {
       get(): TDataTableItems[] {
         return this.selected;
@@ -167,12 +158,6 @@ export default Vue.extend({
       set(this: Vue, value: TDataTableItems[]) {
         this.$emit("update:selected", value);
       },
-    },
-    selectedStatus: {
-      get(): string {
-        return this.$store.state.activeFileTable.status;
-      },
-      set() {},
     },
     isArchived: {
       get(): boolean {
@@ -191,6 +176,7 @@ export default Vue.extend({
       },
     },
   },
+
   methods: {
     handleChangePage(newPage: number) {
       this.localPage = newPage;
@@ -198,18 +184,10 @@ export default Vue.extend({
       this.$emit("page-changed", newPage);
     },
     expandable(): boolean {
-      if (this.tableType === "events") {
-        return true;
-      } else {
-        return false;
-      }
+      return this.tableType === "events";
     },
     showSelect(): boolean {
-      if (this.tableType === "events") {
-        return true;
-      } else {
-        return false;
-      }
+      return this.tableType === "events";
     },
     getColor(status: string): string {
       if (status === `active`) return `green`;
@@ -227,6 +205,7 @@ export default Vue.extend({
       return date.split(`T`)[0];
     },
   },
+
   watch: {
     page(newPage: number) {
       this.localPage = newPage;
@@ -234,16 +213,6 @@ export default Vue.extend({
     async isArchived(newValue: boolean) {
       await this.$store.dispatch(`activeFileTable/switchToArchive`, newValue);
     },
-    localSortByList: {
-      handler(newVal, oldVal) {
-        console.log("DataTable localSortByList изменился:", { newVal, oldVal });
-      },
-      deep: true,
-    },
-  },
-  mounted() {
-    console.log(`При монтировке DataTable`, this.sortByList);
-    console.log(`При монтировке DataTable`, this.sortDescFields);
   },
 });
 </script>

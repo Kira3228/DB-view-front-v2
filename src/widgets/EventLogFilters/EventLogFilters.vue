@@ -57,9 +57,6 @@ import TextInput from "@/shared/UI/TextInput/TextInput.vue";
 import { eventOptions } from "./SelectOptions/EventOptions";
 import { statusOptions } from "./SelectOptions/StatusOptions";
 import { defineComponent } from "@vue/composition-api";
-import Modal from "@/shared/UI/Modal/Modal.vue";
-import { EventLogTableHeaders } from "@/pages/EventLogPage/ui/tableHeaders";
-import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 export default defineComponent({
   name: `EventLogFilters`,
   components: {
@@ -67,20 +64,14 @@ export default defineComponent({
     SelectInput,
     DateInput,
     CustomButton,
-    Modal,
   },
   data() {
-    return {
-      pathName: "",
-      date: [],
-      status: statusOptions,
-      events: eventOptions,
-    };
+    return { status: statusOptions, events: eventOptions };
+  },
+  async mounted() {
+    await this.$store.dispatch(`dataTable/getPresets`);
   },
   methods: {
-    async loadPreset() {
-      return await this.$store.dispatch(`dataTable/getPresets`);
-    },
     async downloadSelectedLogReport() {
       return await this.$store.dispatch(`dataTable/downloadSelectedLogReport`);
     },
@@ -93,8 +84,6 @@ export default defineComponent({
     async fetchPreset() {
       return await this.$store.dispatch(`dataTable/getHeaders`);
     },
-
-    async fetchHeaders() {},
   },
   computed: {
     presetOptions: {
@@ -102,22 +91,6 @@ export default defineComponent({
         return this.$store.state.dataTable.presetList;
       },
       set() {},
-    },
-    sortByFields: {
-      get(): string[] {
-        return this.$store.state.tableHeaderModule.sortByFields;
-      },
-      set(v: string[]) {
-        this.$store.commit("tableLogHeaderModule/SET_SORT_BY_FIELDS", v);
-      },
-    },
-    headersFromStore: {
-      get(): ExtendedHeaderColumn[] {
-        return this.$store.state.tableHeaderModule.headers;
-      },
-      set(value: ExtendedHeaderColumn[]) {
-        this.$store.commit("tableLogHeaderModule/UPDATE_HEADERS", value);
-      },
     },
     isDisabled(): boolean {
       return this.$store.getters[`dataTable/hasSelection`];
@@ -170,15 +143,6 @@ export default defineComponent({
         this.$store.commit(`dataTable/SET_PRESET`, newPreset);
       },
     },
-  },
-  async mounted() {
-    await this.loadPreset();
-  },
-  created() {
-    this.$store.commit(
-      `tableLogHeaderModule/SET_HEADERS`,
-      EventLogTableHeaders
-    );
   },
 });
 </script>

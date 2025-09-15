@@ -10,18 +10,17 @@
 <script lang="ts">
 import FileDetailsTree from "@/widgets/FileDetails/FileDetailsTree/FileDetailsTree.vue";
 import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
-
 import Vue from "vue";
 
 export default Vue.extend({
   name: "FileDetailsPage",
   components: { FileDetailsTree, FiltersBar },
-  async mounted() {},
   methods: {
     async fetchFiltered() {
       await this.$store.dispatch(`fileDetailsModule/loadItems`);
     },
   },
+
   data() {
     return {
       filters: {
@@ -30,6 +29,7 @@ export default Vue.extend({
       },
     };
   },
+  
   watch: {
     filters: {
       deep: true,

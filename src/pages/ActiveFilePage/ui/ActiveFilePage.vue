@@ -17,7 +17,6 @@
       multi-sort
       :sort-by-list.sync="sortByFields"
       :sortDescList.sync="sortDescFields"
-      :setting-headers.sync="headersFromStore"
     >
     </data-table>
   </div>
@@ -25,17 +24,14 @@
 <script lang="ts">
 import DataTable from "@/shared/UI/DataTable/DataTable.vue";
 import Vue from "vue";
-import { ActiveFileTableHeaders } from "./tableHeaders";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
-import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 
 export default Vue.extend({
   name: `ActiveFilePage`,
   components: { DataTable, FiltersBar },
   data() {
     return {
-      headers: ActiveFileTableHeaders,
       filters: {
         filepath: this.$store.state.activeFileTable.filepath,
         inode: this.$store.state.activeFileTable.inode,
@@ -67,6 +63,7 @@ export default Vue.extend({
       await this.$store.dispatch("activeFileTable/getHeaders");
     },
   },
+
   async mounted() {
     await this.loadItems();
     await this.loadHeader();
@@ -81,19 +78,6 @@ export default Vue.extend({
     totalPages(): number {
       return this.$store.state.activeFileTable.totalPages;
     },
-    headersFromStore: {
-      get(): ExtendedHeaderColumn[] {
-        return this.$store.state.tableActiveHeaderModule.headers;
-      },
-      set(value: ExtendedHeaderColumn[]) {
-        this.$store.commit("tableActiveHeaderModule/UPDATE_HEADERS", value);
-      },
-    },
-    visibleHeaders(): ExtendedHeaderColumn[] {
-      return this.headersFromStore.filter(
-        (h: ExtendedHeaderColumn) => h.isVisible
-      );
-    },
     currentPreset(): string {
       return this.$store.state.dataTable.preset || "";
     },
@@ -105,11 +89,6 @@ export default Vue.extend({
     },
     sortByFields: {
       get(): string[] {
-        console.log(
-          `Из EventLogPage`,
-          this.$store.getters["activeFileTable/getSortBy"]
-        );
-
         return this.$store.getters["activeFileTable/getSortBy"];
       },
       set(newSortList: string[]) {
@@ -126,12 +105,6 @@ export default Vue.extend({
     },
   },
 
-  created() {
-    this.$store.commit(
-      `tableActiveHeaderModule/SET_HEADERS`,
-      ActiveFileTableHeaders
-    );
-  },
   watch: {
     filters: {
       deep: true,

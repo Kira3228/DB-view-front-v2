@@ -47,14 +47,7 @@ const routes: Array<RouteConfig> = [
         meta: {
         }
       },
-      {
-        path: "/settings",
-        name: "settings",
-        component: SettingPage,
-
-        meta: {
-        }
-      },
+     
     ],
   },
 ];
