@@ -7,5 +7,5 @@ export const fetchFileDetails = async (params: { filePath: string, inode?: numbe
 }
 
 export const fetchDetails = async (params: { filePath?: string, inode?: number }) => {
-  return httpGet(`${BASE_URL}/api/graph`, params)
+  return httpGet(`${BASE_URL}/api/files/graph`, params)
 }

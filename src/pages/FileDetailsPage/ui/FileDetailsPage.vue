@@ -8,7 +8,6 @@
   </div>
 </template>
 <script lang="ts">
-import FileDetailsFilter from "@/widgets/FileDetails/FileDetailsFilters/FileDetailsFilter.vue";
 import FileDetailsTree from "@/widgets/FileDetails/FileDetailsTree/FileDetailsTree.vue";
 import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
 
@@ -16,18 +15,18 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "FileDetailsPage",
-  components: { FileDetailsTree, FileDetailsFilter, FiltersBar },
+  components: { FileDetailsTree, FiltersBar },
   async mounted() {},
   methods: {
     async fetchFiltered() {
-      await this.$store.dispatch(``);
+      await this.$store.dispatch(`fileDetailsModule/loadItems`);
     },
   },
   data() {
     return {
       filters: {
-        filepath: this.$store.state.fileDeatails.filePath,
-        inode: this.$store.state.fileDeatails.inode,
+        filepath: this.$store.state.fileDetailsModule.filePath,
+        inode: this.$store.state.fileDetailsModule.inode,
       },
     };
   },
@@ -35,8 +34,8 @@ export default Vue.extend({
     filters: {
       deep: true,
       handler(newVal) {
-        this.$store.commit(`activeFileTable/SET_FILEPATH`, newVal.filepath);
-        this.$store.commit(`activeFileTable/SET_INODE`, newVal.inode);
+        this.$store.commit(`fileDetailsModule/SET_FILEPATH`, newVal.filepath);
+        this.$store.commit(`fileDetailsModule/SET_INODE`, newVal.inode);
       },
     },
   },

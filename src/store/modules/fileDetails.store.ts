@@ -3,6 +3,7 @@ import { TFlattenGraph } from "@/widgets/FileDetails/file-details.type";
 import { graphToTreeItems, TGraph } from "@/shared/utils/map-file-to-tree";
 import { RootState } from "../types/IRootState";
 import { FileDetailsState } from "../types/IFile";
+import { fetchDetails } from "@/shared/api/file-details";
 
 const state: FileDetailsState = {
   error: null,
@@ -35,9 +36,11 @@ const mutations: MutationTree<FileDetailsState> = {
 const actions: ActionTree<FileDetailsState, RootState> = {
   async loadItems({ commit, state, getters }) {
     try {
-      const details = await fetchDetails({state.filePath, state.inode})
+      const details = await fetchDetails({ filePath: state.filePath, inode: Number(state.inode) })
+      console.log({ filePath: state.filePath, inode: state.inode });
 
-      commit(`SET_FILE_HIERARCHY`, data)
+
+      commit(`SET_FILE_HIERARCHY`, details)
 
     }
     catch (error) {
