@@ -3,8 +3,8 @@ import { TOption } from "@/shared/UI/SelectInput/TOptions"
 export interface ReportFilters {
   date: string[] | null
   depth: number[]
-  reportType: TOption
-  reportFormat: TOption
+  reportType: string
+  reportFormat: string
   selectedFields: SelectedReportFields
   reportFields: ReportFields[]
 }

@@ -40,6 +40,13 @@ export default Vue.extend({
   },
   methods: {
     handleClick() {
+      console.log("Current type:", this.type);
+      console.log("Current format:", this.format);
+      console.log("Store state:", {
+        type: this.$store.state.reportModule.reportType,
+        format: this.$store.state.reportModule.reportFormat,
+      });
+
       this.$store.dispatch("reportModule/downloadReport");
     },
   },

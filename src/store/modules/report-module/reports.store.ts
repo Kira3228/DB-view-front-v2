@@ -1,11 +1,10 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 import { downloadBlob } from "@/shared/utils/downloadHelper";
-import { toSearchString } from "./toSearchString";
-import { TOption } from "@/shared/UI/SelectInput/TOptions";
+import { toSearchStringAsObject } from "./toSearchString";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
-import { buildURL } from "@/shared/api/http";
 import { RootState } from "@/store/types/IRootState";
 import { ReportFields, ReportFilters, SelectedReportFields } from "@/store/types/IReportFilters";
+import { downloadReport } from "@/shared/api/reports";
 
 const state: ReportFilters = {
   date: [],
@@ -43,8 +42,8 @@ const state: ReportFilters = {
       processStartTime: false
     }
   },
-  reportFormat: { label: '', value: '' },
-  reportType: { label: '', value: '' },
+  reportFormat: "",
+  reportType: "",
   reportFields: []
 }
 
@@ -80,11 +79,11 @@ const getters: GetterTree<ReportFilters, RootState> = {
     return toSqlDateTimeOrEmpty(state.date?.[1])
   },
 
-  reprtTypeValue: (state: ReportFilters): string => {
-    return state.reportType?.value || ""
+  reportTypeValue: (state: ReportFilters): string => {
+    return state.reportType || ""
   },
-  reortFormatValue: (state: ReportFilters): string => {
-    return state.reportFormat?.value || ""
+  reportFormatValue: (state: ReportFilters): string => {
+    return state.reportFormat || ""
   }
 }
 
@@ -105,11 +104,14 @@ const mutations: MutationTree<ReportFilters> = {
     state.date = newValues;
   },
 
-  SET_FORMAT(state: ReportFilters, newValue: TOption) {
+  SET_FORMAT(state: ReportFilters, newValue: string) {
+    console.log(newValue);
+
     state.reportFormat = newValue;
   },
 
-  SET_TYPE(state: ReportFilters, newValue: TOption) {
+  SET_TYPE(state: ReportFilters, newValue: string) {
+
     state.reportType = newValue;
   }
 }
@@ -117,8 +119,9 @@ const mutations: MutationTree<ReportFilters> = {
 const actions: ActionTree<ReportFilters, RootState> = {
   async downloadReport({ state, getters }) {
     try {
-      const reportType = getters.reprtTypeValue
-      const reportFormat = getters.reortFormatValue
+      const reportType = state.reportType;
+      const reportFormat = state.reportFormat;
+      console.log({ reportType, reportFormat });
 
       if (![`pdf`, `docx`, `xlsx`].includes(reportFormat)) {
         throw new Error("Не выбран формат");
@@ -126,35 +129,40 @@ const actions: ActionTree<ReportFilters, RootState> = {
       if (![`events`, `chains`].includes(reportType)) {
         throw new Error("Не выбран тип документа");
       }
-      const params: Record<string, any> = {
-        startDate: getters.startDate || undefined,
-        endDate: getters.endDate || undefined
+
+      const params: Record<string, any> = {};
+
+      if (getters.startDate) {
+        params.startDate = getters.startDate;
+      }
+      if (getters.endDate) {
+        params.endDate = getters.endDate;
       }
 
       if (reportType === `events`) {
-        Object.assign(params, toSearchString(state.selectedFields))
-      }
-      else {
-        params.minDepth = state.depth[0]
-        params.maxDepth = state.depth[1]
+        const searchFields = toSearchStringAsObject(state.selectedFields);
+        Object.assign(params, searchFields);
+      } else {
+        params.minDepth = state.depth[0];
+        params.maxDepth = state.depth[1];
       }
 
-      const url = `http://localhost:3000/api/reports/${reportType}.${reportFormat}`;
-      const fullUrl = buildURL(url, params)
-      const response = await fetch(fullUrl)
+      Object.keys(params).forEach(key => {
+        if (params[key] === undefined || params[key] === null) {
+          delete params[key];
+        }
+      });
 
-      if (!response.ok) {
-        throw new Error(`Ошибка загрузки отчета`)
-      }
-      const blob = await response.blob()
+      const blob = await downloadReport(params, reportType, reportFormat)
+      await downloadBlob(blob, { filename: `report.${reportFormat}` })
 
-      downloadBlob(blob, { filename: `report.${reportFormat}` })
-    }
-    catch (e) {
-      alert(e)
-      console.error(e);
+    } catch (error) {
+      console.error('Download error:', error);
+      alert(error);
     }
   }
+
+
 }
 
 const reportModule: Module<ReportFilters, RootState> = {
@@ -163,7 +171,6 @@ const reportModule: Module<ReportFilters, RootState> = {
   getters,
   mutations,
   actions
-
 }
 
 export default reportModule

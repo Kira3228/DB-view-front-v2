@@ -48,7 +48,7 @@ export default Vue.extend({
     },
 
     shouldShowFieldTree(): boolean {
-      return this.normalizedType.value === "event";
+      return this.normalizedType.value === "events";
     },
     shouldShowCustomSlider(): boolean {
       return this.normalizedType.value === "chains";

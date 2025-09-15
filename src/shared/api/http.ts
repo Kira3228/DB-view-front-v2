@@ -33,13 +33,15 @@ export const buildURL = (base: string, params?: Record<string, any>): string => 
     if (v === undefined || v === null || v === "") continue
     sp.set(k, String(v))
   }
-  
+
   const qs = sp.toString()
   return qs ? `${base}?${qs}` : base
 }
 
 export const httpGetBlob = async (url: string, params?: Record<string, any>): Promise<Blob> => {
   const final = buildURL(url, params);
+  console.log(final);
+
   const res = await fetch(final)
   if (!res.ok) {
     throw new Error(`GET ${final} failed: ${res.status}`)
