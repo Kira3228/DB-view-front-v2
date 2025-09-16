@@ -48,11 +48,7 @@ export default defineComponent({
           icon: "mdi-star",
           route: "/details",
         },
-        {
-          title: "Настройки",
-          icon: "mdi-star",
-          route: "/settings",
-        },
+
         {
           title: "Отчёты",
           icon: "mdi-star",

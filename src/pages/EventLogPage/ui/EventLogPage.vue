@@ -2,7 +2,7 @@
   <div>
     <event-log-filters></event-log-filters>
     <data-table
-      v-if="sortDataLoaded"
+      v-if="!isLoading"
       :selected.sync="selectedItems"
       :paginationLength="totalPages"
       :items="items"
@@ -22,7 +22,7 @@
         </tr>
       </template>
     </data-table>
-    <div v-else class="text-center pa-4">Загрузка таблицы...</div>
+    <v-skeleton-loader v-else type="table-tbody"></v-skeleton-loader>
   </div>
 </template>
 
@@ -42,14 +42,13 @@ export default Vue.extend({
   data() {
     return {
       pages: 0,
-      sortDataLoaded: false,
     };
   },
   async mounted() {
     await this.$store.dispatch("dataTable/getPresets");
     await this.$store.dispatch("dataTable/getHeaders");
     await this.$store.dispatch("dataTable/getSort");
-    this.sortDataLoaded = true;
+
     await this.$store.dispatch("dataTable/loadItems");
   },
   methods: {
@@ -99,6 +98,9 @@ export default Vue.extend({
     },
     headersFromBackend() {
       return this.$store.state.dataTable.headers;
+    },
+    isLoading() {
+      return this.$store.state.dataTable.loading;
     },
   },
 });

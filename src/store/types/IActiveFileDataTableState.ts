@@ -7,4 +7,6 @@ export interface ActiveFileDataTableState extends DataTable {
   status: string
   isArchived: boolean
   default_filters: IDefaultFilters
+  isSuccessUpdateStatus: boolean
+  isStatusPending: boolean | null
 }

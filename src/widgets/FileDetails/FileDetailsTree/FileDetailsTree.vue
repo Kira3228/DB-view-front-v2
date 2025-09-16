@@ -16,7 +16,7 @@
           <span
             v-if="item.status"
             :class="getColor(item.status)"
-            class="font-weight-thin tw-text-xs"
+            class="tw-text-base"
           >
             {{ item.status }}
           </span>
@@ -62,3 +62,8 @@ export default Vue.extend({
   },
 });
 </script>
+<style scoped>
+.red {
+  background-color: red;
+}
+</style>

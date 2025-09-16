@@ -1,5 +1,5 @@
 <template>
-  <v-card class="tw-p-4 tw-w-1/2">
+  <v-card class="tw-p-4 tw-w-64">
     <div class="tw-flex tw-flex-col tw-gap-2">
       <select-input v-model="type" :items="types" label="Тип"></select-input>
       <select-input
@@ -7,7 +7,7 @@
         :items="formats"
         label="Формат"
       ></select-input>
-      <report-filters :type="type"></report-filters>
+      <report-filters class="tw-pt-3" :type="type"></report-filters>
       <custom-button
         @click="handleClick"
         title="Загрузить отчёт"

@@ -23,6 +23,7 @@ export type TreeItem = {
   name: string
   children?: TreeItem[]
   raw?: TNode
+  status: string
 }
 
 const indexGraph = (g: TGraph) => {
@@ -73,9 +74,10 @@ const buildTree = (rootId: number, nodeById: Map<number, TNode>, out: Map<number
     }
     const item: TreeItem = {
       id: `${id}-${Math.random().toString(36).slice(2, 8)}`,
-      name: `${n.fileName}-${n.status}`,
+      name: `${n.fileName}`,
       raw: n,
-      children: []
+      children: [],
+      status: `${n.status}`
     }
     if (path.has(id)) {
       item.name = `${n.fileName} - ${n.status} (ref)`
@@ -138,8 +140,9 @@ export const graphToTreeItems = (g: TGraph): TreeItem[] => {
     if (!inForestIds.has(n.id)) {
       forest.push({
         id: `${n.id}-solo`,
-        name: `${n.fileName} - ${n.status}`,
-        raw: n
+        name: `${n.fileName}`,
+        raw: n,
+        status: `${n.status}`
       })
     }
   }

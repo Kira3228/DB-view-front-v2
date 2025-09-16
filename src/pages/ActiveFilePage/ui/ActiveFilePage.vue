@@ -9,6 +9,7 @@
       :debouncedEventOnSelect="debouncedFetchPresets"
     ></filters-bar>
     <data-table
+      v-if="!isLoading"
       :paginationLength="totalPages"
       table-type="active"
       :items="items"
@@ -19,6 +20,20 @@
       :sortDescList.sync="sortDescFields"
     >
     </data-table>
+    <v-skeleton-loader v-else type="table-tbody"></v-skeleton-loader>
+    <v-snackbar :color="getColor()" v-model="isStatusPending">
+      {{ getText() }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="isStatusPending = false"
+        >
+          Закрыть
+        </v-btn></template
+      ></v-snackbar
+    >
   </div>
 </template>
 <script lang="ts">
@@ -40,6 +55,20 @@ export default Vue.extend({
   },
 
   methods: {
+    getColor(): `red` | `green` {
+      const status = this.$store.state.activeFileTable.isSuccessUpdateStatus;
+      if (status) {
+        return `green`;
+      }
+      return `red`;
+    },
+    getText(): string {
+      const status = this.$store.state.activeFileTable.isSuccessUpdateStatus;
+      if (status) {
+        return `Статус успешно обновлён`;
+      }
+      return `Ошибка обновления статуса`;
+    },
     loadItems() {
       this.$store.dispatch("activeFileTable/loadItems");
     },
@@ -101,6 +130,17 @@ export default Vue.extend({
       },
       set(value: boolean[]) {
         this.$store.commit("activeFileTable/SET_SORT_DESC", value);
+      },
+    },
+    isLoading() {
+      return this.$store.state.activeFileTable.loading;
+    },
+    isStatusPending: {
+      get() {
+        return this.$store.state.activeFileTable.isStatusPending;
+      },
+      set() {
+        this.$store.commit(`activeFileTable/SET_STATUS_PENDING`);
       },
     },
   },

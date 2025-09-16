@@ -177,7 +177,7 @@ const actions: ActionTree<EventLogDataTableState, RootState> = {
         }
     },
 
-    async downloadAllLogReport({ commit, state }) {
+    async downloadAllLogReport() {
         try {
             const blob = await downloadAllLogsCsv()
             downloadBlob(blob, { filename: `report.csv` })

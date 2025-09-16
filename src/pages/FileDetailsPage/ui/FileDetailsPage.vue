@@ -4,7 +4,9 @@
       v-model="filters"
       :debouncedEvent="fetchFiltered"
     ></filters-bar>
-    <file-details-tree></file-details-tree>
+    <v-card>
+      <file-details-tree></file-details-tree>
+    </v-card>
   </div>
 </template>
 <script lang="ts">
@@ -29,7 +31,7 @@ export default Vue.extend({
       },
     };
   },
-  
+
   watch: {
     filters: {
       deep: true,

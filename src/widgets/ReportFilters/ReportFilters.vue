@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <date-input @input="handleDateChange"></date-input>
+  <div class="">
+    <date-input
+      @input="handleDateChange"
+      v-if="shouldShowCustomSlider || shouldShowFieldTree"
+    ></date-input>
     <field-tree v-if="shouldShowFieldTree"></field-tree>
     <custom-slider
       v-if="shouldShowCustomSlider"

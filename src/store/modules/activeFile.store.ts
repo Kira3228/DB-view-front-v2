@@ -23,8 +23,8 @@ const state: ActiveFileDataTableState = {
         sortBy: [],
         sortDesc: []
     },
-
-
+    isSuccessUpdateStatus: false,
+    isStatusPending: null,
 }
 
 const getters: GetterTree<ActiveFileDataTableState, RootState> = {
@@ -94,6 +94,12 @@ const mutations: MutationTree<ActiveFileDataTableState> = {
     },
     SET_FILTERS(state: ActiveFileDataTableState, newValue: typeof state.default_filters) {
         state.default_filters = newValue
+    },
+    SET_SUCCES_UPDATE(state: ActiveFileDataTableState, newVal: boolean) {
+        state.isSuccessUpdateStatus = newVal
+    },
+    SET_STATUS_PENDING(state: ActiveFileDataTableState, newVal: boolean) {
+        state.isStatusPending = newVal
     }
 }
 
@@ -143,12 +149,15 @@ const actions: ActionTree<ActiveFileDataTableState, RootState> = {
     },
     async updateStatus({ commit }, payload: { id: string, status: string }) {
         try {
+            commit(`SET_STATUS_PENDING`, true) // открываем окно
             const data = await updateFileStatus(payload.id, payload.status)
             commit(`SET_FILE_STATUS`, { id: Number(payload.id), status: payload.status })
+            commit(`SET_SUCCES_UPDATE`, true) // ставим успех обновления
             return data
         }
         catch (error) {
             console.error(error);
+            commit(`SET_SUCCES_UPDATE`, false)// ставим успех обновления
         }
     },
     async switchToArchive({ commit, state, dispatch }, newValue: boolean) {
