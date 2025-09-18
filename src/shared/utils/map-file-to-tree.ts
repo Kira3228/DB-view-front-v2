@@ -24,6 +24,7 @@ export type TreeItem = {
   children?: TreeItem[]
   raw?: TNode
   status: string
+  filePath?: string
 }
 
 const indexGraph = (g: TGraph) => {
@@ -77,7 +78,8 @@ const buildTree = (rootId: number, nodeById: Map<number, TNode>, out: Map<number
       name: `${n.fileName}`,
       raw: n,
       children: [],
-      status: `${n.status}`
+      status: `${n.status}`,
+      filePath: `${n.filePath}`
     }
     if (path.has(id)) {
       item.name = `${n.fileName} - ${n.status} (ref)`
@@ -142,7 +144,8 @@ export const graphToTreeItems = (g: TGraph): TreeItem[] => {
         id: `${n.id}-solo`,
         name: `${n.fileName}`,
         raw: n,
-        status: `${n.status}`
+        status: `${n.status}`,
+        filePath: `${n.filePath}`,
       })
     }
   }

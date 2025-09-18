@@ -20,6 +20,9 @@
           >
             {{ item.status }}
           </span>
+          <span v-if="item.filePath" class="tw-text-sm tw-italic"
+            >{{ item.filePath }}
+          </span>
         </div>
       </template>
     </v-treeview>
