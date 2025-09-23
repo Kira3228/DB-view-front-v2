@@ -44,12 +44,11 @@ export default Vue.extend({
       pages: 0,
     };
   },
-  async mounted() {
-    await this.$store.dispatch("dataTable/getPresets");
-    await this.$store.dispatch("dataTable/getHeaders");
-    await this.$store.dispatch("dataTable/getSort");
-
-    await this.$store.dispatch("dataTable/loadItems");
+  mounted() {
+    this.$store.dispatch("dataTable/getPresets");
+    this.$store.dispatch("dataTable/getHeaders");
+    this.$store.dispatch("dataTable/getSort");
+    this.$store.dispatch("dataTable/loadItems");
   },
   methods: {
     updatePage(newPage: number) {

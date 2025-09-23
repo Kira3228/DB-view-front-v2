@@ -3,10 +3,8 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import MainMenu from "./../shared/UI/Menu/Menu.vue"
 import ActiveFilePage from '@/pages/ActiveFilePage/ui/ActiveFilePage.vue'
-import FileDetails from '@/pages/FileDetails/FileDetailsPage.vue'
 import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
 import ReportPage from '@/pages/ReportPage/ui/ReportPage.vue'
-import SettingPage from '@/pages/SettingPage/ui/SettingPage.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
@@ -47,7 +45,7 @@ const routes: Array<RouteConfig> = [
         meta: {
         }
       },
-     
+
     ],
   },
 ];

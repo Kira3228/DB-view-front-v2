@@ -99,9 +99,7 @@ import { statusOptions } from "@/widgets/ActiveFileFilters/StatusOptions/StatusO
 
 export default Vue.extend({
   components: { SelectInput },
-
   name: "DataTable",
-
   props: {
     selected: {
       type: Array as PropType<TDataTableItems[]>,
@@ -201,8 +199,7 @@ export default Vue.extend({
       });
     },
     formatDate(date: string): string {
-      if (!date) return "";
-      return date.split(`T`)[0];
+      return date ? date.split("T")[0] : "";
     },
   },
 

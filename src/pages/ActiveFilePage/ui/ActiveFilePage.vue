@@ -55,49 +55,45 @@ export default Vue.extend({
   },
 
   methods: {
-    getColor(): `red` | `green` {
-      const status = this.$store.state.activeFileTable.isSuccessUpdateStatus;
-      if (status) {
-        return `green`;
-      }
-      return `red`;
+    getColor(): "red" | "green" {
+      return this.$store.state.activeFileTable.isSuccessUpdateStatus
+        ? "green"
+        : "red";
     },
     getText(): string {
-      const status = this.$store.state.activeFileTable.isSuccessUpdateStatus;
-      if (status) {
-        return `Статус успешно обновлён`;
-      }
-      return `Ошибка обновления статуса`;
+      return this.$store.state.activeFileTable.isSuccessUpdateStatus
+        ? "Статус успешно обновлён"
+        : "Ошибка обновления статуса";
     },
     loadItems() {
       this.$store.dispatch("activeFileTable/loadItems");
     },
-    updatePage(newPage: number) {
-      this.$store.commit(`activeFileTable/SET_CURRENT_PAGE`, newPage);
-      this.$store.dispatch(`activeFileTable/loadItems`);
+    updatePage(page: number) {
+      this.$store.commit("activeFileTable/SET_CURRENT_PAGE", page);
+      this.loadItems();
     },
-    async fetchFiltered() {
-      await this.$store.dispatch(`activeFileTable/debouncedFetch`);
+    fetchFiltered() {
+      return this.$store.dispatch("activeFileTable/debouncedFetch");
     },
-    async fetchPresets() {
-      return this.$store.dispatch(`activeFileTable/getPresets`);
+    fetchPresets() {
+      return this.$store.dispatch("activeFileTable/getPresets");
     },
-    async debouncedFetchPresets() {
-      return await this.$store.dispatch(`activeFileTable/getHeaders`);
+    debouncedFetchPresets() {
+      return this.$store.dispatch("activeFileTable/getHeaders");
     },
     handlePresetChange(newPreset: string) {
-      this.$store.commit(`activeFileTable/SET_PRESET`, newPreset);
+      this.$store.commit("activeFileTable/SET_PRESET", newPreset);
     },
-    async loadHeader() {
-      await this.$store.dispatch("activeFileTable/getHeaders");
+    loadHeader() {
+      return this.$store.dispatch("activeFileTable/getHeaders");
     },
   },
 
-  async mounted() {
-    await this.loadItems();
-    await this.loadHeader();
-    await this.fetchPresets();
-    await this.$store.dispatch(`activeFileTable/getFilter`);
+  mounted() {
+    this.loadItems();
+    this.loadHeader();
+    this.fetchPresets();
+    this.$store.dispatch("activeFileTable/getFilter");
   },
 
   computed: {
@@ -117,15 +113,15 @@ export default Vue.extend({
       return this.$store.state.activeFileTable.headers || [];
     },
     sortByFields: {
-      get(): string[] {
+      get() {
         return this.$store.getters["activeFileTable/getSortBy"];
       },
-      set(newSortList: string[]) {
-        this.$store.commit(`activeFileTable/SET_SORT_BY`, newSortList);
+      set(value: string[]) {
+        this.$store.commit("activeFileTable/SET_SORT_BY", value);
       },
     },
     sortDescFields: {
-      get(): boolean[] {
+      get() {
         return this.$store.getters["activeFileTable/getSortDesc"];
       },
       set(value: boolean[]) {
@@ -140,7 +136,7 @@ export default Vue.extend({
         return this.$store.state.activeFileTable.isStatusPending;
       },
       set() {
-        this.$store.commit(`activeFileTable/SET_STATUS_PENDING`);
+        this.$store.commit("activeFileTable/SET_STATUS_PENDING");
       },
     },
   },
@@ -149,8 +145,8 @@ export default Vue.extend({
     filters: {
       deep: true,
       handler(newVal) {
-        this.$store.commit(`activeFileTable/SET_FILEPATH`, newVal.filepath);
-        this.$store.commit(`activeFileTable/SET_INODE`, newVal.inode);
+        this.$store.commit("activeFileTable/SET_FILEPATH", newVal.filepath);
+        this.$store.commit("activeFileTable/SET_INODE", newVal.inode);
       },
     },
   },
