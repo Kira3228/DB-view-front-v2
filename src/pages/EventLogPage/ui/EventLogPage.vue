@@ -26,19 +26,22 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import DataTable from "@/shared/UI/DataTable/DataTable.vue";
 import EventLogFilters from "@/widgets/EventLogFilters/EventLogFilters.vue";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
-import Vue from "vue";
+import Vue, { ref } from "vue";
 import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 
+const pages = ref<number>(0)
+  
 export default Vue.extend({
   name: `EventLogPage`,
   components: {
     EventLogFilters,
     DataTable,
   },
+
   data() {
     return {
       pages: 0,
@@ -49,6 +52,7 @@ export default Vue.extend({
     this.$store.dispatch("dataTable/getHeaders");
     this.$store.dispatch("dataTable/getSort");
     this.$store.dispatch("dataTable/loadItems");
+    console.log(`sdasdasdasaa`);
   },
   methods: {
     updatePage(newPage: number) {

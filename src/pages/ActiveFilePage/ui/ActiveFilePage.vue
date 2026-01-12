@@ -24,7 +24,12 @@
     <v-snackbar :color="getColor()" v-model="isStatusPending">
       {{ getText() }}
       <template v-slot:action="{ attrs }">
-        <v-btn color="white" text v-bind="attrs" @click="isStatusPending = false">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="isStatusPending = false"
+        >
           Закрыть
         </v-btn></template
       ></v-snackbar
@@ -32,7 +37,6 @@
   </div>
 </template>
 <script lang="ts">
-// import DataTable from "@/shared/UI/DataTable/DataTable.vue";
 import Vue from "vue";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
@@ -50,7 +54,9 @@ export default Vue.extend({
 
   methods: {
     getColor(): "red" | "green" {
-      return this.$store.state.activeFileTable.isSuccessUpdateStatus ? "green" : "red";
+      return this.$store.state.activeFileTable.isSuccessUpdateStatus
+        ? "green"
+        : "red";
     },
     getText(): string {
       return this.$store.state.activeFileTable.isSuccessUpdateStatus
