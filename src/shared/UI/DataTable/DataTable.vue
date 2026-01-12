@@ -20,10 +20,7 @@
       :sort-by.sync="localSortByList"
       :sort-desc.sync="sortDescFields"
     >
-      <template
-        v-if="tableType === `events`"
-        v-slot:expanded-item="{ headers, item }"
-      >
+      <template v-if="tableType === `events`" v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <pre>
             {{ JSON.stringify(item.eventData, null, 2) }}
@@ -44,10 +41,7 @@
           </span>
         </v-tooltip>
       </template>
-      <template
-        v-if="tableType === 'active'"
-        v-slot:item.changeStatus="{ item }"
-      >
+      <template v-if="tableType === 'active'" v-slot:item.changeStatus="{ item }">
         <div class="tw-flex tw-flex-col tw-justify-center tw-align-middle">
           <select-input
             @input="(newStatus) => onUpdate(item.id, newStatus)"
@@ -110,7 +104,7 @@ export default Vue.extend({
       default: (): DataTableHeader[] => [],
     },
     items: {
-      type: Array as PropType<TDataTableItems[]>,
+      type: Array,
       default: (): TDataTableItems[] => [],
     },
     paginationLength: {

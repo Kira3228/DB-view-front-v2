@@ -1,25 +1,24 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib/framework';
-import ru from 'vuetify/src/locale/ru'
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css';
+import { VDataTable, VPagination } from 'vuetify/lib';
+import ru from "vuetify/src/locale/ru";
 
-Vue.use(Vuetify);
-
-export default new Vuetify({
-    lang: {
-        locales: { ru }
+Vue.use(Vuetify, {
+    components: {
+        VDataTable,
+        VPagination,
     },
-    theme: {
-        // dark: localStorage.getItem("isDarkTheme") === "true",
-        options: {
-            customProperties: true
-        },
-
-    },
-    typography: {
-        fontFamily: '"Roboto", "Inter", "Segoe UI", Arial, sans-serif',
-    },
-    icons: { iconfont: 'mdi' },
-
-
-
 });
+
+const vuetify = new Vuetify({
+    lang: {
+        locales: { ru },
+        current: "ru",
+    },
+    components: {
+        VDataTable,
+        VPagination,
+    },
+
+}); export default vuetify;

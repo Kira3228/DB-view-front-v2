@@ -34,7 +34,11 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "src/shims-vue.d.ts",
+    "src/shims-vuetify.d.ts",
+    "src/shims-vue-options.d.ts",
+    "src/shims-vuetify-components.d.ts"
   ],
   "exclude": [
     "node_modules"

@@ -17,11 +17,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
 import { TOption } from "./TOptions";
 import { useDebounce } from "@/shared/utils/debounce";
+import Vue from "vue";
 
-export default defineComponent({
+export default Vue.extend({
   name: "CustomSelect",
   props: {
     label: {

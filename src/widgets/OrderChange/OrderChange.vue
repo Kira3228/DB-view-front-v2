@@ -9,11 +9,7 @@
       ghost-class="drag-ghost"
       :component-data="{ props: { flat: true }, attrs: { class: 'tw-p-2' } }"
     >
-      <v-card
-        class="tw-cursor-move"
-        v-for="header in local"
-        :key="header.value"
-      >
+      <v-card class="tw-cursor-move" v-for="header in local" :key="header.value">
         <div>
           <v-icon small class="mr-2">mdi-drag</v-icon>
           <text-input v-model="header.text" placeholder="Название"></text-input>
@@ -36,7 +32,6 @@ import { ExtendedHeaderColumn } from "@/store/types/THeaders";
 import Vue from "vue";
 import draggable from "vuedraggable";
 import { DataTableHeader } from "vuetify";
-
 export default Vue.extend({
   name: `OrderChange`,
   components: { draggable, TextInput },

@@ -1,24 +1,31 @@
-// vue.config.js
+const path = require("path");
+
 module.exports = {
-    chainWebpack: config => {
-        // Изменение существующих правил
-        config.module
-            .rule('vue')
-            .use('vue-loader')
-            .tap(options => {
-                // модификация опций
-                return options
-            })
-
-        // Добавление нового правила
-        config.module
-            .rule('my-rule')
-            .test(/\.ext$/)
-            .use('my-loader')
-            .loader('my-loader')
+  transpileDependencies: ["vuetify", "vuetify-components"],
+  configureWebpack: {
+    resolve: {
+      alias: {
+        "@shared": path.resolve(__dirname, "src/shared-ui/src"),
+      },
     },
+  },
 
-    transpileDependencies: [
-      'vuetify'
-    ]
-}
+  chainWebpack: (config) => {
+    config.module
+      .rule("vue")
+      .use("vue-loader")
+      .tap((options) => {
+        // модификация опций
+        return options;
+      });
+
+    config.module
+      .rule("my-rule")
+      .test(/\.ext$/)
+      .use("my-loader")
+      .loader("my-loader");
+
+    config.module.rule("eslint").exclude.add(/node_modules/);
+    config.plugins.delete("vuetify-loader");
+  },
+};
