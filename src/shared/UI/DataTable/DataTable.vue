@@ -43,11 +43,11 @@
       </template>
       <template v-if="tableType === 'active'" v-slot:item.changeStatus="{ item }">
         <div class="tw-flex tw-flex-col tw-justify-center tw-align-middle">
-          <select-input
+          <!-- <select-input
             @input="(newStatus) => onUpdate(item.id, newStatus)"
             :value="item.status"
             :items="statusOptions"
-          />
+          /> -->
         </div>
       </template>
       <template v-slot:item.timestamp="{ item }">

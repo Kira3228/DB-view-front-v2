@@ -5,13 +5,17 @@ import MainMenu from "./../shared/UI/Menu/Menu.vue"
 import ActiveFilePage from '@/pages/ActiveFilePage/ui/ActiveFilePage.vue'
 import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
 import ReportPage from '@/pages/ReportPage/ui/ReportPage.vue'
+import { Menu } from '@/common-components/src/components/Menu'
+import { menuItems } from '../layout/menu-items'
 Vue.use(VueRouter)
+import { Layout } from '@/layout'
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: "/events",
-    component: MainMenu,
+    component: Layout,
+    props: { menu: menuItems },
     children: [
       {
         path: "/events",

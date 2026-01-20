@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <event-log-filters></event-log-filters>
-    <data-table
+  <div class="tw-h-screen">
+    <!-- <event-log-filters /> -->
+    <LogFilter />
+    <LogViewer />
+
+    <!-- <data-table
       v-if="!isLoading"
       :selected.sync="selectedItems"
       :paginationLength="totalPages"
@@ -21,8 +24,8 @@
           </th>
         </tr>
       </template>
-    </data-table>
-    <v-skeleton-loader v-else type="table-tbody"></v-skeleton-loader>
+    </data-table> -->
+    <!-- <v-skeleton-loader v-else type="table-tbody"></v-skeleton-loader> -->
   </div>
 </template>
 
@@ -32,79 +35,80 @@ import EventLogFilters from "@/widgets/EventLogFilters/EventLogFilters.vue";
 import { TDataTableItems } from "@/shared/UI/DataTable/TDataTableItems";
 import Vue, { ref } from "vue";
 import { ExtendedHeaderColumn } from "@/store/types/THeaders";
+import { LogFilter } from "@/modules/LogFilter/ui";
+import { LogViewer } from "@/modules/LogViewer/ui";
+const pages = ref<number>(0);
 
-const pages = ref<number>(0)
-  
-export default Vue.extend({
-  name: `EventLogPage`,
-  components: {
-    EventLogFilters,
-    DataTable,
-  },
+// export default Vue.extend({
+//   name: `EventLogPage`,
+//   components: {
+//     EventLogFilters,
+//     DataTable,
+//   },
 
-  data() {
-    return {
-      pages: 0,
-    };
-  },
-  mounted() {
-    this.$store.dispatch("dataTable/getPresets");
-    this.$store.dispatch("dataTable/getHeaders");
-    this.$store.dispatch("dataTable/getSort");
-    this.$store.dispatch("dataTable/loadItems");
-    console.log(`sdasdasdasaa`);
-  },
-  methods: {
-    updatePage(newPage: number) {
-      this.$store.dispatch(`dataTable/updatePage`, newPage);
-      this.$store.dispatch(`dataTable/updateTableItems`);
-    },
-  },
-  computed: {
-    sortByFields: {
-      get(): string[] {
-        return this.$store.getters["dataTable/getSortBy"];
-      },
-      set(newSortList: string[]) {
-        this.$store.commit(`dataTable/SET_SORT_BY`, newSortList);
-      },
-    },
-    sortDescFields: {
-      get(): boolean[] {
-        return this.$store.getters["dataTable/getSortDesc"];
-      },
-      set(value: boolean[]) {
-        this.$store.commit("dataTable/SET_SORT_DESC", value);
-      },
-    },
-    selectedItems: {
-      get() {
-        return this.$store.state.dataTable.selectedItems;
-      },
-      set(value: TDataTableItems[]) {
-        this.$store.dispatch(`dataTable/updateSelection`, value);
-      },
-    },
-    headersFromStore: {
-      get(): ExtendedHeaderColumn[] {
-        return this.$store.state.tableLogHeaderModule.headers;
-      },
-      set(value: ExtendedHeaderColumn[]) {
-        this.$store.commit("tableLogHeaderModule/UPDATE_HEADERS", value);
-      },
-    },
-    items(): TDataTableItems[] {
-      return this.$store.state.dataTable.items;
-    },
-    totalPages(): number {
-      return this.$store.state.dataTable.totalPages;
-    },
-    headersFromBackend() {
-      return this.$store.state.dataTable.headers;
-    },
-    isLoading() {
-      return this.$store.state.dataTable.loading;
-    },
-  },
-});
+//   data() {
+//     return {
+//       pages: 0,
+//     };
+//   },
+//   mounted() {
+//     this.$store.dispatch("dataTable/getPresets");
+//     this.$store.dispatch("dataTable/getHeaders");
+//     this.$store.dispatch("dataTable/getSort");
+//     this.$store.dispatch("dataTable/loadItems");
+//     console.log(`sdasdasdasaa`);
+//   },
+//   methods: {
+//     updatePage(newPage: number) {
+//       this.$store.dispatch(`dataTable/updatePage`, newPage);
+//       this.$store.dispatch(`dataTable/updateTableItems`);
+//     },
+//   },
+//   computed: {
+//     sortByFields: {
+//       get(): string[] {
+//         return this.$store.getters["dataTable/getSortBy"];
+//       },
+//       set(newSortList: string[]) {
+//         this.$store.commit(`dataTable/SET_SORT_BY`, newSortList);
+//       },
+//     },
+//     sortDescFields: {
+//       get(): boolean[] {
+//         return this.$store.getters["dataTable/getSortDesc"];
+//       },
+//       set(value: boolean[]) {
+//         this.$store.commit("dataTable/SET_SORT_DESC", value);
+//       },
+//     },
+//     selectedItems: {
+//       get() {
+//         return this.$store.state.dataTable.selectedItems;
+//       },
+//       set(value: TDataTableItems[]) {
+//         this.$store.dispatch(`dataTable/updateSelection`, value);
+//       },
+//     },
+//     headersFromStore: {
+//       get(): ExtendedHeaderColumn[] {
+//         return this.$store.state.tableLogHeaderModule.headers;
+//       },
+//       set(value: ExtendedHeaderColumn[]) {
+//         this.$store.commit("tableLogHeaderModule/UPDATE_HEADERS", value);
+//       },
+//     },
+//     items(): TDataTableItems[] {
+//       return this.$store.state.dataTable.items;
+//     },
+//     totalPages(): number {
+//       return this.$store.state.dataTable.totalPages;
+//     },
+//     headersFromBackend() {
+//       return this.$store.state.dataTable.headers;
+//     },
+//     isLoading() {
+//       return this.$store.state.dataTable.loading;
+//     },
+//   },
+// });
 </script>
