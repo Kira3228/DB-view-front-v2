@@ -22,8 +22,8 @@ export const useLogsViewerStore = defineStore(`logs-table-store`, {
         this.events = events.events
         this.totalPage = events.totalPage
         this.totalCount = events.totalCount
-        console.log(events.events.length);
-        
+        console.log(events.events);
+
       }
       catch (error) {
         //TODO: что то сделеть 

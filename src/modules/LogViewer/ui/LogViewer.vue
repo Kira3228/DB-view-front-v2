@@ -44,14 +44,18 @@ import { UiSelect } from "@/common-components/src/components/Select";
 import { useRoute, useRouter } from "vue-router/composables";
 import { Pagination } from "@/common-components/src/components/pagination";
 import JsonViewer from "vue-json-viewer";
+import { useLogFilterModel } from "@/modules/LogFilter/model";
+import { useDebounce } from "@/common-components/src/lib/debounce";
+
 const { logsLoad, headers, presetLoad, presetList, events, totalPage } =
   useLogsViewerModel();
-
+const { endDate, filePath, startDate, status, systemId, type } =
+  useLogFilterModel();
 const router = useRouter();
 const route = useRoute();
 
 const presetName = ref<string | undefined>(
-  (route.query.preset as string) || undefined
+  (route.query.preset as string) || undefined,
 );
 const currentPage = ref<number>(Number(route.query.page) || 1);
 const eventData = ref<string>("");
@@ -61,7 +65,6 @@ onMounted(() => {
 });
 
 const handleRowClick = (data: any) => {
-  console.log(JSON.parse(data.eventData));
   eventData.value = { ...data, eventData: JSON.parse(data.eventData) };
   isDrawerOpen.value = !isDrawerOpen.value;
 };
@@ -96,6 +99,23 @@ watch(
       limit: 20,
     });
   },
-  { immediate: true }
+  { immediate: true },
 );
+const debouncedFetch = () => {
+  debounce(() => {
+    logsLoad({
+      endDate: endDate.value,
+      eventType: type.value,
+      filePath: filePath.value,
+      startDate: startDate.value,
+      status: status.value?.value,
+      fileSystemId: systemId.value,
+      page: currentPage.value,
+      limit: 14,
+    });
+  }, 500);
+};
+
+const { debounce } = useDebounce();
+watch([endDate, filePath, startDate, status, systemId, type], debouncedFetch);
 </script>
