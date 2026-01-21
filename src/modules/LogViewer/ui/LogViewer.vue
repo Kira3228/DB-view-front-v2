@@ -18,14 +18,28 @@
       :headers="headers"
       :items="events"
       :items-per-page="15"
+      v-model="ids"
+      show-select
     >
       <template #select-preset>
-        <UiSelect
-          class="tw-flex-1 tw-w-1/4 pa-4"
-          v-model="presetName"
-          label="Пресет"
-          :items="presetList"
-        />
+        <div class="tw-flex tw-justify-between">
+          <div>
+            <UiSelect
+              class="tw-flex-1 pa-4"
+              v-model="presetName"
+              label="Пресет"
+              :items="presetList"
+            />
+          </div>
+          <div class="tw-flex tw-gap-2 tw-items-center">
+            <Button @click="downloadAllLogReport" outlined :height="32"
+              >Экспорт всего</Button
+            >
+            <Button @click="downloadSelectedLogReport" outlined :height="32"
+              >Экспорт выделенноего</Button
+            >
+          </div>
+        </div>
       </template>
     </DataTable>
     <Pagination
@@ -46,13 +60,28 @@ import { Pagination } from "@/common-components/src/components/pagination";
 import JsonViewer from "vue-json-viewer";
 import { useLogFilterModel } from "@/modules/LogFilter/model";
 import { useDebounce } from "@/common-components/src/lib/debounce";
+import { Button } from "@/common-components/src/components/Button";
+import { EventLog } from "../types";
 
-const { logsLoad, headers, presetLoad, presetList, events, totalPage } =
-  useLogsViewerModel();
+const {
+  logsLoad,
+  downloadAllLogReport,
+  downloadSelectedLogReport,
+  totalCount,
+  headers,
+  presetLoad,
+  presetList,
+  events,
+  totalPage,
+  ids,
+} = useLogsViewerModel();
+
 const { endDate, filePath, startDate, status, systemId, type } =
   useLogFilterModel();
 const router = useRouter();
 const route = useRoute();
+
+const selected = ref<EventLog>();
 
 const presetName = ref<string | undefined>(
   (route.query.preset as string) || undefined,
@@ -118,4 +147,8 @@ const debouncedFetch = () => {
 
 const { debounce } = useDebounce();
 watch([endDate, filePath, startDate, status, systemId, type], debouncedFetch);
+
+watch(ids, () => {
+  console.log(ids.value);
+});
 </script>

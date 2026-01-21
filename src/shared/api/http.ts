@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/constants"
-import { log } from "console"
+import { IDownloadOptions } from "../utils/downloadHelper"
+
 
 export const useApi = () => {
   const get = async <T>(endpoint: string, params?: Record<string, any>): Promise<T> => {
@@ -12,8 +13,34 @@ export const useApi = () => {
     return res.json()
   }
 
+  const httpGetBlob = async (url: string, params?: Record<string, any>): Promise<Blob> => {
+    const final = buildURL(url, params);
+
+    const res = await fetch(final)
+    if (!res.ok) {
+      throw new Error(`GET ${final} failed: ${res.status}`)
+    }
+    return res.blob()
+  }
+
+  const downloadBlob = (blob: Blob, options: IDownloadOptions = {}) => {
+    const { filename = `report.csv` } = options
+
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement(`a`)
+    link.href = url
+    link.download = filename
+
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
+    window.URL.revokeObjectURL(url);
+  }
   return {
-    get
+    get,
+    httpGetBlob,
+    downloadBlob
   }
 }
 
@@ -47,14 +74,4 @@ export const buildURL = (base: string, params?: Record<string, any>): string => 
   const qs = sp.toString()
   const result = qs ? `${BASE_URL}${base}?${qs}` : `${BASE_URL}${base}`
   return result
-}
-
-export const httpGetBlob = async (url: string, params?: Record<string, any>): Promise<Blob> => {
-  const final = buildURL(url, params);
-
-  const res = await fetch(final)
-  if (!res.ok) {
-    throw new Error(`GET ${final} failed: ${res.status}`)
-  }
-  return res.blob()
 }

@@ -1,5 +1,5 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
-import { downloadBlob } from "@/shared/utils/downloadHelper";
+// import { downloadBlob } from "@/shared/utils/downloadHelper";
 import { toSearchStringAsObject } from "./toSearchString";
 import { toSqlDateTimeOrEmpty } from "@/shared/utils/date";
 import { RootState } from "@/store/types/IRootState";
@@ -154,7 +154,7 @@ const actions: ActionTree<ReportFilters, RootState> = {
       });
 
       const blob = await downloadReport(params, reportType, reportFormat)
-      await downloadBlob(blob, { filename: `report.${reportFormat}` })
+      // await downloadBlob(blob, { filename: `report.${reportFormat}` })
 
     } catch (error) {
       console.error('Download error:', error);

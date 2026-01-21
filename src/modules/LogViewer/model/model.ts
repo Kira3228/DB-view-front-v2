@@ -3,11 +3,19 @@ import { useLogsViewerStore } from "./store"
 
 
 export const useLogsViewerModel = () => {
-  const { logsLoad, presetLoad, resetTable } = useLogsViewerStore()
-  const { headers, presetList, events, totalCount, totalPage } = storeToRefs(useLogsViewerStore())
-  
+  const { logsLoad, presetLoad, downloadAllLogReport, downloadSelectedLogReport } = useLogsViewerStore()
+  const { headers, presetList, events, totalCount, totalPage, ids } = storeToRefs(useLogsViewerStore())
+
   return {
-    logsLoad, presetLoad, headers, presetList, events, resetTable, totalCount, totalPage
+    logsLoad,
+    presetLoad,
+    headers,
+    presetList,
+    events,
+    totalCount,
+    totalPage,
+    downloadAllLogReport, downloadSelectedLogReport,
+    ids
   }
 
 }

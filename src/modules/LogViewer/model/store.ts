@@ -3,6 +3,7 @@ import { fetchLogs } from "../api/fetch-log";
 import { Header } from "@/common-components/src/components/DataTable";
 import { fetchPreset } from "../api/fetchPreset";
 import { EventLog, LogsParams } from "../types";
+import { fetchReport } from "../api/fetch-report";
 
 interface LogsTableState {
   headers: Header[]
@@ -10,10 +11,11 @@ interface LogsTableState {
   events: EventLog[]
   totalPage: number
   totalCount: number
+  ids: EventLog[]
 }
 
 export const useLogsViewerStore = defineStore(`logs-table-store`, {
-  state: (): LogsTableState => ({ headers: [], presetList: [], events: [], totalCount: 0, totalPage: 0 }),
+  state: (): LogsTableState => ({ headers: [], presetList: [], events: [], totalCount: 0, totalPage: 0, ids: [] }),
   actions: {
     async logsLoad(params?: Partial<LogsParams>) {
       try {
@@ -37,7 +39,14 @@ export const useLogsViewerStore = defineStore(`logs-table-store`, {
       const presetList = await fetchPreset()
       this.presetList = presetList
     },
-    resetTable() {
-    }
+
+    async downloadAllLogReport() {
+      const blob = await fetchReport()
+    },
+    async downloadSelectedLogReport() {
+      const ids = this.ids.map((item) => { return item.id })
+      const blob = await fetchReport({ ids: ids })
+    },
+
   }
 })
