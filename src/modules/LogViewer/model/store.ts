@@ -12,10 +12,11 @@ interface LogsTableState {
   totalPage: number
   totalCount: number
   ids: EventLog[]
+  isOpenSnackbar: boolean
 }
 
 export const useLogsViewerStore = defineStore(`logs-table-store`, {
-  state: (): LogsTableState => ({ headers: [], presetList: [], events: [], totalCount: 0, totalPage: 0, ids: [] }),
+  state: (): LogsTableState => ({ headers: [], presetList: [], events: [], totalCount: 0, totalPage: 0, ids: [], isOpenSnackbar: false }),
   actions: {
     async logsLoad(params?: Partial<LogsParams>) {
       try {
@@ -45,6 +46,9 @@ export const useLogsViewerStore = defineStore(`logs-table-store`, {
     },
     async downloadSelectedLogReport() {
       const ids = this.ids.map((item) => { return item.id })
+      if (ids.length === 0) {
+        this.isOpenSnackbar = true
+      }
       const blob = await fetchReport({ ids: ids })
     },
 

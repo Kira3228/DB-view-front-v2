@@ -39,7 +39,7 @@ export default defineComponent({
           route: "/",
         },
         {
-          title: "Активные файлы",
+          title: "Управление файлами",
           icon: "mdi-folder",
           route: "/active-files",
         },

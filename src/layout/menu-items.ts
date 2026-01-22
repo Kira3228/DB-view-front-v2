@@ -5,12 +5,27 @@ export const menuItems: TMenuItem[] = [
     title: "Журнал событий",
     icon: "",
     to: "/",
-    subMenu: []
   },
   {
-    title: "Активные файлы",
+    title: "Управление файлами",
     icon: "",
-    to: "/active-files",
+    subMenu: [
+      {
+        title: `Активные файлы`,
+        icon: '',
+        to: `/active`,
+      },
+      {
+        title: `Архив`,
+        icon: '',
+        to: `/archive`,
+      },
+      {
+        title: `Детали файла`,
+        icon: '',
+        to: `/details`,
+      },
+    ]
   },
   {
     title: "Детали файла",

@@ -1,6 +1,5 @@
-import { TOption } from "@/shared/UI/SelectInput/TOptions"
 
-export const formatOptions: TOption[] = [
+export const formatOptions = [
   {
     label: `DOCX`,
     value: `docx`

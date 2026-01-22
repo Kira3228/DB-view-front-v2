@@ -23,7 +23,6 @@ import ReportFilters from "@/widgets/ReportFilters/ReportFilters.vue";
 import Vue from "vue";
 import { typeOptions } from "./options/type-options";
 import { formatOptions } from "./options/format-options";
-import { TOption } from "@/shared/UI/SelectInput/TOptions";
 
 export default Vue.extend({
   name: "ReportPage",
@@ -52,18 +51,18 @@ export default Vue.extend({
   },
   computed: {
     type: {
-      get(): TOption {
+      get() {
         return this.$store.state.reportModule.reportType;
       },
-      set(newVal: TOption) {
+      set(newVal) {
         this.$store.commit("reportModule/SET_TYPE", newVal);
       },
     },
     format: {
-      get(): TOption {
+      get() {
         return this.$store.state.reportModule.reportFormat;
       },
-      set(newVal: TOption) {
+      set(newVal) {
         this.$store.commit("reportModule/SET_FORMAT", newVal);
       },
     },

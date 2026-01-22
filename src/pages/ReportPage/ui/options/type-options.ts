@@ -1,6 +1,5 @@
-import { TOption } from "@/shared/UI/SelectInput/TOptions"
 
-export const typeOptions: TOption[] = [
+export const typeOptions = [
   {
     label: `События`,
     value: `events`

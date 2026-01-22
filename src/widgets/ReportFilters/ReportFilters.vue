@@ -18,7 +18,6 @@
 <script lang="ts">
 import DateInput from "@/shared/UI/DateInput/DateInput.vue";
 import FieldTree from "@/shared/UI/FieldTree/FieldTree.vue";
-import { TOption } from "@/shared/UI/SelectInput/TOptions";
 import CustomSlider from "@/shared/UI/Slider/CustomSlider.vue";
 import Vue from "vue";
 export default Vue.extend({
@@ -43,7 +42,7 @@ export default Vue.extend({
       return ["", ""];
     },
 
-    normalizedType(): TOption {
+    normalizedType() {
       if (typeof this.type === "string") {
         return { label: this.type, value: this.type };
       }
@@ -62,7 +61,7 @@ export default Vue.extend({
 
     typeDebug(): string {
       return `Type: ${JSON.stringify(this.type)} | Normalized: ${JSON.stringify(
-        this.normalizedType
+        this.normalizedType,
       )}`;
     },
     // dateRange: {

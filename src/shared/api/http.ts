@@ -4,13 +4,29 @@ import { IDownloadOptions } from "../utils/downloadHelper"
 
 export const useApi = () => {
   const get = async <T>(endpoint: string, params?: Record<string, any>): Promise<T> => {
+
     const url = buildURL(endpoint, params)
-    console.log(url)
     const res = await fetch(url, { method: `GET` })
+
     if (!res.ok) {
       throw new Error(`GET ${url} failed ${res.status}`)
     }
     return res.json()
+  }
+
+  const patch = async <T>(endpoint: string, body?: any): Promise<T> => {
+    const url = buildURL(endpoint)
+    const res = await fetch(url, {
+      method: `PATCH`,
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    })
+
+    if (!res.ok) {
+      throw new Error(`PATCH ${url} failed ${res.status}`)
+    }
+
+    return res.json() as Promise<T>
   }
 
   const httpGetBlob = async (url: string, params?: Record<string, any>): Promise<Blob> => {
@@ -39,6 +55,7 @@ export const useApi = () => {
   }
   return {
     get,
+    patch,
     httpGetBlob,
     downloadBlob
   }

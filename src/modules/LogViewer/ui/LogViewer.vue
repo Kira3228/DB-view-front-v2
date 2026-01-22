@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-min-h-full tw-overflow-auto">
+  <div class="tw-h-full tw-flex tw-flex-col tw-overflow-hidden">
     <v-navigation-drawer
       fixed
       right
@@ -13,41 +13,48 @@
         <JsonViewer boxed copyable :value="eventData"></JsonViewer>
       </div>
     </v-navigation-drawer>
-    <DataTable
-      @click-row="handleRowClick"
-      :headers="headers"
-      :items="events"
-      :items-per-page="15"
-      v-model="ids"
-      show-select
-    >
-      <template #select-preset>
-        <div class="tw-flex tw-justify-between">
-          <div>
-            <UiSelect
-              class="tw-flex-1 pa-4"
-              v-model="presetName"
-              label="Пресет"
-              :items="presetList"
-            />
+    <div class="tw-flex-1 tw-overflow-auto tw-min-h-0">
+      <DataTable
+        @click-row="handleRowClick"
+        :headers="headers"
+        ё
+        :items="events"
+        :items-per-page="limit"
+        v-model="ids"
+        show-select
+      >
+        <template #select-preset>
+          <div class="tw-flex tw-justify-between">
+            <div>
+              <UiSelect
+                class="tw-flex-1 pa-4"
+                v-model="presetName"
+                label="Пресет"
+                :items="presetList"
+              />
+            </div>
+            <div class="tw-flex tw-gap-2 tw-items-center">
+              <Button @click="downloadAllLogReport" outlined :height="32"
+                >Экспорт всего</Button
+              >
+              <Button @click="downloadSelectedLogReport" outlined :height="32"
+                >Экспорт выделенноего</Button
+              >
+            </div>
           </div>
-          <div class="tw-flex tw-gap-2 tw-items-center">
-            <Button @click="downloadAllLogReport" outlined :height="32"
-              >Экспорт всего</Button
-            >
-            <Button @click="downloadSelectedLogReport" outlined :height="32"
-              >Экспорт выделенноего</Button
-            >
-          </div>
-        </div>
-      </template>
-    </DataTable>
-    <Pagination
-      v-if="totalPage > 1"
-      v-model="currentPage"
-      :length="totalPage"
-      :totalVisible="10"
-    />
+        </template>
+      </DataTable>
+    </div>
+    <div class="tw-shrink-0 tw-border-t tw-p-2">
+      <Pagination
+        v-model="currentPage"
+        :length="totalPage"
+        :totalVisible="10"
+      />
+    </div>
+    <v-snackbar tile v-model="isOpenSnackbar" color="yellow" :timeout="1500">
+      <span class="tw-text-black">Выбрано 0 элементов </span>
+    </v-snackbar>
   </div>
 </template>
 <script lang="ts" setup>
@@ -61,34 +68,38 @@ import JsonViewer from "vue-json-viewer";
 import { useLogFilterModel } from "@/modules/LogFilter/model";
 import { useDebounce } from "@/common-components/src/lib/debounce";
 import { Button } from "@/common-components/src/components/Button";
-import { EventLog } from "../types";
 
 const {
   logsLoad,
   downloadAllLogReport,
   downloadSelectedLogReport,
-  totalCount,
   headers,
   presetLoad,
   presetList,
   events,
   totalPage,
   ids,
+  isOpenSnackbar,
 } = useLogsViewerModel();
 
 const { endDate, filePath, startDate, status, systemId, type } =
   useLogFilterModel();
+
 const router = useRouter();
 const route = useRoute();
-
-const selected = ref<EventLog>();
 
 const presetName = ref<string | undefined>(
   (route.query.preset as string) || undefined,
 );
+
 const currentPage = ref<number>(Number(route.query.page) || 1);
+
 const eventData = ref<string>("");
+
 const isDrawerOpen = ref<boolean>(false);
+
+const limit = ref(14);
+
 onMounted(() => {
   presetLoad();
 });
@@ -125,7 +136,7 @@ watch(
     logsLoad({
       presetName: newPreset,
       page: newPage,
-      limit: 20,
+      limit: limit.value,
     });
   },
   { immediate: true },
@@ -140,7 +151,7 @@ const debouncedFetch = () => {
       status: status.value?.value,
       fileSystemId: systemId.value,
       page: currentPage.value,
-      limit: 14,
+      limit: limit.value,
     });
   }, 500);
 };
