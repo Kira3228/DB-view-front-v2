@@ -46,6 +46,9 @@ import { fetchUpdateStatus } from "../api";
 import { useRoute, useRouter } from "vue-router/composables";
 import { Pagination } from "@/common-components/src/components/pagination";
 
+const router = useRouter();
+const route = useRoute();
+
 const props = defineProps<{
   isArchive?: `archived`;
 }>();
@@ -54,9 +57,6 @@ const { headers, files, loadActiveFile, page, totalPage } =
   useActiveFileModel();
 
 const statusToChange = [`active`, `archived`, `deleted`];
-
-const router = useRouter();
-const route = useRoute();
 
 const currentPage = ref<number>(Number(route.query.page) || 1);
 const presetName = ref<string | undefined>(

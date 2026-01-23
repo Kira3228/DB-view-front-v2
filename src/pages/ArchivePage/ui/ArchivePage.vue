@@ -1,5 +1,6 @@
 <template>
   <div class="tw-h-full tw-flex tw-flex-col tw-overflow-hidden">
+    Архив
     <ActiveFileFilters />
     <ActiveFileViewer is-archive="archived" />
   </div>
