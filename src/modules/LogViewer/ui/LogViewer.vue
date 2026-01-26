@@ -29,11 +29,22 @@
               <UiSelect
                 class="tw-flex-1 pa-4"
                 v-model="presetName"
+                ф
                 label="Пресет"
                 :items="presetList"
               />
             </div>
             <div class="tw-flex tw-gap-2 tw-items-center">
+              <Button
+                @click="
+                  () => {
+                    dialogIsOpen = true;
+                  }
+                "
+                outlined
+                :height="32"
+                >Экспорт</Button
+              >
               <Button @click="downloadAllLogReport" outlined :height="32"
                 >Экспорт всего</Button
               >
@@ -58,7 +69,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DataTable } from "@/common-components/src/components/DataTable";
+import {
+  DataTable,
+  Header,
+} from "@/common-components/src/components/DataTable";
 import { onMounted, ref, watch } from "vue";
 import { useLogsViewerModel } from "../model/model";
 import { UiSelect } from "@/common-components/src/components/Select";
@@ -80,24 +94,21 @@ const {
   totalPage,
   ids,
   isOpenSnackbar,
+  dialogIsOpen,
 } = useLogsViewerModel();
 
 const { endDate, filePath, startDate, status, systemId, type } =
   useLogFilterModel();
-
+const { debounce } = useDebounce();
 const router = useRouter();
 const route = useRoute();
 
 const presetName = ref<string | undefined>(
   (route.query.preset as string) || undefined,
 );
-
 const currentPage = ref<number>(Number(route.query.page) || 1);
-
 const eventData = ref<string>("");
-
 const isDrawerOpen = ref<boolean>(false);
-
 const limit = ref(14);
 
 onMounted(() => {
@@ -108,6 +119,8 @@ const handleRowClick = (data: any) => {
   eventData.value = { ...data, eventData: JSON.parse(data.eventData) };
   isDrawerOpen.value = !isDrawerOpen.value;
 };
+
+const fields = ref();
 
 const updateUrl = () => {
   const query = { ...route.query };
@@ -120,6 +133,10 @@ const updateUrl = () => {
 
   router.replace({ query }).catch(() => {});
 };
+
+watch(dialogIsOpen, () => {
+  console.log(dialogIsOpen.value);
+});
 
 watch(presetName, updateUrl);
 watch(currentPage, updateUrl);
@@ -156,10 +173,5 @@ const debouncedFetch = () => {
   }, 500);
 };
 
-const { debounce } = useDebounce();
 watch([endDate, filePath, startDate, status, systemId, type], debouncedFetch);
-
-watch(ids, () => {
-  console.log(ids.value);
-});
 </script>

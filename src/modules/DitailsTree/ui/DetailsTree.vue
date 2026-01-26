@@ -1,8 +1,6 @@
 <template>
   <div class="tw-h-full tw-flex tw-overflow-hidden">
-    <div
-      class="tw-w-1/3 tw-h-full tw-overflow-y-auto tw-shrink-0 tw-border-r tw-p-2"
-    >
+    <div class="tw-w-1/3 tw-h-full tw-overflow-y-auto tw-shrink-0 tw-border-r tw-p-2">
       <v-treeview
         open-on-click
         :load-children="handleUpdate"

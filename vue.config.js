@@ -15,7 +15,6 @@ module.exports = {
       .rule("vue")
       .use("vue-loader")
       .tap((options) => {
-        // модификация опций
         return options;
       });
 

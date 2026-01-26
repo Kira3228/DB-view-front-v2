@@ -3,10 +3,12 @@
     Журнал событий
     <LogFilter />
     <LogViewer />
+    <LogsReport />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { LogFilter } from "@/modules/LogFilter/ui";
+import { LogsReport } from "@/modules/LogsReports/ui";
 import { LogViewer } from "@/modules/LogViewer/ui";
 </script>
