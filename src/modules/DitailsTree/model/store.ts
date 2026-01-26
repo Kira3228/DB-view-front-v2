@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { fetchRoots } from "../api/fetch-roots";
 import { FileDetail, FileDetailParams, TreeNode } from "../types";
+import { mapToNode } from "../helpers";
 interface DetailsTreeState {
   files: FileDetail[]
   treeData: TreeNode[]
@@ -11,12 +12,7 @@ export const useDetailsTreeStore = defineStore(`details-tree-store`, {
   actions: {
     async loadRoots(params?: FileDetailParams) {
       const response = await fetchRoots(params)
-      this.treeData = response.roots.map(f => ({
-        id: f.id,
-        name: f.name,
-        hasChildren: f.hasChildren,
-        children: f.hasChildren ? [] : undefined
-      }))
+      this.treeData = response.roots.map(f => mapToNode(f, `root`))
     }
   },
   getters: {

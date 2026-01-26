@@ -10,7 +10,8 @@ export type FilDetailResponse = {
 }
 
 export type TreeNode = {
-  id: number
+  id: string
+  realId: number
   name: string
   children?: TreeNode[]
   hasChildren: boolean
