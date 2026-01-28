@@ -2,7 +2,6 @@ import EventLogPage from '@/pages/EventLogPage/ui/EventLogPage.vue'
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import ActiveFilePage from '@/pages/ActiveFilePage/ui/ActiveFilePage.vue'
-import { menuItems } from '../layout/menu-items'
 import ArchivePage from '@/pages/ArchivePage/ui/ArchivePage.vue'
 Vue.use(VueRouter)
 import { Layout } from '@/layout'
@@ -13,7 +12,6 @@ const routes: Array<RouteConfig> = [
     path: "/",
     redirect: "/events",
     component: Layout,
-    props: { menu: menuItems },
     children: [
       {
         path: "/events",

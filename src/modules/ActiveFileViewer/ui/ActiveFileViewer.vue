@@ -45,10 +45,14 @@ import { UiSelect } from "@/common-components/src/components/Select";
 import { fetchUpdateStatus } from "../api";
 import { useRoute, useRouter } from "vue-router/composables";
 import { Pagination } from "@/common-components/src/components/pagination";
+import { useActiveFileFilterStore } from "@/modules/ActiveFileFilters/model/store";
+import { useActiveFileFiltersModel } from "@/modules/ActiveFileFilters/model/model";
+import { useDebounce } from "@/common-components/src/lib";
 
 const router = useRouter();
 const route = useRoute();
-
+const { inode } = useActiveFileFiltersModel();
+const { debounce } = useDebounce();
 const props = defineProps<{
   isArchive?: `archived`;
 }>();
@@ -100,4 +104,17 @@ watch(
 const handleChange = async (value: any, id: number) => {
   fetchUpdateStatus(id, { status: value });
 };
+
+const debouncedFetch = () => {
+  debounce(() => {
+    loadActiveFile({
+      page: currentPage.value,
+      limit: 14,
+      isArchived: props.isArchive,
+      presetName: presetName.value,
+      search: inode.value,
+    });
+  }, 500);
+};
+watch(inode, debouncedFetch);
 </script>

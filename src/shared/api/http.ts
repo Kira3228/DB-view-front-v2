@@ -1,6 +1,8 @@
 import { BASE_URL } from "@/constants"
-import { IDownloadOptions } from "../utils/downloadHelper"
 
+interface IDownloadOptions {
+  filename: string
+}
 
 export const useApi = () => {
   const get = async <T>(endpoint: string, params?: Record<string, any>): Promise<T> => {
@@ -12,6 +14,28 @@ export const useApi = () => {
       throw new Error(`GET ${url} failed ${res.status}`)
     }
     return res.json()
+  }
+
+  const post = async <T>(endpoint: string, body: any, params?: Record<string, any>): Promise<T> => {
+    const url = params ? buildURL(endpoint, params) : endpoint;
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      throw new Error(`POST ${url} failed: ${res.status}`);
+    }
+
+    if (res.status === 204) {
+      return {} as T;
+    }
+
+    return res.json();
   }
 
   const patch = async <T>(endpoint: string, body?: any): Promise<T> => {
@@ -38,14 +62,33 @@ export const useApi = () => {
     }
     return res.blob()
   }
+  const httpPostBlob = async (endpoint: string, body: any): Promise<Blob> => {
+    const url = buildURL(endpoint);
 
-  const downloadBlob = (blob: Blob, options: IDownloadOptions = {}) => {
-    const { filename = `report.csv` } = options
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      try {
+        const errJson = await res.json();
+        throw new Error(`POST Blob failed: ${errJson.message || res.status}`);
+      } catch (e) {
+        throw new Error(`POST Blob failed: ${res.status}`);
+      }
+    }
+    return res.blob()
+  }
+  const downloadBlob = (blob: Blob, options: IDownloadOptions) => {
 
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement(`a`)
     link.href = url
-    link.download = filename
+    link.download = options.filename
 
     document.body.appendChild(link)
     link.click()
@@ -55,8 +98,10 @@ export const useApi = () => {
   }
   return {
     get,
+    post,
     patch,
     httpGetBlob,
+    httpPostBlob,
     downloadBlob
   }
 }

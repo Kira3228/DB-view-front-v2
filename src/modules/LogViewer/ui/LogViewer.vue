@@ -69,10 +69,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {
-  DataTable,
-  Header,
-} from "@/common-components/src/components/DataTable";
+import { DataTable } from "@/common-components/src/components/DataTable";
 import { onMounted, ref, watch } from "vue";
 import { useLogsViewerModel } from "../model/model";
 import { UiSelect } from "@/common-components/src/components/Select";
@@ -120,8 +117,6 @@ const handleRowClick = (data: any) => {
   isDrawerOpen.value = !isDrawerOpen.value;
 };
 
-const fields = ref();
-
 const updateUrl = () => {
   const query = { ...route.query };
   if (presetName.value) query.preset = presetName.value;
@@ -133,10 +128,6 @@ const updateUrl = () => {
 
   router.replace({ query }).catch(() => {});
 };
-
-watch(dialogIsOpen, () => {
-  console.log(dialogIsOpen.value);
-});
 
 watch(presetName, updateUrl);
 watch(currentPage, updateUrl);

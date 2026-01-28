@@ -29,9 +29,8 @@
       label="Путь к файлу"
       placeholder="/usr/tpm"
       v-model="filePath"
-      @debounce="handle"
     />
-    <DateInput label="От" v-model="startDate" @debounce="deb" />
+    <DateInput label="От" v-model="startDate" />
     <DateInput label="До" v-model="endDate" />
 
     <Button @click="resetFilters" outlined :height="32">Сбросить</Button>
@@ -42,7 +41,7 @@ import { UiSelect } from "@/common-components/src/components/Select";
 import { TextInput } from "@/common-components/src/components/TextInput";
 import { DateInput } from "@/common-components/src/components/DateInput";
 import { useLogFilterModel } from "../model";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { Button } from "@/common-components/src/components/Button";
 
 type StatusSelectItem = { label: string; value: string };
@@ -67,9 +66,4 @@ const {
 onMounted(() => {
   loadStatusTypes();
 });
-const deb = (data: string) => {
-  console.log(data);
-};
-const handle = () => {};
-onMounted(() => {});
 </script>
