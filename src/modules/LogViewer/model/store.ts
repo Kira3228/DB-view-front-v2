@@ -25,7 +25,6 @@ export const useLogsViewerStore = defineStore(`logs-table-store`, {
         this.events = events.events
         this.totalPage = events.totalPage
         this.totalCount = events.totalCount
-        console.log(events.events);
 
       }
       catch (error) {
@@ -42,7 +41,7 @@ export const useLogsViewerStore = defineStore(`logs-table-store`, {
     },
 
     async downloadAllLogReport() {
-      const blob = await fetchReport()
+      await fetchReport()
     },
     async downloadSelectedLogReport() {
       const ids = this.ids.map((item) => { return item.id })

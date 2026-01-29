@@ -22,6 +22,7 @@
                 class="tw-flex-1 pa-4"
                 v-model="presetName"
                 label="Пресет"
+                :items="presetList"
               />
             </div>
           </div>
@@ -45,7 +46,6 @@ import { UiSelect } from "@/common-components/src/components/Select";
 import { fetchUpdateStatus } from "../api";
 import { useRoute, useRouter } from "vue-router/composables";
 import { Pagination } from "@/common-components/src/components/pagination";
-import { useActiveFileFilterStore } from "@/modules/ActiveFileFilters/model/store";
 import { useActiveFileFiltersModel } from "@/modules/ActiveFileFilters/model/model";
 import { useDebounce } from "@/common-components/src/lib";
 
@@ -57,8 +57,15 @@ const props = defineProps<{
   isArchive?: `archived`;
 }>();
 
-const { headers, files, loadActiveFile, page, totalPage } =
-  useActiveFileModel();
+const {
+  headers,
+  files,
+  loadActiveFile,
+  page,
+  totalPage,
+  presetList,
+  presetLoad,
+} = useActiveFileModel();
 
 const statusToChange = [`active`, `archived`, `deleted`];
 
@@ -79,6 +86,10 @@ const updateUrl = () => {
   router.replace({ query }).catch(() => {});
 };
 
+onMounted(() => {
+  presetLoad();
+});
+
 watch(presetName, updateUrl);
 watch(currentPage, updateUrl);
 
@@ -88,7 +99,13 @@ watch(
     const newPreset = (newQuery.preset as string) || undefined;
     const newPage = Number(newQuery.page) || 1;
 
-    if (presetName.value !== newPreset) presetName.value = newPreset;
+    console.log(presetName.value, newPreset);
+
+    if (presetName.value !== newPreset) {
+      console.log(32131312);
+      presetName.value = newPreset;
+    }
+
     if (currentPage.value !== newPage) currentPage.value = newPage;
 
     loadActiveFile({

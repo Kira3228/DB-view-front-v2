@@ -10,7 +10,7 @@
     >
       <div class="tw-p-5">
         <h4 class="tw-text-xl tw-text-center tw-font-normal">Данные события</h4>
-        <JsonViewer boxed copyable :value="eventData"></JsonViewer>
+        <JsonViewer theme boxed copyable :value="eventData"></JsonViewer>
       </div>
     </v-navigation-drawer>
     <div class="tw-flex-1 tw-overflow-auto tw-min-h-0">
@@ -29,7 +29,6 @@
               <UiSelect
                 class="tw-flex-1 pa-4"
                 v-model="presetName"
-                ф
                 label="Пресет"
                 :items="presetList"
               />
