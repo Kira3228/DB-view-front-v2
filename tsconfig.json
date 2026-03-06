@@ -14,13 +14,17 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "node",
       "webpack-env",
       "vuetify/types"
     ],
     "paths": {
       "@/*": [
-        "src/*"
-      ]
+        "src/*",
+      ],
+      "~/*": [
+        "src/common-components/src/*",
+      ],
     },
     "lib": [
       "esnext",

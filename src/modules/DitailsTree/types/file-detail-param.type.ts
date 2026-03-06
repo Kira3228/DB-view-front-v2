@@ -1,0 +1,1 @@
+export interface FileDetailParams { id: number | string }

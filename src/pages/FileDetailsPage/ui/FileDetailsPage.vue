@@ -1,45 +1,30 @@
 <template>
-  <div>
-    <filters-bar
-      v-model="filters"
-      :debouncedEvent="fetchFiltered"
-    ></filters-bar>
-    <v-card>
-      <file-details-tree></file-details-tree>
-    </v-card>
+  <div class="tw-h-full tw-flex tw-overflow-hidden">
+    <div class="tw-h-full">
+      <DetailsTree />
+    </div>
+    <div class="tw-flex-1">
+      Тут что то будет
+      <DetailsReport />
+      <Button
+        :height="32"
+        @click="
+          () => {
+            modalIsOpen = true;
+          }
+        "
+        outlined
+        >Экспорт</Button
+      >
+    </div>
   </div>
 </template>
-<script lang="ts">
-import FileDetailsTree from "@/widgets/FileDetails/FileDetailsTree/FileDetailsTree.vue";
-import FiltersBar from "@/widgets/FiltersBar/FiltersBar.vue";
-import Vue from "vue";
+<script lang="ts" setup>
+import { Button } from "@/common-components/src/components/Button";
+import { useDetailsReportModel } from "@/modules/DetailsReport/model/model";
+import { DetailsReport } from "@/modules/DetailsReport/ui";
+import { DetailsTree } from "@/modules/DitailsTree/ui";
+import { ref } from "vue";
 
-export default Vue.extend({
-  name: "FileDetailsPage",
-  components: { FileDetailsTree, FiltersBar },
-  methods: {
-    async fetchFiltered() {
-      await this.$store.dispatch(`fileDetailsModule/loadItems`);
-    },
-  },
-
-  data() {
-    return {
-      filters: {
-        filepath: this.$store.state.fileDetailsModule.filePath,
-        inode: this.$store.state.fileDetailsModule.inode,
-      },
-    };
-  },
-
-  watch: {
-    filters: {
-      deep: true,
-      handler(newVal) {
-        this.$store.commit(`fileDetailsModule/SET_FILEPATH`, newVal.filepath);
-        this.$store.commit(`fileDetailsModule/SET_INODE`, newVal.inode);
-      },
-    },
-  },
-});
+const { endDate, modalIsOpen, startDate } = useDetailsReportModel();
 </script>

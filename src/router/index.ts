@@ -1,17 +1,17 @@
 import EventLogPage from '@/pages/EventLogPage/ui/EventLogPage.vue'
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import MainMenu from "./../shared/UI/Menu/Menu.vue"
 import ActiveFilePage from '@/pages/ActiveFilePage/ui/ActiveFilePage.vue'
-import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
-import ReportPage from '@/pages/ReportPage/ui/ReportPage.vue'
+import ArchivePage from '@/pages/ArchivePage/ui/ArchivePage.vue'
 Vue.use(VueRouter)
+import { Layout } from '@/layout'
+import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: "/events",
-    component: MainMenu,
+    component: Layout,
     children: [
       {
         path: "/events",
@@ -23,7 +23,7 @@ const routes: Array<RouteConfig> = [
         },
       },
       {
-        path: "/active-files",
+        path: "/active",
         name: "active-files",
         component: ActiveFilePage,
         meta: {
@@ -31,17 +31,16 @@ const routes: Array<RouteConfig> = [
       },
 
       {
-        path: "/details",
-        component: FileDetailsPage,
-        name: "details",
+        path: "/archive",
+        component: ArchivePage,
+        name: "archive",
         meta: {
         },
       },
       {
-        path: "/report-list",
-        name: "report-list",
-        component: ReportPage,
-
+        path: "/details",
+        name: "Детали",
+        component: FileDetailsPage,
         meta: {
         }
       },
