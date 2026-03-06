@@ -15,6 +15,9 @@
         <DateInput v-model="startDate" label="От" />
         <DateInput v-model="endDate" label="До" />
       </div>
+      <div>
+        <Button height="32">Экспортировать</Button>
+      </div>
     </template>
   </Dialog>
 </template>
@@ -24,6 +27,7 @@ import { Dialog } from "@/common-components/src/components/Dialog";
 import { UiSelect } from "@/common-components/src/components/Select";
 import { watch } from "vue";
 import { useDetailsReportModel } from "../model/model";
+import { Button } from "@/common-components/src/components/Button";
 
 const { endDate, modalIsOpen, startDate, getReport, format } =
   useDetailsReportModel();

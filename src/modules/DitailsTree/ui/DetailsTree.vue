@@ -20,7 +20,6 @@ const { files, loadRoots, formatNodes, treeData } = useDetailsTreeModel();
 
 const handleUpdate = async (item: TreeNode) => {
   const res = await fetchRoots({ id: item.realId });
-  console.log(item.realId);
   const children = res.roots.map((f) => mapToNode(f, `root`));
   item.children?.push(...children);
 };

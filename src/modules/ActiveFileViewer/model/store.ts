@@ -20,8 +20,6 @@ export const useActiveFileViewStore = defineStore(`active-file-view-store`, {
 
       const response = await fetchActiveFile(params)
       this.headers = response.headers
-      console.log(this.headers);
-
       this.files = response.files
     },
     async presetLoad() {
@@ -29,17 +27,4 @@ export const useActiveFileViewStore = defineStore(`active-file-view-store`, {
       this.presetList = presetList
     },
   },
-  getters: {
-    getHeaders(state: ActiveFileView) {
-      const headers: Header[] = [...state.headers, {
-        text: "Изменить статус",
-        value: "changeStatus",
-        sortable: true,
-        isVisible: true,
-        width: 80,
-        align: `auto`
-      }]
-      return headers
-    }
-  }
 })

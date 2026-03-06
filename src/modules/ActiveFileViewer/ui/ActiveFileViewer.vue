@@ -99,10 +99,7 @@ watch(
     const newPreset = (newQuery.preset as string) || undefined;
     const newPage = Number(newQuery.page) || 1;
 
-    console.log(presetName.value, newPreset);
-
     if (presetName.value !== newPreset) {
-      console.log(32131312);
       presetName.value = newPreset;
     }
 

@@ -28,11 +28,8 @@ export const useLogsViewerStore = defineStore(`logs-table-store`, {
 
       }
       catch (error) {
-        //TODO: что то сделеть 
         console.log(error);
-
       }
-
     },
 
     async presetLoad() {
