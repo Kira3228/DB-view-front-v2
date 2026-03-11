@@ -68,7 +68,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DataTable } from "@/common-components/src/components/DataTable";
+import {
+  DataTable,
+  Header,
+} from "@/common-components/src/components/DataTable";
 import { onMounted, ref, watch } from "vue";
 import { useLogsViewerModel } from "../model/model";
 import { UiSelect } from "@/common-components/src/components/Select";
@@ -83,7 +86,7 @@ const {
   logsLoad,
   downloadAllLogReport,
   downloadSelectedLogReport,
-  headers,
+  // headers,
   presetLoad,
   presetList,
   events,
@@ -95,6 +98,7 @@ const {
 
 const { endDate, filePath, startDate, status, systemId, type } =
   useLogFilterModel();
+
 const { debounce } = useDebounce();
 const router = useRouter();
 const route = useRoute();
@@ -106,6 +110,57 @@ const currentPage = ref<number>(Number(route.query.page) || 1);
 const eventData = ref<string>("");
 const isDrawerOpen = ref<boolean>(false);
 const limit = ref(14);
+
+const headers = ref<Header[]>([
+  {
+    text: `Файл`,
+    align: "center",
+    isVisible: true,
+    sortable: true,
+    value: `file`,
+    width: 80,
+  },
+  {
+    text: `Версия файла`,
+    align: "center",
+    isVisible: true,
+    sortable: true,
+    value: ``,
+    width: 80,
+  },
+  {
+    text: `Процесс / Версия`,
+    align: "center",
+    isVisible: true,
+    sortable: true,
+    value: ``,
+    width: 80,
+  },
+  {
+    text: `Пользователь`,
+    align: "center",
+    isVisible: true,
+    sortable: true,
+    value: ``,
+    width: 80,
+  },
+  {
+    text: `First At`,
+    align: "center",
+    isVisible: true,
+    sortable: true,
+    value: ``,
+    width: 80,
+  },
+  {
+    text: `Last At`,
+    align: "center",
+    isVisible: true,
+    sortable: true,
+    value: ``,
+    width: 80,
+  },
+]);
 
 onMounted(() => {
   presetLoad();

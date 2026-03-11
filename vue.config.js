@@ -5,26 +5,23 @@ module.exports = {
   configureWebpack: {
     resolve: {
       alias: {
+        "@": path.resolve(__dirname, "src"), 
         "@shared": path.resolve(__dirname, "src/shared-ui/src"),
       },
     },
   },
+  css: {
+    loaderOptions: {
+      sass: {
+        additionalData: `@import "@/sass/variables.scss"`
+      },
+      scss: {
+        additionalData: `@import "@/sass/variables.scss";`
+      }
+    }
+  },
 
   chainWebpack: (config) => {
-    config.module
-      .rule("vue")
-      .use("vue-loader")
-      .tap((options) => {
-        return options;
-      });
-
-    config.module
-      .rule("my-rule")
-      .test(/\.ext$/)
-      .use("my-loader")
-      .loader("my-loader");
-
-    config.module.rule("eslint").exclude.add(/node_modules/);
     config.plugins.delete("vuetify-loader");
   },
 };

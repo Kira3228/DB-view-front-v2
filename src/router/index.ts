@@ -6,6 +6,7 @@ import ArchivePage from '@/pages/ArchivePage/ui/ArchivePage.vue'
 Vue.use(VueRouter)
 import { Layout } from '@/layout'
 import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
+import { FileReadsPage } from '@/pages/FileReads'
 
 const routes: Array<RouteConfig> = [
   {
@@ -19,7 +20,22 @@ const routes: Array<RouteConfig> = [
         component: EventLogPage,
         meta: {
           title: 'Главная',
-
+        },
+      },
+      {
+        path: "/events/reads",
+        name: "events",
+        component: FileReadsPage,
+        meta: {
+          title: 'Главная',
+        },
+      },
+      {
+        path: "/events/writes",
+        name: "events",
+        component: EventLogPage,
+        meta: {
+          title: 'Главная',
         },
       },
       {

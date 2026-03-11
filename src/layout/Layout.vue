@@ -35,12 +35,21 @@ const menuItems = computed<TMenuItem[]>(() => {
 
   return [
     {
-      title: "Журнал событий",
+      title: "Журнал операций",
       icon: ListIcon,
-      to: "/",
       iconProps: {
         theme: currentTheme,
       },
+      subMenu: [
+        {
+          title: "Чтения",
+          to: "/events/reads",
+        },
+        {
+          title: "Записи  ",
+          to: "/events/writes",
+        },
+      ],
     },
     {
       title: "Управление файлами",

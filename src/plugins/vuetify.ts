@@ -11,6 +11,8 @@ const vuetify = new Vuetify({
         locales: { ru },
         current: "ru",
     },
+    customProperties: true
 
-}); 
+
+});
 export default vuetify;
