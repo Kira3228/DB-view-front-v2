@@ -1,3 +1,22 @@
+<template>
+  <div class="tw-h-screen tw-flex tw-relative tw-overflow-hidden">
+    <AppMenu :items="menuItems" />
+    <Button
+      height="32"
+      :color="isDark ? 'white' : 'black'"
+      outlined
+      class="theme"
+      @click="handleThemeChange"
+    >
+      {{ isDark ? "Светлая тема" : "Темная тема" }}
+    </Button>
+    <div
+      class="tw-p-4 tw-flex-1 tw-min-w-0 tw-min-h-0 tw-overflow-hidden tw-flex tw-flex-col"
+    >
+      <RouterView class="tw-flex-1 tw-min-h-0" />
+    </div>
+  </div>
+</template>
 <script setup lang="ts">
 import {
   Menu as AppMenu,
@@ -40,16 +59,7 @@ const menuItems = computed<TMenuItem[]>(() => {
       iconProps: {
         theme: currentTheme,
       },
-      subMenu: [
-        {
-          title: "Чтения",
-          to: "/events/reads",
-        },
-        {
-          title: "Записи  ",
-          to: "/events/writes",
-        },
-      ],
+      to: `/events`,
     },
     {
       title: "Управление файлами",
@@ -101,25 +111,6 @@ const handleThemeChange = () => {
   applyTheme();
 };
 </script>
-<template>
-  <div class="tw-h-screen tw-flex tw-relative">
-    <AppMenu :items="menuItems" />
-    <Button
-      height="32"
-      :color="isDark ? 'white' : 'black'"
-      outlined
-      class="theme"
-      @click="handleThemeChange"
-    >
-      {{ isDark ? "Светлая тема" : "Темная тема" }}
-    </Button>
-    <div
-      class="tw-p-4 tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-flex tw-flex-col"
-    >
-      <RouterView />
-    </div>
-  </div>
-</template>
 <style scoped lang="scss">
 .theme {
   position: absolute;

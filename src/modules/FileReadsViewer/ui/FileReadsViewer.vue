@@ -1,131 +1,96 @@
 <template>
-  <div class="tw-flex-1 tw-overflow-auto tw-min-h-0">
-    <!-- @input="(val) => (drawerIsOpen = val)" -->
-    <Drawer :value="true" :event-data="{}">
-      <template #content>
-        <span>Детали файла</span>
-        <v-divider />
-        <DrawerInfoBlock />
-      </template>
-    </Drawer>
-    <DataTable
-      style="cursor: pointer"
-      @click-row="handleRowClick"
-      :headers="headers"
-      :items="store.files"
-      dense
-    >
-      <template #select-preset>
-        <div class="tw-flex tw-justify-between">
-          <!-- <div>
-            <UiSelect
-              class="tw-flex-1 pa-4"
-              v-model="presetName"
-              label="Пресет"
-              :items="presetList"
-            />
-          </div> -->
-          <!-- <div class="tw-flex tw-gap-2 tw-items-center">
-            <Button
-              @click="
-                () => {
-                  dialogIsOpen = true;
-                }
-              "
-              outlined
-              :height="32"
-              >Экспорт</Button
-            >
-            <Button @click="downloadAllLogReport" outlined :height="32"
-              >Экспорт всего</Button
-            >
-            <Button @click="downloadSelectedLogReport" outlined :height="32"
-              >Экспорт выделенноего</Button
-            >
-          </div> -->
+  <div class="tw-h-full tw-flex tw-flex-col">
+    <Drawer />
+    <FilterDrawer v-model="filterDrawerIsOpen" />
+    <div class="tw-flex tw-justify-between">
+      <Button text @click="openFiltersClick">
+        <div class="tw-flex tw-items-center">
+          <FiltersIcon />
+          Фильтры
         </div>
-      </template>
-    </DataTable>
+      </Button>
+      <Button @click="refreshClick" height="32" width="32" icon>
+        <div class="tw-flex tw-items-center">
+          <RefrehsIcon :width="24" />
+        </div>
+      </Button>
+    </div>
+    <div class="viewer__table">
+      <DataTable
+        @click-row="handleRowClick"
+        :headers="headers"
+        :items="fileReadsViewStore.files"
+        :items-per-page="limit"
+        height="100%"
+      >
+        <template #select-preset>
+          <div class="tw-flex tw-justify-between"></div>
+        </template>
+      </DataTable>
+    </div>
+
+    <div class="viewer__pagination">
+      <Pagination v-model="currentPage" :length="1" :totalVisible="10" />
+    </div>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import {
   DataTable,
   Header,
 } from "@/common-components/src/components/DataTable";
-import { ref } from "vue";
-import { useFileReadsViewer } from "../model/use-file-reads-viewer";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router/composables";
+import { Pagination } from "@/common-components/src/components/pagination";
+import { useLogFilterModel } from "@/modules/LogFilter/model";
+import { useDebounce } from "@/common-components/src/lib/debounce";
+import { Button } from "@/common-components/src/components/Button";
 import { useFileReadsViewerStore } from "../model/use-file-reads-viewer-store";
+import { useFileReadsViewer } from "../model/use-file-reads-viewer";
+import FiltersIcon from "@/common-components/src/components/Icons/FiltersIcon.vue";
+import { RefrehsIcon } from "@/common-components/src/components/Icons";
 import { Drawer } from "@/components/Drawer";
-import { VDivider } from "vuetify/lib";
-import DrawerInfoBlock from "./components/DrawerInfoBlock.vue";
+import { headerList } from "../model/header-list.mock";
+import FilterDrawer from "./components/FilterDrawer.vue";
 
-interface Props {}
-const props = defineProps<Props>();
-const fileReadsViewer = useFileReadsViewer();
-const drawerIsOpen = ref<boolean>(false);
+const { handleRowClick, refreshClick, filterDrawerIsOpen, openFiltersClick } =
+  useFileReadsViewer();
 
-const handleRowClick = (data: any) => {
-  drawerIsOpen.value = true;
+const fileReadsViewStore = useFileReadsViewerStore();
+
+const { endDate, filePath, startDate, status, systemId, type } =
+  useLogFilterModel();
+
+const { debounce } = useDebounce();
+const route = useRoute();
+
+const currentPage = ref<number>(Number(route.query.page) || 1);
+
+const limit = ref(100);
+
+const headers = ref<Header[]>(headerList);
+
+const debouncedFetch = () => {
+  debounce(() => {}, 500);
 };
-const headers = ref<Header[]>([
-  {
-    text: `Файл`,
-    align: "start",
-    isVisible: true,
-    sortable: true,
-    value: `filePath`,
-    width: 80,
-  },
-  {
-    text: `Версия файла`,
-    align: "start",
-    isVisible: true,
-    sortable: true,
-    value: `fileVersion`,
-    width: 80,
-  },
-  {
-    text: `Процесс`,
-    align: "start",
-    isVisible: true,
-    sortable: true,
-    value: `process`,
-    width: 80,
-  },
-  {
-    text: `Версия`,
-    align: "start",
-    isVisible: true,
-    sortable: true,
-    value: `processVersion`,
-    width: 80,
-  },
-  {
-    text: `Пользователь`,
-    align: "start",
-    isVisible: true,
-    sortable: true,
-    value: `user`,
-    width: 80,
-  },
-  {
-    text: `First At`,
-    align: "start",
-    isVisible: true,
-    sortable: true,
-    value: `firstAt`,
-    width: 80,
-  },
-  {
-    text: `Last At`,
-    align: "start",
-    isVisible: true,
-    sortable: true,
-    value: `lastAt`,
-    width: 80,
-  },
-]);
 
-const store = useFileReadsViewerStore();
+watch([endDate, filePath, startDate, status, systemId, type], debouncedFetch);
 </script>
+<style scoped>
+.viewer {
+}
+
+.viewer__table {
+  overflow: auto;
+}
+
+.viewer__pagination {
+  flex-shrink: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 8px;
+}
+
+.viewer__table ::v-deep .v-data-table__wrapper {
+  overflow: visible !important;
+}
+</style>

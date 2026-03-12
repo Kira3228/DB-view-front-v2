@@ -86,7 +86,7 @@ const {
   logsLoad,
   downloadAllLogReport,
   downloadSelectedLogReport,
-  // headers,
+  headers,
   presetLoad,
   presetList,
   events,
@@ -111,56 +111,56 @@ const eventData = ref<string>("");
 const isDrawerOpen = ref<boolean>(false);
 const limit = ref(14);
 
-const headers = ref<Header[]>([
-  {
-    text: `Файл`,
-    align: "center",
-    isVisible: true,
-    sortable: true,
-    value: `file`,
-    width: 80,
-  },
-  {
-    text: `Версия файла`,
-    align: "center",
-    isVisible: true,
-    sortable: true,
-    value: ``,
-    width: 80,
-  },
-  {
-    text: `Процесс / Версия`,
-    align: "center",
-    isVisible: true,
-    sortable: true,
-    value: ``,
-    width: 80,
-  },
-  {
-    text: `Пользователь`,
-    align: "center",
-    isVisible: true,
-    sortable: true,
-    value: ``,
-    width: 80,
-  },
-  {
-    text: `First At`,
-    align: "center",
-    isVisible: true,
-    sortable: true,
-    value: ``,
-    width: 80,
-  },
-  {
-    text: `Last At`,
-    align: "center",
-    isVisible: true,
-    sortable: true,
-    value: ``,
-    width: 80,
-  },
-]);
+// const headers = ref<Header[]>([
+//   {
+//     text: `Файл`,
+//     align: "center",
+//     isVisible: true,
+//     sortable: true,
+//     value: `file`,
+//     width: 80,
+//   },
+//   {
+//     text: `Версия файла`,
+//     align: "center",
+//     isVisible: true,
+//     sortable: true,
+//     value: ``,
+//     width: 80,
+//   },
+//   {
+//     text: `Процесс / Версия`,
+//     align: "center",
+//     isVisible: true,
+//     sortable: true,
+//     value: ``,
+//     width: 80,
+//   },
+//   {
+//     text: `Пользователь`,
+//     align: "center",
+//     isVisible: true,
+//     sortable: true,
+//     value: ``,
+//     width: 80,
+//   },
+//   {
+//     text: `First At`,
+//     align: "center",
+//     isVisible: true,
+//     sortable: true,
+//     value: ``,
+//     width: 80,
+//   },
+//   {
+//     text: `Last At`,
+//     align: "center",
+//     isVisible: true,
+//     sortable: true,
+//     value: ``,
+//     width: 80,
+//   },
+// ]);
 
 onMounted(() => {
   presetLoad();

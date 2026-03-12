@@ -17,23 +17,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "/events",
         name: "events",
-        component: EventLogPage,
-        meta: {
-          title: 'Главная',
-        },
-      },
-      {
-        path: "/events/reads",
-        name: "events",
         component: FileReadsPage,
-        meta: {
-          title: 'Главная',
-        },
-      },
-      {
-        path: "/events/writes",
-        name: "events",
-        component: EventLogPage,
         meta: {
           title: 'Главная',
         },
