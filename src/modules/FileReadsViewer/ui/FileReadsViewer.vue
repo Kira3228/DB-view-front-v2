@@ -52,6 +52,7 @@ import { RefrehsIcon } from "@/common-components/src/components/Icons";
 import { Drawer } from "@/components/Drawer";
 import { headerList } from "../model/header-list.mock";
 import FilterDrawer from "./components/FilterDrawer.vue";
+import LogFilter from "@/modules/LogFilter/ui/LogFilter.vue";
 
 const { handleRowClick, refreshClick, filterDrawerIsOpen, openFiltersClick } =
   useFileReadsViewer();
