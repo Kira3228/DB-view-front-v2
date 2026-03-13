@@ -4,8 +4,7 @@ import { MessageEventDto } from "../types/message-event.dto"
 
 export const getFiles = async (params?: MessageEventDto) => {
   const { get } = useApi()
-  return await get<FileReadsTableBody[]>(`/file/reads`, params)
-
+  return await get<FileReadsTableBody[]>(`/events/all`, params)
 }
 
 

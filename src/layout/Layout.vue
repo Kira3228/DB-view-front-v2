@@ -67,6 +67,8 @@ const menuItems = computed<TMenuItem[]>(() => {
       iconProps: {
         theme: currentTheme,
       },
+      to: `/management`,
+
       subMenu: [
         {
           title: `Активные файлы`,

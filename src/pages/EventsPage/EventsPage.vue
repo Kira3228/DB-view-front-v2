@@ -1,12 +1,10 @@
 <template>
   <div class="page">
-    <FileReadFilter class="page__filter" />
-    <FileReadsViewer class="page__viewer" />
+    <EventViewer class="page__viewer" />
   </div>
 </template>
 <script setup lang="ts">
-import FileReadFilter from "@/modules/FileReadFilters/ui/FileReadFilter.vue";
-import { FileReadsViewer } from "@/modules/FileReadsViewer/ui";
+import { EventViewer } from "@/modules/EventsViewer/ui";
 </script>
 <style scoped>
 .page {
