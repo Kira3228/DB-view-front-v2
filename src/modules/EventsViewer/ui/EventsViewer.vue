@@ -30,7 +30,11 @@
     </div>
 
     <div class="viewer__pagination">
-      <Pagination v-model="currentPage" :length="1" :totalVisible="10" />
+      <Pagination
+        v-model="fileReadsViewStore.filters.page"
+        :length="fileReadsViewStore.totalPages"
+        :totalVisible="10"
+      />
     </div>
   </div>
 </template>
@@ -40,10 +44,7 @@ import {
   Header,
 } from "@/common-components/src/components/DataTable";
 import { ref, watch } from "vue";
-import { useRoute } from "vue-router/composables";
 import { Pagination } from "@/common-components/src/components/pagination";
-import { useLogFilterModel } from "@/modules/LogFilter/model";
-import { useDebounce } from "@/common-components/src/lib/debounce";
 import { Button } from "@/common-components/src/components/Button";
 import { useFileReadsViewerStore } from "../model/use-file-reads-viewer-store";
 import { useFileReadsViewer } from "../model/use-file-reads-viewer";
@@ -52,31 +53,24 @@ import { RefrehsIcon } from "@/common-components/src/components/Icons";
 import { Drawer } from "@/components/Drawer";
 import { headerList } from "../model/header-list.mock";
 import FilterDrawer from "./components/FilterDrawer.vue";
-import LogFilter from "@/modules/LogFilter/ui/LogFilter.vue";
 
 const { handleRowClick, refreshClick, filterDrawerIsOpen, openFiltersClick } =
   useFileReadsViewer();
 
 const fileReadsViewStore = useFileReadsViewerStore();
 
-const { endDate, filePath, startDate, status, systemId, type } =
-  useLogFilterModel();
-
-const { debounce } = useDebounce();
-const route = useRoute();
-
-const currentPage = ref<number>(Number(route.query.page) || 1);
-
 const limit = ref(100);
 
 const headers = ref<Header[]>(headerList);
 
-const debouncedFetch = () => {
-  debounce(() => {}, 500);
-};
-
-watch([endDate, filePath, startDate, status, systemId, type], debouncedFetch);
+watch(
+  () => fileReadsViewStore.filters.page,
+  () => {
+    fileReadsViewStore.loadFiles();
+  },
+);
 </script>
+
 <style scoped>
 .viewer {
 }

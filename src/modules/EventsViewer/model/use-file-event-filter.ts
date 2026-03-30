@@ -6,23 +6,25 @@ export const useFileEventFilter = (onClose: (val: boolean) => void) => {
   const fileEventStore = useFileReadsViewerStore()
   const localFilters = ref<MessageEventDto>({ ...fileEventStore.filters })
 
-
   watch(() => fileEventStore.filters, (newVal) => {
     localFilters.value = { ...newVal };
   }, { deep: true });
 
-
   const applyFilters = () => {
-    fileEventStore.setFilters(localFilters.value)
+    const filterToApply = {
+      ...localFilters.value,
+      page: 1,
+    }
+    fileEventStore.setFilters(filterToApply)
     fileEventStore.loadFiles()
     onClose(false)
   }
 
   const resetFilters = () => {
-    fileEventStore.resetFilters()
+    fileEventStore.resetFilters();
+    fileEventStore.loadFiles();
+    onClose(false);
   }
-
-
 
   return {
     applyFilters, localFilters, resetFilters
