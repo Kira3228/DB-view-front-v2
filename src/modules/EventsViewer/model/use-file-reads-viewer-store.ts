@@ -18,7 +18,8 @@ const emptyFilters: MessageEventDto = {
   status: "",
   trackingStartedAt: "",
   versionNumber: undefined,
-  process: ''
+  process: '',
+  searchTerm: ''
 }
 
 export const useFileReadsViewerStore = defineStore(`use-file-reads-viewer-store`, () => {

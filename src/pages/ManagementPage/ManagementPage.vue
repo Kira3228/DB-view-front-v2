@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <FilesManagementPanel />
-  </div>
+  <FilesManagementPanel />
 </template>
 <script setup lang="ts">
 import FilesManagementPanel from "@/modules/FileManagement/ui/FilesManagementPanel.vue";

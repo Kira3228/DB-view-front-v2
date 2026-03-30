@@ -68,33 +68,13 @@ const menuItems = computed<TMenuItem[]>(() => {
         theme: currentTheme,
       },
       to: `/management`,
-
-      subMenu: [
-        {
-          title: `Активные файлы`,
-          icon: FilesIcon,
-          to: `/active`,
-          iconProps: {
-            theme: currentTheme,
-          },
-        },
-        {
-          title: `Архив`,
-          icon: ArchiveIcon,
-          to: `/archive`,
-          iconProps: {
-            theme: currentTheme,
-          },
-        },
-        {
-          title: `Детали файла`,
-          icon: DetailsIcon,
-          to: `/details`,
-          iconProps: {
-            theme: currentTheme,
-          },
-        },
-      ],
+    },
+    {
+      title: "Настройки",
+      to: `/settings`,
+      iconProps: {
+        theme: currentTheme,
+      },
     },
   ];
 });

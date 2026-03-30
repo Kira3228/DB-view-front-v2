@@ -12,4 +12,5 @@ export interface MessageEventDto {
   limit?: number
   page?: number
   process?: string
+  searchTerm?: string
 }
