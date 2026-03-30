@@ -10,7 +10,7 @@
         <div class="tw-flex">
           <TextInput v-model="search" @keyup.enter="handleEnter" outlined />
           <Button height="" icon>
-            <div @click="searchHandler" class="tw-flex tw-items-center">
+            <div class="tw-flex tw-items-center">
               <SearchIcon :width="24" />
             </div>
           </Button>
@@ -53,8 +53,8 @@ import {
 import { ref, watch } from "vue";
 import { Pagination } from "@/common-components/src/components/pagination";
 import { Button } from "@/common-components/src/components/Button";
-import { useFileReadsViewerStore } from "../model/use-file-reads-viewer-store";
-import { useFileReadsViewer } from "../model/use-file-reads-viewer";
+import { useFileReadsViewerStore } from "../model/use-event-panel-store";
+import { useFileReadsViewer } from "../model/use-event-panel";
 import {
   RefrehsIcon,
   SearchIcon,
@@ -63,9 +63,11 @@ import { Drawer } from "@/components/Drawer";
 import { headerList } from "../model/header-list.mock";
 import FilterDrawer from "./components/FilterDrawer.vue";
 import { TextInput } from "@/common-components/src/components/TextInput";
+import { useEventFilter } from "../model/use-event-filter";
 
 const { handleRowClick, refreshClick, filterDrawerIsOpen, openFiltersClick } =
   useFileReadsViewer();
+const { filters } = useEventFilter();
 
 const fileReadsViewStore = useFileReadsViewerStore();
 const limit = ref(100);
@@ -73,21 +75,29 @@ const headers = ref<Header[]>(headerList);
 
 const search = ref<string>(``);
 
-const searchHandler = () => {
-  fileReadsViewStore.filters.searchTerm = search.value;
-  fileReadsViewStore.filters.page = 1;
-  fileReadsViewStore.loadFiles();
-  search.value = "";
-};
+// const searchHandler = () => {
+//   fileReadsViewStore.filters.searchTerm = search.value;
+//   fileReadsViewStore.filters.page = 1;
+//   fileReadsViewStore.loadFiles();
+//   search.value = "";
+// };
 
 const handleEnter = () => {
-  searchHandler();
+  // searchHandler();
 };
+// watch(
+//   () => fileReadsViewStore.filters.page,
+//   () => {
+//     fileReadsViewStore.loadFiles();
+//   },
+// );
+
 watch(
-  () => fileReadsViewStore.filters.page,
-  () => {
-    fileReadsViewStore.loadFiles();
+  filters,
+  (newFilters) => {
+    fileReadsViewStore.loadFiles(newFilters);
   },
+  { immediate: true },
 );
 </script>
 

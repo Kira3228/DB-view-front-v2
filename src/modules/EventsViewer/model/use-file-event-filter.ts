@@ -1,29 +1,22 @@
 import { ref, watch } from "vue"
-import { MessageEventDto } from "../types/message-event.dto"
-import { useFileReadsViewerStore } from "./use-file-reads-viewer-store"
+import { useEventFilter } from "./use-event-filter"
 
 export const useFileEventFilter = (onClose: (val: boolean) => void) => {
-  const fileEventStore = useFileReadsViewerStore()
-  const localFilters = ref<MessageEventDto>({ ...fileEventStore.filters })
+  const { filters, setFilter, resetFilters: reset } = useEventFilter()
+  const localFilters = ref({ ...filters.value })
 
-  watch(() => fileEventStore.filters, (newVal) => {
-    localFilters.value = { ...newVal };
-  }, { deep: true });
+  watch(filters, (newVal) => {
+    localFilters.value = { ...newVal }
+  })
 
   const applyFilters = () => {
-    const filterToApply = {
-      ...localFilters.value,
-      page: 1,
-    }
-    fileEventStore.setFilters(filterToApply)
-    fileEventStore.loadFiles()
+    setFilter(localFilters.value)
     onClose(false)
   }
 
   const resetFilters = () => {
-    fileEventStore.resetFilters();
-    fileEventStore.loadFiles();
-    onClose(false);
+    reset()
+    onClose(false)
   }
 
   return {
