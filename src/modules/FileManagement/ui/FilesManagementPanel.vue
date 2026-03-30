@@ -9,7 +9,7 @@
         </div>
       </Button>
       <Button height="32" width="32" icon>
-        <div class="tw-flex tw-items-center">
+        <div class="tw-flex tw-items-center" @click="refreshClick">
           <RefrehsIcon :width="24" />
         </div>
       </Button>
@@ -47,7 +47,7 @@ import { ref, watch } from "vue";
 interface Props {}
 const props = defineProps<Props>();
 
-const { headers, openFiltersClick, filterDrawerIsOpen } =
+const { headers, openFiltersClick, filterDrawerIsOpen, refreshClick } =
   useFileManagementPanel();
 
 const fileManagementStore = useFileManagementStore();

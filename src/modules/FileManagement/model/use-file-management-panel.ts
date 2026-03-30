@@ -3,14 +3,17 @@ import { useFileManagementStore } from "./use-file-management-store"
 import { Header } from "@/common-components/src/components/DataTable"
 
 export const useFileManagementPanel = () => {
-  const fileManagementStore = useFileManagementStore()
+  const { loadFiles } = useFileManagementStore()
 
   onMounted(() => {
-    fileManagementStore.loadFiles()
+    loadFiles()
   })
 
+  const refreshClick = () => {
+    loadFiles()
+  }
   const filterDrawerIsOpen = ref<boolean>(false)
-  
+
   const headers: Header[] = [
     { align: "start", isVisible: true, sortable: true, text: 'birthTime', value: "birthTime", width: 80 },
     { align: "start", isVisible: true, sortable: true, text: 'filesystem', value: "filesystem", width: 80 },
@@ -30,6 +33,7 @@ export const useFileManagementPanel = () => {
   return {
     headers,
     openFiltersClick,
-    filterDrawerIsOpen
+    filterDrawerIsOpen,
+    refreshClick
   }
 }
