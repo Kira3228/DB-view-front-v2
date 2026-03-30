@@ -19,8 +19,6 @@ export const useFileReadsViewer = () => {
 
   const openFiltersClick = () => {
     filterDrawerIsOpen.value = true
-
-
   };
 
   onMounted(() => {

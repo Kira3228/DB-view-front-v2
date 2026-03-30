@@ -10,6 +10,7 @@ export const useFileManagementPanel = () => {
   })
 
   const filterDrawerIsOpen = ref<boolean>(false)
+  
   const headers: Header[] = [
     { align: "start", isVisible: true, sortable: true, text: 'birthTime', value: "birthTime", width: 80 },
     { align: "start", isVisible: true, sortable: true, text: 'filesystem', value: "filesystem", width: 80 },
