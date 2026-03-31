@@ -1,12 +1,12 @@
 import { computed, ref, watch } from "vue"
-import { FilesManagementDto } from "../types/file-management.dto"
 import { useRoute, useRouter } from "vue-router/composables"
+import { EventDto } from "../types/message-event.dto"
 
-export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
+export const useEventFilter = (onClose?: (val: boolean) => void) => {
   const router = useRouter()
   const route = useRoute()
 
-  const filters = computed<FilesManagementDto>(() => ({
+  const filters = computed<EventDto>(() => ({
     filesystemId: route.query.filesystemId as string | undefined,
     osUserId: route.query.osUserId as string | undefined,
     process: route.query.process as string | undefined,
@@ -19,11 +19,11 @@ export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
     firstAt: route.query.firstAt as string | undefined,
     page: Number(route.query.page) || 1,
     limit: Number(route.query.limit) || 100,
-    status: route.query.status as string | undefined,
     searchTerm: route.query.searchTerm as string | undefined
+
   }))
 
-  const localFilters = ref({ ...filters.value })
+  const localFilters = ref<EventDto>({ ...filters.value })
 
   const setFilter = (patch: Partial<typeof filters.value>) => {
     const query = { ...route.query }
@@ -45,8 +45,9 @@ export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
 
   watch(filters, (newVal) => {
     localFilters.value = { ...newVal }
-  })
+    console.log(newVal);
 
+  })
 
   const applyFilters = () => {
     setFilter(localFilters.value)
@@ -100,13 +101,6 @@ export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
     router.push({ query }).catch(() => { })
   }
 
-  return {
-    filters,
-    setFilter,
-    resetFilters,
-    applyFilters,
-    localFilters,
-    filterChips,
-    removeFilter
-  }
+  return { filters, localFilters, setFilter, applyFilters, resetFilters, filterChips, removeFilter }
+
 }

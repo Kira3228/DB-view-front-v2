@@ -1,6 +1,6 @@
 import { useApi } from "@/shared/api/http"
-import { FilesManagementDto } from "../types/file-management.dto"
 import { FileManagementTableBody } from "../types/table-body.type"
+import { FilesManagementDto } from "../types/file-management.dto"
 
 export interface FileManagementResponse {
   data: FileManagementTableBody[],
@@ -10,8 +10,10 @@ export interface FileManagementResponse {
   totalPages: number,
 }
 
-export const getFiles = async (params?: FilesManagementDto) => {
-  const { get } = useApi()
-  const result = await get<FileManagementResponse>(`/file/get/all`, params)
-  return result
+const api = useApi()
+
+export const FileService = {
+  async get(params?: FilesManagementDto) {
+    return await api.get<FileManagementResponse>(`/file/get/all`, params)
+  }
 }

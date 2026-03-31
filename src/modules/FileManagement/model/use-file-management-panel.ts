@@ -1,18 +1,28 @@
-import { onMounted, ref } from "vue"
-import { useFileManagementStore } from "./use-file-management-store"
+import { computed, ref } from "vue"
 import { Header } from "@/common-components/src/components/DataTable"
+import { useFileManagementFilter } from "./use-file-management-filters"
+import { useQuery } from "@tanstack/vue-query"
+import { FileService } from "../api/file.service"
 
 export const useFileManagementPanel = () => {
-  const { loadFiles } = useFileManagementStore()
 
-  onMounted(() => {
-    loadFiles()
+  const { filters, setFilter, resetFilters } = useFileManagementFilter()
+  // const { loadFiles } = useFileManagementStore()
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: computed(() => ["files", filters.value]),
+    queryFn: () => FileService.get(filters.value),
+    keepPreviousData: true,
+    staleTime: 1000 * 60,
   })
 
-  const refreshClick = () => {
-    loadFiles()
-  }
   const filterDrawerIsOpen = ref<boolean>(false)
+
+  const setPage = (page: number) => setFilter({ page })
+
+
+
+
 
   const headers: Header[] = [
     { align: "start", isVisible: true, sortable: true, text: 'birthTime', value: "birthTime", width: 80 },
@@ -32,8 +42,15 @@ export const useFileManagementPanel = () => {
 
   return {
     headers,
-    openFiltersClick,
     filterDrawerIsOpen,
-    refreshClick
+    openFiltersClick: () => { filterDrawerIsOpen.value = true },
+    refreshClick: () => refetch(),
+    data: computed(() => data.value?.data ?? []),
+    totalPages: computed(() => data.value?.totalPages ?? 1),
+    currentPage: computed(() => filters.value.page),
+    setPage,
+    isLoading,
+    error,
   }
+
 }

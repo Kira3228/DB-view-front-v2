@@ -5,40 +5,38 @@
         <div class="tw-flex tw-flex-col tw-gap-3">
           <div class="tw-flex tw-flex-col tw-gap-2">
             <TextInput
-              v-model="fileManagementFilter.localFilters.value.filesystemId"
+              v-model="localFilters.filesystemId"
               outlined
               placeholder="Например, be2925b5-72ac-4d61-a5b2-873a744f6683"
               label="Файловая система"
             />
             <TextInput
-              v-model="fileManagementFilter.localFilters.value.versionNumber"
+              v-model="localFilters.versionNumber"
               outlined
               placeholder="Например, 12"
               label="Номер версии"
             />
             <TextInput
-              v-model="fileManagementFilter.localFilters.value.osUserId"
+              v-model="localFilters.osUserId"
               outlined
               placeholder="Например, astra"
               label="Пользователь"
             />
             <TextInput
               outlined
-              v-model="fileManagementFilter.localFilters.value.process"
+              v-model="localFilters.process"
               placeholder="Например, "
               label="Процесс"
             />
           </div>
           <div class="tw-flex tw-gap-2">
             <DateInput
-              v-model="
-                fileManagementFilter.localFilters.value.trackingStartedAt
-              "
+              v-model="localFilters.trackingStartedAt"
               outlined
               label="Начало отслеживания"
             />
             <DateInput
-              v-model="fileManagementFilter.localFilters.value.birthTime"
+              v-model="localFilters.birthTime"
               outlined
               label="Дата создания"
             />
@@ -54,15 +52,10 @@
           </div>
         </div>
         <div class="tw-right-0 tw-bottom-0 tw-w-full tw-flex tw-gap-3">
-          <Button @click="fileManagementFilter.applyFilters" height="32"
+          <Button @click="applyFilters" height="32"
             ><span class="tw-text-white"> Применить фильтры </span>
           </Button>
-          <Button
-            @click="fileManagementFilter.resetFilters"
-            height="32"
-            outlined
-            >Сбросить</Button
-          >
+          <Button @click="resetFilters" height="32" outlined>Сбросить</Button>
         </div>
       </div>
     </template>
@@ -87,5 +80,6 @@ const handleClose = (value: boolean) => {
   emit(`input`, value);
 };
 
-const fileManagementFilter = useFileManagementFilter(handleClose);
+const { filters, resetFilters, setFilter, applyFilters, localFilters } =
+  useFileManagementFilter(handleClose);
 </script>

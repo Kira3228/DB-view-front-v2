@@ -1,4 +1,4 @@
-export interface MessageEventDto {
+export interface EventDto {
   status?: string
   filesystemId?: string
   trackingStartedAt?: string

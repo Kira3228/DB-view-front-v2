@@ -8,6 +8,8 @@ import { Layout } from '@/layout'
 import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
 import { EventsPage } from '@/pages/EventsPage'
 import ManagementPage from '@/pages/ManagementPage/ManagementPage.vue'
+import ReportPage from '@/pages/ReportPage/ReportPage.vue'
+import SettingsPage from '@/pages/SettingsPage/SettingsPage.vue'
 
 const routes: Array<RouteConfig> = [
   {
@@ -42,6 +44,20 @@ const routes: Array<RouteConfig> = [
         path: "/management",
         component: ManagementPage,
         name: "management",
+        meta: {
+        },
+      },
+      {
+        path: "/reports",
+        component: ReportPage,
+        name: "reports",
+        meta: {
+        },
+      },
+      {
+        path: "/settings",
+        component: SettingsPage,
+        name: "settings",
         meta: {
         },
       },

@@ -6,8 +6,10 @@ import router from './router'
 import VueRouter from 'vue-router'
 import './assets/global.css'
 import { createPinia, PiniaVuePlugin } from "pinia"
-Vue.use(VueRouter)
+import { VueQueryPlugin } from "@tanstack/vue-query"
 
+Vue.use(VueRouter)
+Vue.use(VueQueryPlugin)
 Vue.config.productionTip = false
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()

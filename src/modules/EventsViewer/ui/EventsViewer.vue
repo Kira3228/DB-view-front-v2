@@ -1,34 +1,51 @@
 <template>
   <div class="tw-h-full tw-flex tw-flex-col">
-    <Drawer />
+    <Drawer v-model="drawerIsOpen" />
     <FilterDrawer v-model="filterDrawerIsOpen" />
-    <div class="tw-flex tw-justify-between tw-items-center">
-      <div class="tw-flex tw-w-1/2">
+    <div class="tw-flex tw-flex-col tw-gap-2">
+      <div class="tw-flex tw-items-center tw-gap-2">
+        <div class="tw-w-1/2">
+          <TextInput
+            @keyup.enter.native="eventFilter.applyFilters"
+            is-search
+            v-model="eventFilter.localFilters.value.searchTerm"
+            outlined
+            clearable
+            @click:clear="handleClear"
+            placeholder="Поиск..."
+          >
+            <template #append>
+              <div class="tw-flex tw-items-center tw-h-full">
+                <SearchIcon :width="24" />
+              </div>
+            </template>
+          </TextInput>
+        </div>
         <Button class="tw-flex tw-items-center" text @click="openFiltersClick">
           Фильтры
         </Button>
-        <div class="tw-flex">
-          <TextInput v-model="search" @keyup.enter="handleEnter" outlined />
-          <Button height="" icon>
-            <div @click="searchHandler" class="tw-flex tw-items-center">
-              <SearchIcon :width="24" />
-            </div>
-          </Button>
-        </div>
       </div>
-      <Button @click="refreshClick" height="32" width="32" icon>
-        <div class="tw-flex tw-items-center">
-          <RefrehsIcon :width="24" />
-        </div>
-      </Button>
+
+      <div class="tw-flex tw-gap-2 tw-flex-wrap">
+        <v-chip
+          v-for="chip in eventFilter.filterChips.value"
+          :key="chip.key"
+          small
+          close
+          @click:close="eventFilter.removeFilter(chip.key)"
+        >
+          {{ chip.label }}
+        </v-chip>
+      </div>
     </div>
     <div class="viewer__table">
       <DataTable
         @click-row="handleRowClick"
         :headers="headers"
-        :items="fileReadsViewStore.files"
+        :items="files"
         :items-per-page="limit"
         height="100%"
+        :is-loading="isLoading"
       >
         <template #select-preset>
           <div class="tw-flex tw-justify-between"></div>
@@ -38,8 +55,8 @@
 
     <div class="viewer__pagination">
       <Pagination
-        v-model="fileReadsViewStore.filters.page"
-        :length="fileReadsViewStore.totalPages"
+        v-model="totalPages"
+        :length="totalPages"
         :totalVisible="10"
       />
     </div>
@@ -50,51 +67,38 @@ import {
   DataTable,
   Header,
 } from "@/common-components/src/components/DataTable";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { Pagination } from "@/common-components/src/components/pagination";
 import { Button } from "@/common-components/src/components/Button";
-import { useFileReadsViewerStore } from "../model/use-file-reads-viewer-store";
-import { useFileReadsViewer } from "../model/use-file-reads-viewer";
-import {
-  RefrehsIcon,
-  SearchIcon,
-} from "@/common-components/src/components/Icons";
+import { useEventPanel } from "../model/use-event-panel";
+import { SearchIcon } from "@/common-components/src/components/Icons";
 import { Drawer } from "@/components/Drawer";
 import { headerList } from "../model/header-list.mock";
 import FilterDrawer from "./components/FilterDrawer.vue";
 import { TextInput } from "@/common-components/src/components/TextInput";
+import { useEventFilter } from "../model/use-event-filter";
 
-const { handleRowClick, refreshClick, filterDrawerIsOpen, openFiltersClick } =
-  useFileReadsViewer();
+const {
+  files,
+  drawerIsOpen,
+  filterDrawerIsOpen,
+  handleRowClick,
+  openFiltersClick,
+  isLoading,
+  totalPages,
+} = useEventPanel();
 
-const fileReadsViewStore = useFileReadsViewerStore();
 const limit = ref(100);
 const headers = ref<Header[]>(headerList);
+const eventFilter = useEventFilter();
 
-const search = ref<string>(``);
-
-const searchHandler = () => {
-  fileReadsViewStore.filters.searchTerm = search.value;
-  fileReadsViewStore.filters.page = 1;
-  fileReadsViewStore.loadFiles();
-  search.value = "";
+const handleClear = (data: any) => {
+  console.log(data);
+  eventFilter.applyFilters();
 };
-
-const handleEnter = () => {
-  searchHandler();
-};
-watch(
-  () => fileReadsViewStore.filters.page,
-  () => {
-    fileReadsViewStore.loadFiles();
-  },
-);
 </script>
 
 <style scoped>
-.viewer {
-}
-
 .viewer__table {
   overflow: auto;
 }

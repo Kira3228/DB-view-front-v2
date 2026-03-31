@@ -10,4 +10,5 @@ export interface FilesManagementDto {
   limit?: number
   page?: number
   process?: string
+  searchTerm?: string
 }

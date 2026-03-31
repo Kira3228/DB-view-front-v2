@@ -5,25 +5,25 @@
         <div class="tw-flex tw-flex-col tw-gap-3">
           <div class="tw-flex tw-flex-col tw-gap-2">
             <TextInput
-              v-model="fileEventFilter.localFilters.value.filesystemId"
+              v-model="eventFilter.localFilters.value.filesystemId"
               outlined
               placeholder="Например, be2925b5-72ac-4d61-a5b2-873a744f6683"
               label="Файловая система"
             />
             <TextInput
-              v-model="fileEventFilter.localFilters.value.versionNumber"
+              v-model="eventFilter.localFilters.value.versionNumber"
               outlined
               placeholder="Например, 12"
               label="Номер версии"
             />
             <TextInput
-              v-model="fileEventFilter.localFilters.value.osUserId"
+              v-model="eventFilter.localFilters.value.osUserId"
               outlined
               placeholder="Например, astra"
               label="Пользователь"
             />
             <TextInput
-              v-model="fileEventFilter.localFilters.value.process"
+              v-model="eventFilter.localFilters.value.process"
               outlined
               placeholder="Например, "
               label="Процесс"
@@ -31,24 +31,24 @@
           </div>
           <div class="tw-flex tw-gap-2">
             <DateInput
-              v-model="fileEventFilter.localFilters.value.trackingStartedAt"
+              v-model="eventFilter.localFilters.value.trackingStartedAt"
               outlined
               label="Начало отслеживания"
             />
             <DateInput
-              v-model="fileEventFilter.localFilters.value.birthTime"
+              v-model="eventFilter.localFilters.value.birthTime"
               outlined
               label="Дата создания"
             />
             <DateInput
-              v-model="fileEventFilter.localFilters.value.firstAt"
+              v-model="eventFilter.localFilters.value.firstAt"
               outlined
               label="Дата операции"
             />
           </div>
           <div class="tw-flex tw-gap-2 tw-w-full">
             <UiSelect
-              v-model="fileEventFilter.localFilters.value.operationType"
+              v-model="eventFilter.localFilters.value.operationType"
               class="tw-flex-1 tw-min-w-0 tw-w-1/2"
               outlined
               label="Тип операции"
@@ -56,7 +56,7 @@
               clearable
             />
             <UiSelect
-              v-model="fileEventFilter.localFilters.value.fileType"
+              v-model="eventFilter.localFilters.value.fileType"
               class="tw-flex-1 tw-min-w-0 tw-w-1/2"
               outlined
               label="Тип файла в цепочке"
@@ -66,10 +66,10 @@
           </div>
         </div>
         <div class="tw-right-0 tw-bottom-0 tw-w-full tw-flex tw-gap-3">
-          <Button @click="fileEventFilter.applyFilters" height="32"
+          <Button @click="eventFilter.applyFilters" height="32"
             >Применить фильтры</Button
           >
-          <Button @click="fileEventFilter.resetFilters" height="32" outlined
+          <Button @click="eventFilter.resetFilters" height="32" outlined
             >Сбросить</Button
           >
         </div>
@@ -83,7 +83,7 @@ import { DateInput } from "@/common-components/src/components/DateInput";
 import { UiSelect } from "@/common-components/src/components/Select";
 import { TextInput } from "@/common-components/src/components/TextInput";
 import { Drawer } from "@/components/Drawer";
-import { useFileEventFilter } from "../../model/use-file-event-filter";
+import { useEventFilter } from "../../model/use-event-filter";
 
 interface Props {
   value?: boolean;
@@ -96,5 +96,5 @@ const handleClose = (value: boolean) => {
   emit(`input`, value);
 };
 
-const fileEventFilter = useFileEventFilter(handleClose);
+const eventFilter = useEventFilter(handleClose);
 </script>

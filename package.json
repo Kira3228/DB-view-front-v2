@@ -9,7 +9,9 @@
     "dev1": "vue-cli-service serve"
   },
   "dependencies": {
+    "@tanstack/vue-query": "^4.43.0",
     "@types/vue-router": "^2.0.0",
+    "axios": "^1.14.0",
     "core-js": "^3.6.5",
     "moment": "^2.30.1",
     "pinia": "^2.0.36",
