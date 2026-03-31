@@ -1,10 +1,6 @@
-import EventLogPage from '@/pages/EventLogPage/ui/EventLogPage.vue'
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import ActiveFilePage from '@/pages/ActiveFilePage/ui/ActiveFilePage.vue'
-import ArchivePage from '@/pages/ArchivePage/ui/ArchivePage.vue'
 import { Layout } from '@/layout'
-import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
 import { EventsPage } from '@/pages/EventsPage'
 import ManagementPage from '@/pages/ManagementPage/ManagementPage.vue'
 import ReportPage from '@/pages/ReportPage/ReportPage.vue'
@@ -24,21 +20,6 @@ const routes: Array<RouteConfig> = [
         component: EventsPage,
         meta: {
           title: 'Главная',
-        },
-      },
-      {
-        path: "/active",
-        name: "active-files",
-        component: ActiveFilePage,
-        meta: {
-        },
-      },
-
-      {
-        path: "/archive",
-        component: ArchivePage,
-        name: "archive",
-        meta: {
         },
       },
       {
@@ -62,13 +43,7 @@ const routes: Array<RouteConfig> = [
         meta: {
         },
       },
-      {
-        path: "/details",
-        name: "Детали",
-        component: FileDetailsPage,
-        meta: {
-        }
-      },
+
 
     ],
   },
