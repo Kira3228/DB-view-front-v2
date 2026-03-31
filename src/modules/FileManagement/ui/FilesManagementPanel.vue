@@ -17,16 +17,17 @@
     <div class="viewer__table">
       <DataTable
         :items-per-page="limit"
-        :items="fileManagementStore.files"
+        :items="data"
         :headers="headers"
         height="100%"
       />
     </div>
     <div class="viewer__pagination">
       <Pagination
-        v-model="fileManagementStore.filters.page"
-        :length="fileManagementStore.totalPages"
+        :value="currentPage"
+        :length="totalPages"
         :totalVisible="10"
+        @input="setPage"
       />
     </div>
   </div>
@@ -34,8 +35,6 @@
 <script setup lang="ts">
 import { DataTable } from "@/common-components/src/components/DataTable";
 import { useFileManagementPanel } from "../model/use-file-management-panel";
-import { useFileManagementStore } from "../model/use-file-management-store";
-import FileFilterDrawer from "./FileFilterDrawer.vue";
 import { Button } from "@/common-components/src/components/Button";
 import {
   FiltersIcon,
@@ -43,22 +42,25 @@ import {
 } from "@/common-components/src/components/Icons";
 import { Pagination } from "@/common-components/src/components/pagination";
 import { ref, watch } from "vue";
+import FileFilterDrawer from "./FileFilterDrawer.vue";
 
 interface Props {}
 const props = defineProps<Props>();
 
-const { headers, openFiltersClick, filterDrawerIsOpen, refreshClick } =
-  useFileManagementPanel();
-
-const fileManagementStore = useFileManagementStore();
+const {
+  headers,
+  openFiltersClick,
+  filterDrawerIsOpen,
+  refreshClick,
+  data,
+  isLoading,
+  currentPage,
+  totalPages,
+  setPage,
+  error,
+} = useFileManagementPanel();
 
 const limit = ref(100);
-watch(
-  () => fileManagementStore.filters.page,
-  () => {
-    fileManagementStore.loadFiles();
-  },
-);
 </script>
 <style scoped>
 .viewer {

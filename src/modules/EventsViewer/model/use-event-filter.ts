@@ -1,8 +1,8 @@
-import { computed } from "vue"
+import { computed, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router/composables"
 import { EventDto } from "../types/message-event.dto"
 
-export const useEventFilter = () => {
+export const useEventFilter = (onClose?: (val: boolean) => void) => {
   const router = useRouter()
   const route = useRoute()
 
@@ -21,6 +21,8 @@ export const useEventFilter = () => {
     limit: Number(route.query.limit) || 100,
   }))
 
+  const localFilters = ref({ ...filters.value })
+
   const setFilter = (patch: Partial<typeof filters.value>) => {
     const query = { ...route.query }
 
@@ -37,9 +39,18 @@ export const useEventFilter = () => {
     router.push({ query })
   }
 
+  watch(filters, (newVal) => {
+    localFilters.value = { ...newVal }
+  })
+
+  const applyFilters = () => {
+    setFilter(localFilters.value)
+    onClose?.(false)
+  }
   const resetFilters = () => {
     router.push({ query: { page: "1" } })
+    onClose?.(false)
   }
-  return { filters, setFilter, resetFilters }
+  return { filters, localFilters, setFilter, applyFilters, resetFilters }
 
 }

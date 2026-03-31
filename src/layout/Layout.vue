@@ -31,6 +31,7 @@ import {
   ControlIcon,
   DetailsIcon,
   FilesIcon,
+  ReportIcon,
 } from "@/common-components/src/components/Icons";
 
 const instance = getCurrentInstance();
@@ -68,6 +69,14 @@ const menuItems = computed<TMenuItem[]>(() => {
         theme: currentTheme,
       },
       to: `/management`,
+    },
+    {
+      title: "Отчёты",
+      icon: ReportIcon,
+      iconProps: {
+        theme: currentTheme,
+      },
+      to: `/reports`,
     },
     {
       title: "Настройки",

@@ -1,32 +1,64 @@
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { FilesManagementDto } from "../types/file-management.dto"
-import { useFileManagementStore } from "./use-file-management-store"
+import { useRoute, useRouter } from "vue-router/composables"
 
-export const useFileManagementFilter = (onClose: (val: boolean) => void) => {
-  const fileManagementStore = useFileManagementStore()
-  const localFilters = ref<FilesManagementDto>({ ...fileManagementStore.filters })
+export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
+  const router = useRouter()
+  const route = useRoute()
 
-  watch(() => fileManagementStore.filters, (newVal) => {
-    localFilters.value = { ...newVal };
-  }, { deep: true });
+  const filters = computed<FilesManagementDto>(() => ({
+    filesystemId: route.query.filesystemId as string | undefined,
+    osUserId: route.query.osUserId as string | undefined,
+    process: route.query.process as string | undefined,
+    operationType: route.query.operationType as string | undefined,
+    versionNumber: route.query.versionNumber
+      ? Number(route.query.versionNumber)
+      : undefined,
+    trackingStartedAt: route.query.trackingStartedAt as string | undefined,
+    birthTime: route.query.birthTime as string | undefined,
+    firstAt: route.query.firstAt as string | undefined,
+    page: Number(route.query.page) || 1,
+    limit: Number(route.query.limit) || 100,
+  }))
+
+  const localFilters = ref({ ...filters.value })
+
+  const setFilter = (patch: Partial<typeof filters.value>) => {
+    const query = { ...route.query }
+
+    for (const [key, val] of Object.entries(patch)) {
+      if (val === undefined || val === "" || val === null) {
+        delete query[key]
+      } else {
+        query[key] = String(val)
+      }
+    }
+
+    query.page = "1"
+
+    router.push({ query })
+  }
+
+  watch(filters, (newVal) => {
+    localFilters.value = { ...newVal }
+  })
+
+
 
   const applyFilters = () => {
-    const filterToApply = {
-      ...localFilters.value,
-      page: 1,
-    }
-    fileManagementStore.setFilters(filterToApply)
-    fileManagementStore.loadFiles()
-    onClose(false)
+    setFilter(localFilters.value)
+    
+    onClose?.(false)
   }
-
   const resetFilters = () => {
-    fileManagementStore.resetFilters();
-    fileManagementStore.loadFiles();
-    onClose(false);
+    router.push({ query: { page: "1" } })
+    onClose?.(false)
   }
-
   return {
-    applyFilters, localFilters, resetFilters
+    filters,
+    setFilter,
+    resetFilters,
+    applyFilters,
+    localFilters
   }
 }

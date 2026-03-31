@@ -12,7 +12,7 @@ interface EventsResponse {
   totalPages: number,
 }
 
-export const FileService = {
+export const EventService = {
   async get(params?: EventDto) {
     return await api.get<EventsResponse>(`/events/all`, params)
   },

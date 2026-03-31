@@ -2,19 +2,34 @@
   <div class="tw-h-full tw-flex tw-flex-col">
     <Drawer v-model="drawerIsOpen" />
     <FilterDrawer v-model="filterDrawerIsOpen" />
-    <div class="tw-flex tw-justify-between tw-items-center">
-      <div class="tw-flex tw-w-1/2">
+    <div class="tw-flex tw-flex-col tw-gap-2">
+      <!-- строка поиска и кнопки -->
+      <div class="tw-flex tw-items-center tw-gap-2">
+        <div class="tw-w-1/2">
+          <TextInput
+            @keyup.enter.native="test"
+            is-search
+            v-model="search"
+            outlined
+          >
+            <template #append>
+              <div class="tw-flex tw-items-center tw-h-full">
+                <SearchIcon :width="24" />
+              </div>
+            </template>
+          </TextInput>
+        </div>
         <Button class="tw-flex tw-items-center" text @click="openFiltersClick">
           Фильтры
         </Button>
-        <div class="tw-flex">
-          <TextInput v-model="search" outlined />
-          <Button height="" icon>
-            <div class="tw-flex tw-items-center">
-              <SearchIcon :width="24" />
-            </div>
-          </Button>
-        </div>
+      </div>
+
+      <!-- чипсы под строкой -->
+      <div class="tw-flex tw-gap-2 tw-flex-wrap">
+        <v-chip close small>asd</v-chip>
+        <v-chip close small>asd</v-chip>
+        <v-chip close small>asd</v-chip>
+        <v-chip close small>asd</v-chip>
       </div>
     </div>
     <div class="viewer__table">
@@ -35,7 +50,7 @@
     <div class="viewer__pagination">
       <Pagination
         v-model="totalPages"
-        :length="fileReadsViewStore.totalPages"
+        :length="totalPages"
         :totalVisible="10"
       />
     </div>
@@ -49,12 +64,8 @@ import {
 import { ref } from "vue";
 import { Pagination } from "@/common-components/src/components/pagination";
 import { Button } from "@/common-components/src/components/Button";
-import { useEventPanelStore } from "../model/use-event-panel-store";
 import { useEventPanel } from "../model/use-event-panel";
-import {
-  RefrehsIcon,
-  SearchIcon,
-} from "@/common-components/src/components/Icons";
+import { SearchIcon } from "@/common-components/src/components/Icons";
 import { Drawer } from "@/components/Drawer";
 import { headerList } from "../model/header-list.mock";
 import FilterDrawer from "./components/FilterDrawer.vue";
@@ -70,11 +81,14 @@ const {
   totalPages,
 } = useEventPanel();
 
-const fileReadsViewStore = useEventPanelStore();
 const limit = ref(100);
 const headers = ref<Header[]>(headerList);
 
 const search = ref<string>(``);
+
+const test = () => {
+  console.log(113212321);
+};
 </script>
 
 <style scoped>
