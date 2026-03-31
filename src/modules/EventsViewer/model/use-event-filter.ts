@@ -51,8 +51,6 @@ export const useEventFilter = (onClose?: (val: boolean) => void) => {
 
   const applyFilters = () => {
     setFilter(localFilters.value)
-    console.log(localFilters.value.searchTerm);
-
     onClose?.(false)
   }
 

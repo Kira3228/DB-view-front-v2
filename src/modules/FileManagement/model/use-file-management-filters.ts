@@ -19,6 +19,8 @@ export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
     firstAt: route.query.firstAt as string | undefined,
     page: Number(route.query.page) || 1,
     limit: Number(route.query.limit) || 100,
+    status: route.query.status as string | undefined,
+    searchTerm: route.query.searchTerm as string | undefined
   }))
 
   const localFilters = ref({ ...filters.value })
@@ -36,6 +38,8 @@ export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
 
     query.page = "1"
 
+    if (JSON.stringify(query) === JSON.stringify(route.query)) return;
+
     router.push({ query })
   }
 
@@ -44,21 +48,65 @@ export const useFileManagementFilter = (onClose?: (val: boolean) => void) => {
   })
 
 
-
   const applyFilters = () => {
     setFilter(localFilters.value)
-    
     onClose?.(false)
   }
+
   const resetFilters = () => {
     router.push({ query: { page: "1" } })
     onClose?.(false)
   }
+
+  const parseQuery = (query: Record<string, any>) => {
+    return {
+      filesystemId: query.filesystemId || undefined,
+      osUserId: query.osUserId || undefined,
+      process: query.process || undefined,
+      operationType: query.operationType || undefined,
+
+      versionNumber: query.versionNumber
+        ? Number(query.versionNumber)
+        : undefined,
+
+      trackingStartedAt: query.trackingStartedAt || undefined,
+      birthTime: query.birthTime || undefined,
+      firstAt: query.firstAt || undefined,
+
+
+      searchTerm: query.searchTerm || "",
+    };
+  };
+
+  const filterChips = computed(() => {
+    const chips = Object.entries(parseQuery(route.query))
+      .filter(([_, v]) => v !== undefined && v !== "" && v !== null)
+      .map(([key, value]) => ({
+        key,
+        label: `${key}: ${value}`,
+        value,
+      }))
+    console.log(chips);
+    return chips
+  }
+  );
+
+  const removeFilter = (key: string) => {
+    const query = { ...route.query }
+
+    delete query[key]
+    query.page = `1`
+
+    router.push({ query }).catch(() => { })
+  }
+
   return {
     filters,
     setFilter,
     resetFilters,
     applyFilters,
-    localFilters
+    localFilters,
+    filterChips,
+    removeFilter
   }
 }
