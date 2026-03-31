@@ -3,14 +3,16 @@
     <Drawer v-model="drawerIsOpen" />
     <FilterDrawer v-model="filterDrawerIsOpen" />
     <div class="tw-flex tw-flex-col tw-gap-2">
-      <!-- строка поиска и кнопки -->
       <div class="tw-flex tw-items-center tw-gap-2">
         <div class="tw-w-1/2">
           <TextInput
-            @keyup.enter.native="test"
+            @keyup.enter.native="eventFilter.applyFilters"
             is-search
-            v-model="search"
+            v-model="eventFilter.localFilters.value.searchTerm"
             outlined
+            clearable
+            @click:clear="handleClear"
+            placeholder="Поиск..."
           >
             <template #append>
               <div class="tw-flex tw-items-center tw-h-full">
@@ -24,12 +26,16 @@
         </Button>
       </div>
 
-      <!-- чипсы под строкой -->
       <div class="tw-flex tw-gap-2 tw-flex-wrap">
-        <v-chip close small>asd</v-chip>
-        <v-chip close small>asd</v-chip>
-        <v-chip close small>asd</v-chip>
-        <v-chip close small>asd</v-chip>
+        <v-chip
+          v-for="chip in eventFilter.filterChips.value"
+          :key="chip.key"
+          small
+          close
+          @click:close="eventFilter.removeFilter(chip.key)"
+        >
+          {{ chip.label }}
+        </v-chip>
       </div>
     </div>
     <div class="viewer__table">
@@ -70,6 +76,7 @@ import { Drawer } from "@/components/Drawer";
 import { headerList } from "../model/header-list.mock";
 import FilterDrawer from "./components/FilterDrawer.vue";
 import { TextInput } from "@/common-components/src/components/TextInput";
+import { useEventFilter } from "../model/use-event-filter";
 
 const {
   files,
@@ -83,11 +90,11 @@ const {
 
 const limit = ref(100);
 const headers = ref<Header[]>(headerList);
+const eventFilter = useEventFilter();
 
-const search = ref<string>(``);
-
-const test = () => {
-  console.log(113212321);
+const handleClear = (data: any) => {
+  console.log(data);
+  eventFilter.applyFilters();
 };
 </script>
 
