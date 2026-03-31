@@ -3,13 +3,14 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import ActiveFilePage from '@/pages/ActiveFilePage/ui/ActiveFilePage.vue'
 import ArchivePage from '@/pages/ArchivePage/ui/ArchivePage.vue'
-Vue.use(VueRouter)
 import { Layout } from '@/layout'
 import FileDetailsPage from '@/pages/FileDetailsPage/ui/FileDetailsPage.vue'
 import { EventsPage } from '@/pages/EventsPage'
 import ManagementPage from '@/pages/ManagementPage/ManagementPage.vue'
 import ReportPage from '@/pages/ReportPage/ReportPage.vue'
 import SettingsPage from '@/pages/SettingsPage/SettingsPage.vue'
+
+Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
