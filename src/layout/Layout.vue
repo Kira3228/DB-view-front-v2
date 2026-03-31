@@ -27,10 +27,7 @@ import { Button } from "@/common-components/src/components/Button";
 import { ref, onMounted, getCurrentInstance, computed } from "vue";
 import {
   ListIcon,
-  ArchiveIcon,
   ControlIcon,
-  DetailsIcon,
-  FilesIcon,
   ReportIcon,
 } from "@/common-components/src/components/Icons";
 
@@ -105,7 +102,7 @@ const handleThemeChange = () => {
 <style scoped lang="scss">
 .theme {
   position: absolute;
-  bottom: 16px; /* Отступ снизу (примерно как tw-bottom-4) */
+  bottom: 16px;
   left: 16px;
 }
 </style>
