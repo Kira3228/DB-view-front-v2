@@ -1,6 +1,6 @@
 <template>
   <div class="tw-h-full tw-flex tw-flex-col">
-    <Drawer />
+    <Drawer v-model="drawerIsOpen" />
     <FilterDrawer v-model="filterDrawerIsOpen" />
     <div class="tw-flex tw-justify-between tw-items-center">
       <div class="tw-flex tw-w-1/2">
@@ -8,7 +8,7 @@
           Фильтры
         </Button>
         <div class="tw-flex">
-          <TextInput v-model="search" @keyup.enter="handleEnter" outlined />
+          <TextInput v-model="search" outlined />
           <Button height="" icon>
             <div class="tw-flex tw-items-center">
               <SearchIcon :width="24" />
@@ -16,19 +16,15 @@
           </Button>
         </div>
       </div>
-      <Button @click="refreshClick" height="32" width="32" icon>
-        <div class="tw-flex tw-items-center">
-          <RefrehsIcon :width="24" />
-        </div>
-      </Button>
     </div>
     <div class="viewer__table">
       <DataTable
         @click-row="handleRowClick"
         :headers="headers"
-        :items="fileReadsViewStore.files"
+        :items="files"
         :items-per-page="limit"
         height="100%"
+        :is-loading="isLoading"
       >
         <template #select-preset>
           <div class="tw-flex tw-justify-between"></div>
@@ -38,7 +34,7 @@
 
     <div class="viewer__pagination">
       <Pagination
-        v-model="fileReadsViewStore.filters.page"
+        v-model="totalPages"
         :length="fileReadsViewStore.totalPages"
         :totalVisible="10"
       />
@@ -50,11 +46,11 @@ import {
   DataTable,
   Header,
 } from "@/common-components/src/components/DataTable";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { Pagination } from "@/common-components/src/components/pagination";
 import { Button } from "@/common-components/src/components/Button";
-import { useFileReadsViewerStore } from "../model/use-event-panel-store";
-import { useFileReadsViewer } from "../model/use-event-panel";
+import { useEventPanelStore } from "../model/use-event-panel-store";
+import { useEventPanel } from "../model/use-event-panel";
 import {
   RefrehsIcon,
   SearchIcon,
@@ -63,48 +59,25 @@ import { Drawer } from "@/components/Drawer";
 import { headerList } from "../model/header-list.mock";
 import FilterDrawer from "./components/FilterDrawer.vue";
 import { TextInput } from "@/common-components/src/components/TextInput";
-import { useEventFilter } from "../model/use-event-filter";
 
-const { handleRowClick, refreshClick, filterDrawerIsOpen, openFiltersClick } =
-  useFileReadsViewer();
-const { filters } = useEventFilter();
+const {
+  files,
+  drawerIsOpen,
+  filterDrawerIsOpen,
+  handleRowClick,
+  openFiltersClick,
+  isLoading,
+  totalPages,
+} = useEventPanel();
 
-const fileReadsViewStore = useFileReadsViewerStore();
+const fileReadsViewStore = useEventPanelStore();
 const limit = ref(100);
 const headers = ref<Header[]>(headerList);
 
 const search = ref<string>(``);
-
-// const searchHandler = () => {
-//   fileReadsViewStore.filters.searchTerm = search.value;
-//   fileReadsViewStore.filters.page = 1;
-//   fileReadsViewStore.loadFiles();
-//   search.value = "";
-// };
-
-const handleEnter = () => {
-  // searchHandler();
-};
-// watch(
-//   () => fileReadsViewStore.filters.page,
-//   () => {
-//     fileReadsViewStore.loadFiles();
-//   },
-// );
-
-watch(
-  filters,
-  (newFilters) => {
-    fileReadsViewStore.loadFiles(newFilters);
-  },
-  { immediate: true },
-);
 </script>
 
 <style scoped>
-.viewer {
-}
-
 .viewer__table {
   overflow: auto;
 }

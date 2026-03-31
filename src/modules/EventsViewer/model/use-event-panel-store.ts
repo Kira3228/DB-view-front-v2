@@ -10,8 +10,8 @@ export const useEventPanelStore = defineStore(`use-file-reads-viewer-store`, () 
 
 
   const loadFilesDetails = async (fileId: number, procVerId: number) => {
-    const result = await getFilesDetails({ fileId: fileId, processVersionId: procVerId })
-    fileDetails.value = result
+    // const result = await getFilesDetails({ fileId: fileId, processVersionId: procVerId })
+    // fileDetails.value = result
   }
 
 

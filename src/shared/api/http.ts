@@ -4,11 +4,12 @@ import axios, { AxiosResponse } from "axios"
 interface IDownloadOptions {
   filename: string
 }
-
+const api = axios.create({
+  baseURL: BASE_URL
+})
 export const useApi = () => {
-
   const get = async <T>(endpoint: string, params?: Record<string, any>): Promise<T> => {
-    const response: AxiosResponse<T> = await axios.get(endpoint, { params });
+    const response: AxiosResponse<T> = await api.get(endpoint, { params });
     return response.data;
   };
 
@@ -17,27 +18,25 @@ export const useApi = () => {
     body: any,
     params?: Record<string, any>
   ): Promise<T> => {
-    const response: AxiosResponse<T> = await axios.post(endpoint, body, { params });
+    const response: AxiosResponse<T> = await api.post(endpoint, body, { params });
     return response.data;
   };
 
   const patch = async <T>(endpoint: string, body?: any): Promise<T> => {
-    const response: AxiosResponse<T> = await axios.patch(endpoint, body);
+    const response: AxiosResponse<T> = await api.patch(endpoint, body);
     return response.data;
   };
 
-  // Получение Blob (GET)
   const httpGetBlob = async (url: string, params?: Record<string, any>): Promise<Blob> => {
-    const response = await axios.get(url, {
+    const response = await api.get(url, {
       params,
       responseType: 'blob',
     });
     return response.data;
   };
 
-  // Отправка данных и получение Blob (POST)
   const httpPostBlob = async (endpoint: string, body: any): Promise<Blob> => {
-    const response = await axios.post(endpoint, body, {
+    const response = await api.post(endpoint, body, {
       responseType: 'blob',
       headers: {
         'Content-Type': 'application/json',
@@ -46,7 +45,6 @@ export const useApi = () => {
     return response.data;
   };
 
-  // Скачивание Blob
   const downloadBlob = (blob: Blob, options: IDownloadOptions) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
